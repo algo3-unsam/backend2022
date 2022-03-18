@@ -1,6 +1,8 @@
+import java.time.LocalDate
+import java.time.Year
 import java.util.*
 class Usuario(var Nombre: String, var Apellido: String, var Username: String, var fechaDeAlta: Int, var paisDeResidencia: String){
-    fun antiguedad() = Calendar.YEAR - fechaDeAlta
+    fun antiguedad() = LocalDate.now().year - fechaDeAlta
 
     fun descuentoPorAntiguedad() = if(antiguedad() > 15) 15 else antiguedad()
 }
