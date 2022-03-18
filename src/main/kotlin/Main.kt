@@ -1,7 +1,17 @@
-fun main(args: Array<String>) {
-    println("Hello World!")
+import java.util.*
+class Usuario(var Nombre: String, var Apellido: String, var Username: String, var fechaDeAlta: Int, var paisDeResidencia: String){
+    fun antiguedad() = Calendar.YEAR - fechaDeAlta
 
-    // Try adding program arguments via Run/Debug configuration.
-    // Learn more about running applications: https://www.jetbrains.com/help/idea/running-applications.html.
-    println("Program arguments: ${args.joinToString()}")
+    fun descuentoPorAntiguedad() = if(antiguedad() > 15) 15 else antiguedad()
+}
+
+class Destino(var Pais: String, var Ciudad: String, var costoBase: Float){
+
+    fun esLocal() = Pais == "Argentina"
+
+    fun precio(unUsuario: Usuario) = costoBase + porcentajeDestino() - descuento(unUsuario)
+
+    fun porcentajeDestino() = if (!esLocal()) costoBase * 0.2 else 0.0
+
+    fun descuento(unUsuario: Usuario) = costoBase * (unUsuario.descuentoPorAntiguedad()*0.01)
 }
