@@ -1,6 +1,7 @@
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
+import java.time.LocalDate
 
 class Testdestinos: DescribeSpec ({
     isolationMode = IsolationMode.InstancePerTest
