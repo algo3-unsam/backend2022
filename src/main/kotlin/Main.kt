@@ -1,10 +1,12 @@
+import java.math.BigDecimal
 import java.time.LocalDate
+import java.time.Period
 import java.time.Year
 import java.util.*
-class Usuario(var Nombre: String, var Apellido: String, var Username: String, var fechaDeAlta: Int, var paisDeResidencia: String){
-    fun antiguedad() = LocalDate.now().year - fechaDeAlta
+class Usuario(var Nombre: String, var Apellido: String, var Username: String, var fechaDeAlta: String, var paisDeResidencia: String){
+    fun antiguedad() = Period.between(LocalDate.parse(fechaDeAlta), LocalDate.now())
 
-    fun descuentoPorAntiguedad() = if(antiguedad() > 15) 15 else antiguedad()
+    fun descuentoPorAntiguedad() = if(antiguedad().years > 15) 15 else antiguedad().years
 }
 
 class Destino(var Pais: String, var Ciudad: String, var costoBase: Float){
