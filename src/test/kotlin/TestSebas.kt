@@ -17,7 +17,7 @@ class TestMios: DescribeSpec ({
         val destino2 = Destino(Pais = "Colombia", Ciudad = "Bogota", costoBase = 25000F)
         describe("Destino No Local"){
             destino2.esLocal() shouldBe false
-            destino2.precio(usuario2) shouldBe 29250.0
+            destino2.precio(usuario2) shouldBe 30000.0
         }
     }
 
