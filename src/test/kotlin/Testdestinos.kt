@@ -6,7 +6,7 @@ import java.time.Period
 
 class Testdestinos: DescribeSpec ({
     isolationMode = IsolationMode.InstancePerTest
-    val usuario1 = Usuario(Apellido = "Torres", Username = "T20", Nombre = "Nicolas", fechaDeAlta = "2010-01-15", paisDeResidencia = "Alemania")
+    val usuario1 = Usuario(Apellido = "Torres", Username = "T20", Nombre = "Nicolas", fechaDeAlta = LocalDate.of(2010, 1, 15), paisDeResidencia = "Alemania")
     describe("Usuario con poca antiguedad no local"){
         val destino1 = Destino(Pais = "Francia", Ciudad = "Paris", costoBase = 20000F)
         describe("destino no local, se paga un extra por el pasaje"){
@@ -15,7 +15,7 @@ class Testdestinos: DescribeSpec ({
 
         }
     }
-    val usuario2 = Usuario(Apellido = "Martinez", Username = "Martu50", Nombre = "Martin", fechaDeAlta = "2005-05-07", paisDeResidencia = "Argentina")
+    val usuario2 = Usuario(Apellido = "Martinez", Username = "Martu50", Nombre = "Martin", fechaDeAlta = LocalDate.of(2005, 5, 7), paisDeResidencia = "Argentina")
     describe("Usuario local con mucha antiguedad"){
         val destino2 = Destino(Pais = "Argentina", Ciudad = "Buenos aires", costoBase = 10000F)
         destino2.esLocal() shouldBe true

@@ -2,16 +2,20 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.Period
 import java.time.Year
+import java.time.temporal.ChronoUnit
 import java.util.*
-class Usuario(var Nombre: String, var Apellido: String, var Username: String, var fechaDeAlta: String, var paisDeResidencia: String){
-    fun antiguedad() = Period.between(LocalDate.parse(fechaDeAlta), LocalDate.now())
+class Usuario(var Nombre: String, var Apellido: String, var Username: String, var fechaDeAlta: LocalDate, var paisDeResidencia: String){
+    fun antiguedad() = ChronoUnit.YEARS.between(fechaDeAlta, LocalDate.now())
 
-    fun descuentoPorAntiguedad() = if(antiguedad().years > 15) 15 else antiguedad().years
+    fun descuentoPorAntiguedad() = if(antiguedad() > 15) 15 else antiguedad()
 }
 
 class Destino(var Pais: String, var Ciudad: String, var costoBase: Float){
+    companion object{
+        var LOCAL = "Argentina"
+    }
 
-    fun esLocal() = Pais == "Argentina"
+    fun esLocal() = Pais == LOCAL
 
     fun precio(unUsuario: Usuario) = costoBase + porcentajeDestino() - descuento(unUsuario)
 
