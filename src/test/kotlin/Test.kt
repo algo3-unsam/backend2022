@@ -5,11 +5,11 @@ import java.time.LocalDate
 
 class TestDePasajes: DescribeSpec( {
     describe("Test de usuario argentino"){
-        val usuarioArg = Usuario("Juan", "Perez", "JuanP", "2003-02-22", "Argentina")
-        it("El usuario tiene mas de 15 años de antiguedad pero igual recibe un 15% de descuento"){
+        val usuarioArg = Usuario("Juan", "Perez", "JuanP", LocalDate.of(2003,3,22), "Argentina")
+        it("El usuario tiene excede el maximo de antiguedad pero recibe el maximo descuento que se puede otorgar"){
             usuarioArg.descuentoPorAntiguedad() shouldBe  15
         }
-        it("El usuario va a un destino en Argentina, por lo tanto recibe descuento por antiguedad y no recibe aumento"){
+        it("El usuario va a un destino local, por lo tanto recibe descuento por antiguedad y no recibe aumento"){
             val cordoba = Destino("Argentina", "Cordoba", 20000F)
             cordoba.precio(usuarioArg) shouldBe 17000F
         }
@@ -19,15 +19,15 @@ class TestDePasajes: DescribeSpec( {
 
         }
         describe("Test de usuario extranjero"){
-            val usuarioYankee = Usuario ("Kevin", "Durant", "KD2017", "2010-02-10", "Estados Unidos")
+            val usuarioYankee = Usuario ("Kevin", "Durant", "KD2017", LocalDate.now().minusYears(12), "Estados Unidos")
             it("El usuario recibira un 12% de descuento por antiguedad"){
                 usuarioYankee.descuentoPorAntiguedad() shouldBe 12
             }
-            it("El usuario va a un destino en Argentina, no recibe aumento pero tampoco descuento"){
+            it("El usuario va a un destino local, no recibe aumento pero tampoco descuento"){
                 val bsAs = Destino("Argentina", "Buenos Aires", 15000F)
                 bsAs.precio(usuarioYankee) shouldBe  15000F
             }
-            it("El usuario viaja a Estados Unidos, recibe aumento y descuento"){
+            it("El usuario viaja a su pais de residencia, recibe aumento y descuento"){
                 val miami = Destino("Estados Unidos", "Miami", 10000F)
                 miami.precio(usuarioYankee) shouldBe  10800F
             }
