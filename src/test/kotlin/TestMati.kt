@@ -1,52 +1,52 @@
-import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
+import java.time.LocalDate
 
 class TestMati : DescribeSpec({
     describe("Testeo descuentos de personas que viajan a su pais de residencia") {
-        val usuario1 = Usuario(
-            Apellido = "Gani",
-            Username = "Mati",
-            Nombre = "Matias",
-            fechaDeAlta = "2002-03-20",
+        val usuarioCon20AniosDeAnt = Usuario(
+            apellido = "Gani",
+            username = "Mati",
+            nombre = "Matias",
+            fechaDeAlta = LocalDate.now().minusYears(20),
             paisDeResidencia = "Argentina"
         )
-        val usuario2 = Usuario(
-            Apellido = "Javi",
-            Username = "Mart",
-            Nombre = "Martin",
-            fechaDeAlta = "2012-03-20",
+        val usuarioCon10AniosDeAnt = Usuario(
+            apellido = "Javi",
+            username = "Mart",
+            nombre = "Martin",
+            fechaDeAlta = LocalDate.now().minusYears(10),
             paisDeResidencia = "Argentina"
         )
-        val destino1 = Destino(Pais = "Argentina", Ciudad = "BuenosAires", costoBase = 10000F)
-        val destino2 = Destino(Pais = "Argentina", Ciudad = "Cordoba", costoBase = 20000F)
+        val destino1 = Destino(pais = "Argentina", ciudad = "BuenosAires", costoBase = 10000F)
+        val destino2 = Destino(pais = "Argentina", ciudad = "Cordoba", costoBase = 20000F)
 
         it("Verificar que el descuento de una persona con 20 años de antiguedad es el 15%") {
-            usuario1.descuentoPorAntiguedad() shouldBe 15
+            usuarioCon20AniosDeAnt.descuentoPorAntiguedad() shouldBe 15
         }
         it("Verificar que el descuento de una persona con 20 años de antiguedad es el 15%") {
-            destino1.descuento(usuario1) shouldBe 1500
+            destino1.descuento(usuarioCon20AniosDeAnt) shouldBe 1500
         }
         it("Verificar que el descuento de una persona con 10 años de antiguedad es el 10%") {
-            usuario1.descuentoPorAntiguedad() shouldBe 15
+            usuarioCon10AniosDeAnt.descuentoPorAntiguedad() shouldBe 10
         }
         it("Verificar que el descuento de una persona con 10 años de antiguedad es el 10%") {
-            destino2.descuento(usuario2) shouldBe 2000
+            destino2.descuento(usuarioCon10AniosDeAnt) shouldBe 2000
         }
     }
     describe("Testeo descuentos de personas que NO viajan a su pais de residencia") {
         val usuario = Usuario(
-            Apellido = "Martinez  ",
-            Username = "Bryan",
-            Nombre = "Bryan",
-            fechaDeAlta = "2002-03-20",
+            apellido = "Martinez  ",
+            username = "Bryan",
+            nombre = "Bryan",
+            fechaDeAlta = LocalDate.now().minusYears(20),
             paisDeResidencia = "Brasil"
         )
-        val destino = Destino(Pais = "Argentina", Ciudad = "BuenosAires", costoBase = 10000F)
+        val destino = Destino(pais = "Argentina", ciudad = "BuenosAires", costoBase = 10000F)
         it("Verificar que el descuento de una persona con 20 años de antiguedad es el 15%") {
             usuario.descuentoPorAntiguedad() shouldBe 15
         }
-        it("Verificar que el descuento es 0") {
+        it("Verificar que el descuento es 0 por no viajar a su pais de residencia") {
             destino.descuento(usuario) shouldBe 0
         }
     }
