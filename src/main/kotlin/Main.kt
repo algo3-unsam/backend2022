@@ -13,5 +13,5 @@ class Destino(var Pais: String, var Ciudad: String, var costoBase: Float){
 
     fun porcentajeDestino() = if (!esLocal()) costoBase * 0.2 else 0.0
 
-    fun descuento(unUsuario: Usuario) = if (unUsuario.paisDeResidencia == Pais) (costoBase * (unUsuario.descuentoPorAntiguedad()*0.01)) else 0.0
+    fun descuento(unUsuario: Usuario) = costoBase * (unUsuario.descuentoPorAntiguedad()*0.01)
 }
