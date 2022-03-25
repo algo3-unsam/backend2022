@@ -1,3 +1,7 @@
+package TP0
+
+import Destino
+import Usuario
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
@@ -5,8 +9,20 @@ import java.time.LocalDate
 
 class TestMios: DescribeSpec ({
     isolationMode = IsolationMode.InstancePerTest
-    val usuario1 = Usuario(apellido = "Rodrigues", username = "El_Perri", nombre = "Sebas", fechaDeAlta = LocalDate.now().minusYears(16), paisDeResidencia = "Argentina")
-    val usuario2 = Usuario(apellido = "Martinez", username = "Holu204", nombre = "Camilo", fechaDeAlta = LocalDate.now().minusYears(3), paisDeResidencia = "Brasil")
+    val usuario1 = Usuario(
+        apellido = "Rodrigues",
+        username = "El_Perri",
+        nombre = "Sebas",
+        fechaDeAlta = LocalDate.now().minusYears(16),
+        paisDeResidencia = "Argentina"
+    )
+    val usuario2 = Usuario(
+        apellido = "Martinez",
+        username = "Holu204",
+        nombre = "Camilo",
+        fechaDeAlta = LocalDate.now().minusYears(3),
+        paisDeResidencia = "Brasil"
+    )
     describe("Usuario con Antiguedad y Local"){
         val destino1 = Destino(pais = "Argentina", ciudad = "BuenosAires", costoBase = 3000F)
         describe("destino local"){
@@ -21,5 +37,6 @@ class TestMios: DescribeSpec ({
             destino2.precio(usuario2) shouldBe 30000.0
         }
     }
+
 
 })

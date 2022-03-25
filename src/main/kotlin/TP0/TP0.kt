@@ -1,6 +1,5 @@
 
 import java.time.LocalDate
-import java.time.Period
 import java.time.temporal.ChronoUnit
 
 class Usuario(var nombre: String, var apellido: String, var username: String, var fechaDeAlta: LocalDate, var paisDeResidencia: String){
