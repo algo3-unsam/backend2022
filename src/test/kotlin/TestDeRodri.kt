@@ -3,7 +3,7 @@ import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import java.time.LocalDate
 
-class Testdestinos: DescribeSpec ({
+class TestDeRodri: DescribeSpec ({
     isolationMode = IsolationMode.InstancePerTest
     val usuario1 = Usuario(apellido = "Torres", username = "T20", nombre = "Nicolas", fechaDeAlta = LocalDate.of(2010,1,15), paisDeResidencia = "Alemania")
     describe("Usuario con poca antiguedad no local"){
