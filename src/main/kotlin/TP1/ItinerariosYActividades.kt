@@ -5,12 +5,23 @@ val MEDIA  = 2
 val BAJA = 1
 
 
+class Dia(var actividades: MutableList<Actividad> = mutableListOf()){
+
+}
+
 class Itinerario(var creador: Usuario, var destino: Destino, var cantDias: Int, var actividades: MutableList<Actividad> = mutableListOf()){
+    var dia: MutableList<actividades> = mutableListOf()
+
+
     fun totalCosto() = actividades.sumOf{ it.costo }
 
     fun agregarActividad(unaActividad: Actividad){
         actividades.add(unaActividad)
     }
+
+
+
+    fun todoLosDiasOcupados() = cantDias == actividades.size
 
     fun sosMiCreador(unUsuario: Usuario) = (unUsuario.username == creador.username )
 
@@ -30,6 +41,10 @@ class Itinerario(var creador: Usuario, var destino: Destino, var cantDias: Int, 
         }
         return BAJA
     }
+
+    fun porcentajeDeActividadXDificultad(unaDificultad: Int) = (actividades.filter{ it.dificultad == unaDificultad }.size * 100)/actividades.size
+
+
 }
 
 

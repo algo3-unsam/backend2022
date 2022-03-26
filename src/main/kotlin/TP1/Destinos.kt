@@ -1,5 +1,6 @@
 package TP1
 
+
 class Destino(var pais: String, var ciudad: String, var costoBase: Float){
 
     companion object{
