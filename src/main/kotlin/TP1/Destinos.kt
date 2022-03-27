@@ -6,7 +6,10 @@ class Destino(var pais: String, var ciudad: String, var costoBase: Float){
     companion object{
         var LOCAL = "Argentina"
     }
+    
+    fun esValido()= (this.costoBase > 0) and this.tieneInformacionCargadaEnStrings()
 
+    fun tieneInformacionCargadaEnStrings() = !(this.pais.isNullOrEmpty() and this.ciudad.isNullOrEmpty())
 
     fun esLocal() = pais == LOCAL
 

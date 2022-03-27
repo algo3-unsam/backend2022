@@ -3,9 +3,10 @@ import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import java.time.LocalDate
 
+
 class TestDeItinerarios:DescribeSpec ({
     describe("Creo un itinerario ") {
-        val pepe = Usuario("Juan", "Pelotas", "Pelotas01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3)
+        val pepe = UsuarioRelajado("Juan", "Pelotas", "Pelotas01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3)
         val destino1 = Destino(pais = "Argentina", ciudad = "BuenosAires", costoBase = 3000F)
         val actividad = Actividad(100.0, "Hola!", 9, 10, ALTA)
         val actividad2 = Actividad(150.0, "Hola!", 9, 10, BAJA)
@@ -19,6 +20,7 @@ class TestDeItinerarios:DescribeSpec ({
         it("Test de Costo De Itinerarios") {
             unItinerario.totalCosto() shouldBe 900.0
         }
+
         it("Test de Dificultad del Itinerario. Al tener ser dificultad BAJA la que mas actividades tiene, el itinerario tendra esa dificultad") {
             unItinerario.dificultad() shouldBe BAJA
         }

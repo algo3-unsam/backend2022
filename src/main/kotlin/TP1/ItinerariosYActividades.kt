@@ -1,5 +1,7 @@
 package TP1
 
+import java.time.LocalDate
+
 val ALTA = 3
 val MEDIA  = 2
 val BAJA = 1
@@ -10,8 +12,7 @@ class Dia(var actividades: MutableList<Actividad> = mutableListOf()){
 }
 
 class Itinerario(var creador: Usuario, var destino: Destino, var cantDias: Int, var actividades: MutableList<Actividad> = mutableListOf()){
-    var dia: MutableList<actividades> = mutableListOf()
-
+    var dia: MutableList<Actividad> = mutableListOf()
 
     fun totalCosto() = actividades.sumOf{ it.costo }
 
@@ -50,4 +51,8 @@ class Itinerario(var creador: Usuario, var destino: Destino, var cantDias: Int, 
 
 data class Actividad(var costo: Double, var descrpcion: String, var inicio: Int, var fin: Int, var dificultad : Int){
     fun duracion() = fin - inicio
+
+    fun esValido() = (this.costo >= 0) and (this.dificultad > 0)  and this.tieneInformacionCargadaEnDescripcion() and (this.inicio < this.fin)
+
+    fun tieneInformacionCargadaEnDescripcion() = !this.descrpcion.isNullOrEmpty()
 }

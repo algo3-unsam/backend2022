@@ -21,9 +21,13 @@ abstract class Usuario(
         var ANTIGUEDAD_MAXIMA = 15
     }
 
+    fun esValido() = this.tienenInformacionCargadaEnLosStrings() and (this.fechaDeAlta > LocalDate.now()) and (this.diasParaViajar > 0)
+
+    fun tienenInformacionCargadaEnLosStrings() = !(this.nombre.isNullOrEmpty() and this.apellido.isNullOrEmpty() and this.username.isNullOrEmpty() and this.paisDeResidencia.isNullOrEmpty())
+
     fun agregarAmigo(unUsuario: Usuario) = amigos.add(unUsuario)
 
-    fun itinerariosAPuntuar(listaDeItirenarios: MutableList<Itinerario>)= listaDeItirenarios.filter{ it.sosMiCreador(this) and this.conoceDestino(it.destino)}
+    fun itinerariosAPuntuar(listaDeItirenarios: MutableList<Itinerario>)= listaDeItirenarios.filter{ !it.sosMiCreador(this) and this.conoceDestino(it.destino)}
 
     fun conoceDestino(unDestino: Destino) = (destinosDeseados.contains(unDestino) or destinosVisitados.contains(unDestino))
 
@@ -39,6 +43,7 @@ abstract class Usuario(
 
     fun diasSuficientes(unItinerario: Itinerario) = diasParaViajar >= unItinerario.cantDias
 }
+
 
 
 class UsuarioRelajado(
