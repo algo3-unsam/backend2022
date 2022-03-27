@@ -6,7 +6,6 @@ val ALTA = 3
 val MEDIA  = 2
 val BAJA = 1
 
-
 class Dia(var actividades: MutableList<Actividad> = mutableListOf()){
 
 }
@@ -44,7 +43,6 @@ class Itinerario(var creador: Usuario, var destino: Destino, var cantDias: Int, 
     fun porcentajeDeActividadXDificultad(unaDificultad: Int) = (actividades.filter{ it.dificultad == unaDificultad }.size * 100)/actividades.size
 
 }
-
 
 data class Actividad(var costo: Double, var descrpcion: String, var inicio: Int, var fin: Int, var dificultad : Int){
     fun duracion() = fin - inicio

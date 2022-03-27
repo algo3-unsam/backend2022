@@ -12,10 +12,7 @@ abstract class Usuario(
     var diasParaViajar: Int,
     var amigos: MutableList<Usuario> = mutableListOf(),
     var destinosDeseados: MutableList<Destino> = mutableListOf(),
-    var destinosVisitados: MutableList<Destino> = mutableListOf()) {
-
-
-
+    var destinosVisitados: MutableList<Destino> = mutableListOf()){
 
     companion object {
         var ANTIGUEDAD_MAXIMA = 15
