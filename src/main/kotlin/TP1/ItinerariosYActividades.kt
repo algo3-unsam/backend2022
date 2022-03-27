@@ -20,8 +20,6 @@ class Itinerario(var creador: Usuario, var destino: Destino, var cantDias: Int, 
         actividades.add(unaActividad)
     }
 
-
-
     fun todoLosDiasOcupados() = cantDias == actividades.size
 
     fun sosMiCreador(unUsuario: Usuario) = (unUsuario.username == creador.username )
@@ -44,7 +42,6 @@ class Itinerario(var creador: Usuario, var destino: Destino, var cantDias: Int, 
     }
 
     fun porcentajeDeActividadXDificultad(unaDificultad: Int) = (actividades.filter{ it.dificultad == unaDificultad }.size * 100)/actividades.size
-
 
 }
 
