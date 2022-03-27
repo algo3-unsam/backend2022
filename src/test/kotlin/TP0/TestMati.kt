@@ -1,3 +1,7 @@
+package TP0
+
+import Destino
+import Usuario
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import java.time.LocalDate
