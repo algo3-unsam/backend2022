@@ -16,6 +16,7 @@ class TestDeRodri: DescribeSpec ({
         fechaDeAlta = LocalDate.of(2010, 1, 15),
         paisDeResidencia = "Alemania"
     )
+
     describe("Usuario con poca antiguedad no local"){
         val destino1 = Destino(pais = "Francia", ciudad = "Paris", costoBase = 20000F)
         describe("destino no local, se paga un extra por el pasaje"){
@@ -24,6 +25,7 @@ class TestDeRodri: DescribeSpec ({
 
         }
     }
+
     val usuario2 = Usuario(
         apellido = "Martinez",
         username = "Martu50",
