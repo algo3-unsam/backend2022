@@ -52,12 +52,14 @@ class Itinerario(
 
     }
 
+
     //reviso que todos los dias asignados al itinerario tengan actividades
     fun todoLosDiasOcupados() = dias.any { it.actividades.size > 0 }
 
     fun sosMiCreador(unUsuario: Usuario) = (unUsuario.username == creador.username)
 
     fun cantidadDeActividades() = dias.map { dia -> dia.actividades }.size
+
 
     fun actividadesDifAlta() = dias.flatMap { dia -> dia.actividades.filter { it.dificultad == ALTA } }.size
 
@@ -83,7 +85,6 @@ class Itinerario(
 
     fun porcentajeDeActividadXDificultad(unaDificultad: Int) =
         ((dias.map { dia -> dia.actividades.filter { it.dificultad == ALTA } }.size) * 100) / cantidadDeActividades()
-
 
 }
 
