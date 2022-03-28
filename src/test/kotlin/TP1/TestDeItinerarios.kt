@@ -1,11 +1,14 @@
 package TP1
+
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import java.time.LocalDate
 
 
-class TestDeItinerarios:DescribeSpec ({
+class TestDeItinerarios : DescribeSpec({
+    isolationMode = IsolationMode.InstancePerTest
     describe("Creo un itinerario ") {
         val pepe = UsuarioRelajado("Juan", "Pelotas", "Pelotas01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3)
         val destino1 = Destino(pais = "Argentina", ciudad = "BuenosAires", costoBase = 3000F)
@@ -25,9 +28,7 @@ class TestDeItinerarios:DescribeSpec ({
         unItinerario.ocuparDia(tercer_dia_itinerario1_pepe)
 
 
-
-
-        it("se agreagan actividades a determinado dia"){
+        it("se agreagan actividades a determinado dia") {
             unItinerario.agregarActividad(primer_dia_itinerario1_pepe, actividad)
             unItinerario.agregarActividad(segundo_dia_itinerario1_pepe, actividad3)
             unItinerario.agregarActividad(tercer_dia_itinerario1_pepe, actividad4)
@@ -37,7 +38,7 @@ class TestDeItinerarios:DescribeSpec ({
             tercer_dia_itinerario1_pepe.actividades.contains(actividad4) shouldBe true
         }
 
-        it("no se puede agregar una actividad con el mismo horario al mismo dia"){
+        it("no se puede agregar una actividad con el mismo horario al mismo dia") {
             unItinerario.agregarActividad(primer_dia_itinerario1_pepe, actividad)
             shouldThrow<Exception> { unItinerario.agregarActividad(primer_dia_itinerario1_pepe, actividad2) }
         }
@@ -49,7 +50,7 @@ class TestDeItinerarios:DescribeSpec ({
             unItinerario.totalCosto() shouldBe 750.0
         }
 
-        it("teniendo dos actividades bajas debe dar 2"){
+        it("teniendo dos actividades bajas debe dar 2") {
             unItinerario.agregarActividad(primer_dia_itinerario1_pepe, actividad)
             unItinerario.agregarActividad(segundo_dia_itinerario1_pepe, actividad2)
             unItinerario.agregarActividad(tercer_dia_itinerario1_pepe, actividad3)
@@ -64,7 +65,7 @@ class TestDeItinerarios:DescribeSpec ({
             unItinerario.dificultad() shouldBe BAJA
         }
 
-        it("Test de dificultad cuando todas las dificultades tengan la misma cantidad de actividades. La dificultad final sera la mas alta"){
+        it("Test de dificultad cuando todas las dificultades tengan la misma cantidad de actividades. La dificultad final sera la mas alta") {
             unItinerario.agregarActividad(primer_dia_itinerario1_pepe, actividad)
             unItinerario.agregarActividad(segundo_dia_itinerario1_pepe, actividad2)
             unItinerario.agregarActividad(tercer_dia_itinerario1_pepe, actividad4)
