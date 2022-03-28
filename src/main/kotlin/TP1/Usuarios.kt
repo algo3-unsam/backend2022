@@ -16,7 +16,6 @@ abstract class Usuario(
 
 
 
-
     companion object {
         var ANTIGUEDAD_MAXIMA = 15
     }
