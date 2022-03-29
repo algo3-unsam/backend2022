@@ -9,7 +9,7 @@ val BAJA = 1
 
 class Dia(var nombre: String, var actividades: MutableList<Actividad> = mutableListOf()) {
     fun verificarHorario(unaActividad: Actividad): Boolean {
-        //debo verificar que el horario de inicio y final de la actividad a agregar sea distinto de las otras actividades del dia
+        //debo verificar que el horario de inicio de la actividad a agendar sea mayor al del horario final de las demas actividades
         return actividades.any { (unaActividad.inicio >= it.fin) }
 
     }
@@ -54,7 +54,7 @@ class Itinerario(
 
 
     //reviso que todos los dias asignados al itinerario tengan actividades
-    fun todoLosDiasOcupados() = dias.any { it.actividades.size > 0 }
+    fun todoLosDiasOcupados() = dias.all { it.actividades.size > 0 }
 
     fun sosMiCreador(unUsuario: Usuario) = (unUsuario.username == creador.username)
 
@@ -68,7 +68,7 @@ class Itinerario(
     fun actividadesDifBaja() = dias.flatMap { dia -> dia.actividades.filter { it.dificultad == BAJA } }.size
 
     fun dificultad(): Int {
-        //creo una nueva coleccion con map, revisando cada actividad de cada dia buscando la dificultad
+        //creo una nueva coleccion con flatmap, revisando cada actividad de cada dia buscando la dificultad
         var actividadAlta = actividadesDifAlta()
         var actividadMedia = actividadesDifMedia()
         var actividadBaja = actividadesDifBaja()
@@ -84,7 +84,7 @@ class Itinerario(
     }
 
     fun porcentajeDeActividadXDificultad(unaDificultad: Int) =
-        ((dias.map { dia -> dia.actividades.filter { it.dificultad == ALTA } }.size) * 100) / cantidadDeActividades()
+        ((dias.flatMap{ dia -> dia.actividades.filter { it.dificultad == unaDificultad } }.size) * 100) / cantidadDeActividades()
 
 }
 

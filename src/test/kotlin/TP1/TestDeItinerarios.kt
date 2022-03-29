@@ -50,7 +50,7 @@ class TestDeItinerarios : DescribeSpec({
             unItinerario.totalCosto() shouldBe 750.0
         }
 
-        it("teniendo dos actividades bajas debe dar 2") {
+        it("se tiene determinada cantidad de actividades de dificultad baja en el itinerario") {
             unItinerario.agregarActividad(primer_dia_itinerario1_pepe, actividad)
             unItinerario.agregarActividad(segundo_dia_itinerario1_pepe, actividad2)
             unItinerario.agregarActividad(tercer_dia_itinerario1_pepe, actividad3)
@@ -71,6 +71,24 @@ class TestDeItinerarios : DescribeSpec({
             unItinerario.agregarActividad(tercer_dia_itinerario1_pepe, actividad4)
 
             unItinerario.dificultad() shouldBe ALTA
+        }
+
+        it("Se espera un alto porcentaje de actividades con dificultad baja en el itinerario"){
+            unItinerario.agregarActividad(primer_dia_itinerario1_pepe, actividad)
+            unItinerario.agregarActividad(segundo_dia_itinerario1_pepe, actividad2)
+            unItinerario.agregarActividad(tercer_dia_itinerario1_pepe, actividad3)
+
+            unItinerario.porcentajeDeActividadXDificultad(BAJA) shouldBe 66
+        }
+
+        it("no todos los dias del itinerario estan ocupados"){
+            val cuarto_dia_itinerario1_pepe = Dia("Viernes")
+            unItinerario.ocuparDia(cuarto_dia_itinerario1_pepe)
+            unItinerario.agregarActividad(primer_dia_itinerario1_pepe, actividad)
+            unItinerario.agregarActividad(segundo_dia_itinerario1_pepe, actividad2)
+            unItinerario.agregarActividad(tercer_dia_itinerario1_pepe, actividad3)
+
+            unItinerario.todoLosDiasOcupados() shouldBe false
         }
     }
 
