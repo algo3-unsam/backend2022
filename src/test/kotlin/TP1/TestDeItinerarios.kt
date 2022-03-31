@@ -6,7 +6,7 @@ import java.time.LocalDate
 
 class TestDeItinerarios:DescribeSpec ({
     describe("Creo un itinerario ") {
-        val pepe = UsuarioRelajado("Juan", "Pelotas", "Pelotas01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3)
+        val pepe = Usuario("Juan", "Pelotas", "Pelotas01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3, criterio = Relajado())
         val destino1 = Destino(pais = "Argentina", ciudad = "BuenosAires", costoBase = 3000F)
         val actividad = Actividad(100.0, "Hola!", 9, 10, ALTA)
         val actividad2 = Actividad(150.0, "Hola!", 9, 10, BAJA)

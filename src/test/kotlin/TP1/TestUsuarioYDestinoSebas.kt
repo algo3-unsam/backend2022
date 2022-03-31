@@ -1,7 +1,5 @@
-package TP0
+package TP1
 
-import Destino
-import Usuario
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
@@ -14,14 +12,18 @@ class TestMios: DescribeSpec ({
         username = "El_Perri",
         nombre = "Sebas",
         fechaDeAlta = LocalDate.now().minusYears(16),
-        paisDeResidencia = "Argentina"
+        paisDeResidencia = "Argentina",
+        diasParaViajar = 4,
+        criterio = Relajado()
     )
     val usuario2 = Usuario(
         apellido = "Martinez",
         username = "Holu204",
         nombre = "Camilo",
         fechaDeAlta = LocalDate.now().minusYears(3),
-        paisDeResidencia = "Brasil"
+        paisDeResidencia = "Brasil",
+        diasParaViajar = 4,
+        criterio = Relajado()
     )
     describe("Usuario con Antiguedad y Local"){
         val destino1 = Destino(pais = "Argentina", ciudad = "BuenosAires", costoBase = 3000F)

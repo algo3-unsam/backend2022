@@ -1,26 +1,28 @@
-package TP0
+package TP1
 
-import Destino
-import Usuario
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import java.time.LocalDate
 
-class TestMati : DescribeSpec({
+class TestUsuarioYDestinoMati : DescribeSpec({
     describe("Testeo descuentos de personas que viajan a su pais de residencia") {
         val usuarioCon20AniosDeAnt = Usuario(
             apellido = "Gani",
             username = "Mati",
             nombre = "Matias",
             fechaDeAlta = LocalDate.now().minusYears(20),
-            paisDeResidencia = "Argentina"
+            paisDeResidencia = "Argentina",
+            diasParaViajar = 4,
+            criterio = Relajado()
         )
         val usuarioCon10AniosDeAnt = Usuario(
             apellido = "Javi",
             username = "Mart",
             nombre = "Martin",
             fechaDeAlta = LocalDate.now().minusYears(10),
-            paisDeResidencia = "Argentina"
+            paisDeResidencia = "Argentina",
+            diasParaViajar = 4,
+            criterio = Relajado()
         )
         val destino1 = Destino(pais = "Argentina", ciudad = "BuenosAires", costoBase = 10000F)
         val destino2 = Destino(pais = "Argentina", ciudad = "Cordoba", costoBase = 20000F)
@@ -44,7 +46,9 @@ class TestMati : DescribeSpec({
             username = "Bryan",
             nombre = "Bryan",
             fechaDeAlta = LocalDate.now().minusYears(20),
-            paisDeResidencia = "Brasil"
+            paisDeResidencia = "Brasil",
+            diasParaViajar = 4,
+            criterio = Relajado()
         )
         val destino = Destino(pais = "Argentina", ciudad = "BuenosAires", costoBase = 10000F)
         it("Verificar que el descuento de una persona con 20 años de antiguedad es el 15%") {

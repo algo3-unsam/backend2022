@@ -1,20 +1,20 @@
-package TP0
+package TP1
 
-import Destino
-import Usuario
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import java.time.LocalDate
 
-class TestDeRodri: DescribeSpec ({
+class TestUsuarioYDestinoRodri: DescribeSpec ({
     isolationMode = IsolationMode.InstancePerTest
     val usuario1 = Usuario(
         apellido = "Torres",
         username = "T20",
         nombre = "Nicolas",
         fechaDeAlta = LocalDate.of(2010, 1, 15),
-        paisDeResidencia = "Alemania"
+        paisDeResidencia = "Alemania",
+        diasParaViajar = 4,
+        criterio = Relajado()
     )
     describe("Usuario con poca antiguedad no local"){
         val destino1 = Destino(pais = "Francia", ciudad = "Paris", costoBase = 20000F)
@@ -29,7 +29,9 @@ class TestDeRodri: DescribeSpec ({
         username = "Martu50",
         nombre = "Martin",
         fechaDeAlta = LocalDate.of(2005, 5, 7),
-        paisDeResidencia = "Argentina"
+        paisDeResidencia = "Argentina",
+        diasParaViajar = 4,
+        criterio = Relajado()
     )
     describe("Usuario local con mucha antiguedad"){
         val destino2 = Destino(pais = "Argentina", ciudad = "Buenos aires", costoBase = 10000F)
