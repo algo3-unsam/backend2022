@@ -21,6 +21,10 @@ class Usuario(
 
     fun esValido() = this.tienenInformacionCargadaEnLosStrings() and (this.fechaDeAlta > LocalDate.now()) and (this.diasParaViajar > 0)
 
+    fun cambiarCriterio(unCriterio: Criterio){
+        criterio = unCriterio
+    }
+
     fun tienenInformacionCargadaEnLosStrings() = !(this.nombre.isNullOrEmpty() and this.apellido.isNullOrEmpty() and this.username.isNullOrEmpty() and this.paisDeResidencia.isNullOrEmpty())
 
     fun agregarAmigo(unUsuario: Usuario) = amigos.add(unUsuario)
