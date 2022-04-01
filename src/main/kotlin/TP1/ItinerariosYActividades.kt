@@ -59,7 +59,7 @@ class Itinerario(
 
     fun cantidadDeActividades() = dias.map { dia -> dia.actividades }.size
 
-    fun actividadesDifAlta() = dias.flatMap { dia -> dia.actividades.filter { it.dificultad == Dificultades.baja.numero } }.size
+    fun actividadesDifAlta() = dias.flatMap { dia -> dia.actividades.filter { it.dificultad == Dificultades.alta.numero } }.size
 
     fun actividadesDifMedia() = dias.flatMap { dia -> dia.actividades.filter { it.dificultad == Dificultades.media.numero } }.size
 
