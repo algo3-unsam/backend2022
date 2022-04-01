@@ -4,15 +4,16 @@ import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 
 class TestDeItinerarios:DescribeSpec ({
     describe("Creo un itinerario ") {
         val pepe = Usuario("Juan", "Pelotas", "Pelotas01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3).apply{criterio = Relajado()}
         val destino1 = Destino(pais = "Argentina", ciudad = "BuenosAires", costoBase = 3000F)
-        val actividad = Actividad(100.0, "Hola!", LocalDateTime.of(2022,2,12,9,30), LocalDateTime.of(2022,2,12,10,30), Dificultades.alta.numero)
-        val actividad2 = Actividad(150.0, "Hola!", LocalDateTime.of(2022,2,12,9,30), LocalDateTime.of(2022,2,12,10,30), Dificultades.baja.numero)
-        val actividad3 = Actividad(300.0, "Hola!", LocalDateTime.of(2022,2,12,9,30), LocalDateTime.of(2022,2,12,10,30), Dificultades.baja.numero)
-        val actividad4 = Actividad(350.0, "Hola!", LocalDateTime.of(2022,2,12,9,30), LocalDateTime.of(2022,2,12,10,30), Dificultades.media.numero)
+        val actividad = Actividad(100.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultades.alta.numero)
+        val actividad2 = Actividad(150.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultades.baja.numero)
+        val actividad3 = Actividad(300.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultades.baja.numero)
+        val actividad4 = Actividad(350.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultades.media.numero)
         val unItinerario = Itinerario(pepe, destino1, 5)
         val dia1 = Dia()
         val dia2 = Dia()

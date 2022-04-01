@@ -2,6 +2,7 @@ package TP1
 
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.temporal.ChronoUnit
 
 enum class Dificultades(val numero: Int){
@@ -81,7 +82,7 @@ class Itinerario(
         ((dias.flatMap { dia -> dia.actividades.filter { it.dificultad == unaDificultad } }.size) * 100) / cantidadDeActividades()
 }
 
-data class Actividad(var costo: Double, var descrpcion: String, var inicio: LocalDateTime, var fin: LocalDateTime, var dificultad: Int) {
+data class Actividad(var costo: Double, var descrpcion: String, var inicio: LocalTime, var fin: LocalTime, var dificultad: Int) {
     fun duracion() = ChronoUnit.MINUTES.between(fin,inicio)
 
     fun esValido() =
