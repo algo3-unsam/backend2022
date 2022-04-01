@@ -5,8 +5,8 @@ import io.kotest.matchers.shouldBe
 import java.time.LocalDate
 
 class TestDePasajes: DescribeSpec( {
-    describe("Test de usuario argentino"){
-        val usuarioArg = Usuario("Juan", "Perez", "JuanP", LocalDate.of(2003,3,22), "Argentina",diasParaViajar = 4,criterio = Relajado())
+    describe("Test de Costo de Destino para diferentes usuarios"){
+        val usuarioArg = Usuario("Juan", "Perez", "JuanP", LocalDate.of(2003,3,22), "Argentina",diasParaViajar = 4)
         it("El usuario tiene excede el maximo de antiguedad pero recibe el maximo descuento que se puede otorgar"){
             usuarioArg.descuentoPorAntiguedad() shouldBe  15
         }
@@ -20,7 +20,7 @@ class TestDePasajes: DescribeSpec( {
 
         }
         describe("Test de usuario extranjero"){
-            val usuarioYankee = Usuario ("Kevin", "Durant", "KD2017", LocalDate.now().minusYears(12), "Estados Unidos", diasParaViajar = 4, criterio = Relajado())
+            val usuarioYankee = Usuario ("Kevin", "Durant", "KD2017", LocalDate.now().minusYears(12), "Estados Unidos", diasParaViajar = 4)
             it("El usuario recibira un 12% de descuento por antiguedad"){
                 usuarioYankee.descuentoPorAntiguedad() shouldBe 12
             }

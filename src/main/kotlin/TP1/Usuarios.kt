@@ -12,9 +12,10 @@ class Usuario(
     var diasParaViajar: Int,
     var amigos: MutableList<Usuario> = mutableListOf(),
     var destinosDeseados: MutableList<Destino> = mutableListOf(),
-    var destinosVisitados: MutableList<Destino> = mutableListOf(),
-    var criterio: Criterio){
+    var destinosVisitados: MutableList<Destino> = mutableListOf()
+    ){
 
+    lateinit var  criterio: Criterio
     companion object {
         var ANTIGUEDAD_MAXIMA = 15
     }
@@ -50,32 +51,32 @@ class Usuario(
     fun diasSuficientes(unItinerario: Itinerario) = diasParaViajar >= unItinerario.cantDias
 }
 
-abstract class Criterio(){
-    abstract fun criterioSegunTipo(unItinerario: Itinerario, unUsuario: Usuario): Boolean
+interface Criterio{
+    fun criterioSegunTipo(unItinerario: Itinerario, unUsuario: Usuario): Boolean
 }
 
-class Relajado(): Criterio(){
+class Relajado(): Criterio{
     override fun criterioSegunTipo(unItinerario: Itinerario, unUsuario: Usuario) = true
 }
 
-class Precavido(): Criterio() {
+class Precavido(): Criterio {
     override fun criterioSegunTipo(unItinerario: Itinerario, unUsuario: Usuario) = unUsuario.conoceDestino(unItinerario.destino) or amigoConoceDestino(unItinerario,unUsuario)
     fun amigoConoceDestino(unItinerario: Itinerario, unUsuario: Usuario) = unUsuario.amigos.any{it.conoceDestino(unItinerario.destino)}
 }
 
-class Localista(): Criterio(){
+class Localista(): Criterio{
     override fun criterioSegunTipo(unItinerario: Itinerario,unUsuario: Usuario) = unItinerario.destino.pais == Destino.LOCAL
 }
 
-class Soñadores(): Criterio(){
+class Soñadores(): Criterio{
     override fun criterioSegunTipo(unItinerario: Itinerario,unUsuario: Usuario) = unUsuario.estaEnDeseados(unItinerario) or unUsuario.destinoMasCaroQueDeseadoMasCaro(unItinerario)
 }
 
-class Activo(): Criterio() {
+class Activo(): Criterio {
     override fun criterioSegunTipo(unItinerario: Itinerario, unUsuario: Usuario) = unItinerario.todoLosDiasOcupados()
 }
 
-class Exigente(var dificultadPreferida: Int, var porcentajeDeseado: Int): Criterio() {
+class Exigente(var dificultadPreferida: Int, var porcentajeDeseado: Int): Criterio {
     override fun criterioSegunTipo(unItinerario: Itinerario, unUsuario: Usuario) = porcentajeSuficiente(unItinerario)
 
     fun cambiarDificultad(nuevaDificultad: Int) { dificultadPreferida = nuevaDificultad}
