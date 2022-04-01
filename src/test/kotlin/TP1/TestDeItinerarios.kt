@@ -1,9 +1,9 @@
 package TP1
+
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import java.time.LocalDate
 import java.time.LocalDateTime
-
 
 class TestDeItinerarios:DescribeSpec ({
     describe("Creo un itinerario ") {
@@ -51,5 +51,4 @@ class TestDeItinerarios:DescribeSpec ({
             otroItinerario.dificultad() shouldBe ALTA
         }
     }
-
 })

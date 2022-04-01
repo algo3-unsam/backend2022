@@ -4,15 +4,16 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
-val ALTA = 3
-val MEDIA = 2
-val BAJA = 1
+enum class Dificultades(val numero: Int){
+    baja(1),
+    media(2),
+    alta(3)
+}
 
 class Dia(var actividades: MutableList<Actividad> = mutableListOf()) {
     fun verificarHorario(unaActividad: Actividad): Boolean {
         //debo verificar que el horario de inicio de la actividad a agendar sea mayor al del horario final de las demas actividades
         return actividades.any { (unaActividad.inicio >= it.fin) }
-
     }
 
     fun agregarActividad(unaActividad: Actividad) {
@@ -51,7 +52,6 @@ class Itinerario(
 
     }
 
-
     //reviso que todos los dias asignados al itinerario tengan actividades
     fun todoLosDiasOcupados() = dias.all { it.actividades.size > 0 }
 
@@ -59,32 +59,26 @@ class Itinerario(
 
     fun cantidadDeActividades() = dias.map { dia -> dia.actividades }.size
 
+    fun actividadesDifAlta() = dias.flatMap { dia -> dia.actividades.filter { it.dificultad == Dificultades.baja.numero } }.size
 
-    fun actividadesDifAlta() = dias.flatMap { dia -> dia.actividades.filter { it.dificultad == ALTA } }.size
+    fun actividadesDifMedia() = dias.flatMap { dia -> dia.actividades.filter { it.dificultad == Dificultades.media.numero } }.size
 
-    fun actividadesDifMedia() = dias.flatMap { dia -> dia.actividades.filter { it.dificultad == MEDIA } }.size
-
-    fun actividadesDifBaja() = dias.flatMap { dia -> dia.actividades.filter { it.dificultad == BAJA } }.size
+    fun actividadesDifBaja() = dias.flatMap { dia -> dia.actividades.filter { it.dificultad == Dificultades.baja.numero } }.size
 
     fun dificultad(): Int {
-        //creo una nueva coleccion con flatmap, revisando cada actividad de cada dia buscando la dificultad
-        var actividadAlta = actividadesDifAlta()
-        var actividadMedia = actividadesDifMedia()
-        var actividadBaja = actividadesDifBaja()
-        if (actividadAlta >= actividadMedia) {
-            return if (actividadAlta >= actividadBaja) {
-                ALTA
+        if (actividadesDifAlta() >= actividadesDifMedia()) {
+            return if (actividadesDifAlta() >= actividadesDifBaja()) {
+                Dificultades.alta.numero
             } else
-                BAJA
-        } else if (actividadMedia >= actividadBaja) {
-            return MEDIA
+                Dificultades.baja.numero
+        } else if (actividadesDifMedia() >= actividadesDifBaja()) {
+            Dificultades.media.numero
         }
-        return BAJA
+        return Dificultades.baja.numero
     }
 
     fun porcentajeDeActividadXDificultad(unaDificultad: Int) =
         ((dias.flatMap { dia -> dia.actividades.filter { it.dificultad == unaDificultad } }.size) * 100) / cantidadDeActividades()
-
 }
 
 data class Actividad(var costo: Double, var descrpcion: String, var inicio: LocalDateTime, var fin: LocalDateTime, var dificultad: Int) {
