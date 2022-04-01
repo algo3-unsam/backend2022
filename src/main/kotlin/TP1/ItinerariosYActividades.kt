@@ -60,19 +60,16 @@ class Itinerario(
 
     fun cantidadDeActividades() = dias.map { dia -> dia.actividades }.size
 
-    fun actividadesDifAlta() = dias.flatMap { dia -> dia.actividades.filter { it.dificultad == Dificultades.alta.numero } }.size
-
-    fun actividadesDifMedia() = dias.flatMap { dia -> dia.actividades.filter { it.dificultad == Dificultades.media.numero } }.size
-
-    fun actividadesDifBaja() = dias.flatMap { dia -> dia.actividades.filter { it.dificultad == Dificultades.baja.numero } }.size
+    fun actividadesTotalDificultad(unaDificultad: Int) = dias.flatMap { dia -> dia.actividades.filter { it.dificultad == unaDificultad } }.size
 
     fun dificultad(): Int {
-        if (actividadesDifAlta() >= actividadesDifMedia()) {
-            return if (actividadesDifAlta() >= actividadesDifBaja()) {
+        
+        if (actividadesTotalDificultad(Dificultades.alta.numero) >= actividadesTotalDificultad(Dificultades.media.numero)) {
+            return if (actividadesTotalDificultad(Dificultades.alta.numero) >= actividadesTotalDificultad(Dificultades.baja.numero)) {
                 Dificultades.alta.numero
             } else
                 Dificultades.baja.numero
-        } else if (actividadesDifMedia() >= actividadesDifBaja()) {
+        } else if (actividadesTotalDificultad(Dificultades.media.numero) >= actividadesTotalDificultad(Dificultades.baja.numero)) {
             Dificultades.media.numero
         }
         return Dificultades.baja.numero
