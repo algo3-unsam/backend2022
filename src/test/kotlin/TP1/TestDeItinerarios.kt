@@ -1,14 +1,49 @@
 package TP1
 
+
 import io.kotest.assertions.throwables.shouldThrow
+
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
+import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.api.assertThrows
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.LocalTime
 
-class TestDeItinerarios : DescribeSpec({
+
+class TestDestinos:DescribeSpec({
+    isolationMode = IsolationMode.InstancePerTest
+    describe("Test de Destino") {
+        describe("Test de Validez de Destino") {
+            it("Creo un Destino invalido porque tiene vacias sus parametros") {
+                var unDestinoIncompleto = Destino("", "", 0F)
+               assertThrows<Exception> { unDestinoIncompleto.validar() }
+            }
+            it("Creo un Destino Invalido porque su costo es menor a 0"){
+                var unDestinoSinCosto = Destino("Argentina", "Buenos Aires",-7F)
+                assertThrows<Exception> { unDestinoSinCosto.validar() }
+            }
+            it("Creo un Destino valido") {
+                var unDestinoValido = Destino("Argentina", "Mendoza", 5000f)
+                assertDoesNotThrow { unDestinoValido.validar() }
+            }
+        }
+        describe("Test de Destinos Locales"){
+            it("Testeo un destino en el pais local"){
+                var unDestinoLocal = Destino("Argentina","Mendoza", 10000F)
+                unDestinoLocal.esLocal() shouldBe true
+            }
+            it("Testeo un destino que no es local"){
+                var unDestinoNoLocal = Destino("Brasil","Sao Pablo", 15000F)
+                unDestinoNoLocal.esLocal() shouldBe false
+            }
+        }
+    }
+})
+
+class TestDeItinerarios:DescribeSpec ({
+
     isolationMode = IsolationMode.InstancePerTest
     describe("Creo un itinerario ") {
         val pepe = Usuario("Juan", "Pelotas", "Pelotas01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3).apply{criterio = Relajado()}
@@ -58,6 +93,60 @@ class TestDeItinerarios : DescribeSpec({
         it("No se puede agregar una actividad a un determinado dia porque coincide con el horario de otra actividad"){
             shouldThrow<Exception> { unItinerario.agregarActividad(lunes, actividad2) }
 
+        }
+    }
+})
+
+class TestDeActividades:DescribeSpec({
+    isolationMode = IsolationMode.InstancePerTest
+    describe("Test de validez de Actividades"){
+        it("Testeo una Actividad invalida por falta de parametros"){
+            var actividadIncompleta = Actividad(0.0,"",LocalTime.of(9,30),LocalTime.of(11,0),Dificultades.alta.numero)
+            assertThrows<Exception> { actividadIncompleta.validar() }
+        }
+        it("Testeo una Activida invalida por error en hora de inicio y final"){
+            var actividadConMalHorario = Actividad(0.0,"Visita al Museo",LocalTime.of(10,0),LocalTime.of(8,30),Dificultades.baja.numero)
+            assertThrows<Exception> { actividadConMalHorario.validar() }
+        }
+        it("Testeo una Actividad invalidad por costo menor a 0"){
+            var actividadSinCosto = Actividad(-500.0,"Visita al Museo",LocalTime.of(8,30),LocalTime.of(10,0),Dificultades.baja.numero)
+            assertThrows<Exception> { actividadSinCosto.validar() }
+        }
+        it("Testeo una actividad invalidad por dificultad invalida"){
+            var actividadDificultadInvalida = Actividad(500.0,"Visita al Museo",LocalTime.of(8,30),LocalTime.of(10,0),4)
+            assertThrows<Exception> { actividadDificultadInvalida.validar() }
+        }
+        it("Testeo una actividad invalidad por dificultad invalida"){
+            var actividadDificultadInvalida = Actividad(500.0,"Visita al Museo",LocalTime.of(8,30),LocalTime.of(10,0),-4)
+            assertThrows<Exception> { actividadDificultadInvalida.validar() }
+        }
+        var actividadValida = Actividad(500.0,"Visita al Museo",LocalTime.of(8,30),LocalTime.of(10,0),Dificultades.baja.numero)
+        it("Testeo una Actividad valida"){
+           assertDoesNotThrow { actividadValida.validar() }
+        }
+        it("Testeo duracion de Actividad"){
+            actividadValida.duracion() shouldBe 90
+        }
+    }
+})
+
+class TestDias:DescribeSpec({
+    isolationMode = IsolationMode.InstancePerTest
+    var dia = Dia()
+    var primerActividad = Actividad(300.0,"Circuito Chico",LocalTime.of(8,30),LocalTime.of(10,0),Dificultades.media.numero)
+    var segundaActividad = Actividad(400.0,"Parapente",LocalTime.of(10,30),LocalTime.of(12,0),Dificultades.alta.numero)
+    dia.apply {
+        agregarActividad(primerActividad)
+        agregarActividad(segundaActividad)
+    }
+    describe("Test de ingreso de actividad invalida"){
+        it("Ingreso un actividad que empieza antes de que una actividad que ya estaba en el dia termine"){
+            var actividadInvalida = Actividad(400.0,"Circuito Lagos", LocalTime.of(11,0),LocalTime.of(13,9),Dificultades.media.numero)
+            assertThrows<Exception> {  dia.agregarActividad(actividadInvalida) }
+        }
+        it("Ingreso un actividad valida"){
+            var actividadValida = Actividad(400.0,"Circuito Lagos", LocalTime.of(13,0),LocalTime.of(14,0),Dificultades.media.numero)
+            assertDoesNotThrow { dia.agregarActividad(actividadValida) }
         }
     }
 })
