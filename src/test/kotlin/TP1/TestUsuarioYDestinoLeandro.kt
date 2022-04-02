@@ -1,10 +1,12 @@
 package TP1
 
+import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import java.time.LocalDate
 
 class TestDePasajes: DescribeSpec( {
+    isolationMode = IsolationMode.InstancePerTest
     describe("Test de Costo de Destino para diferentes usuarios"){
         val usuarioArg = Usuario("Juan", "Perez", "JuanP", LocalDate.of(2003,3,22), "Argentina",diasParaViajar = 4)
         it("El usuario tiene excede el maximo de antiguedad pero recibe el maximo descuento que se puede otorgar"){

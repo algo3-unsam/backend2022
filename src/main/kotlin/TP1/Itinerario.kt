@@ -6,6 +6,17 @@ class Itinerario(
     var cantDias: Int,
     var dias: MutableList<Dia> = mutableListOf()
 ) {
+
+    fun unDiaConActividad() = dias.any{ it.actividades.size > 0}
+
+    //fun tieneCreadorYDestino() = !this.creador.isNullorEmpty() and !this.destino.isNullorEmpty()
+
+    fun validar(){
+        if(!this.unDiaConActividad()){
+            throw Exception("Este Itinerario es Invalido")
+        }
+    }
+
     fun totalCosto() = dias.sumOf { dia -> (dia.actividades.sumOf { it.costo }) }
 
     fun ocuparDia(undia: Dia) {

@@ -5,6 +5,8 @@ class Destino(var pais: String, var ciudad: String, var costoBase: Float){
     companion object{
         var LOCAL = "Argentina"
     }
+
+    fun validar() {if(!this.esValido()){throw Exception("No se puede crear esta Destino")}}
     
     fun esValido()= (this.costoBase > 0) and this.tieneInformacionCargadaEnStrings()
 
