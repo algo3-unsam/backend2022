@@ -1,5 +1,6 @@
 package TP1
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import java.time.LocalDate
@@ -50,6 +51,11 @@ class TestDeItinerarios:DescribeSpec ({
         }
         it("Test de dificultad cuando todas las dificultades tengan la misma cantidad de actividades. La dificultad final sera la mas alta"){
             otroItinerario.dificultad() shouldBe Dificultades.alta.numero
+        }
+
+        it("No se puede agregar una actividad a un determinado dia porque coincide con el horario de otra actividad"){
+            shouldThrow<Exception> { unItinerario.agregarActividad(lunes, actividad2) }
+
         }
     }
 })
