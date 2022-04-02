@@ -1,5 +1,8 @@
 package TP1
 
+
+import io.kotest.assertions.throwables.shouldThrow
+
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
@@ -7,6 +10,7 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import java.time.LocalDate
 import java.time.LocalTime
+
 
 class TestDestinos:DescribeSpec({
     isolationMode = IsolationMode.InstancePerTest
@@ -39,6 +43,7 @@ class TestDestinos:DescribeSpec({
 })
 
 class TestDeItinerarios:DescribeSpec ({
+
     isolationMode = IsolationMode.InstancePerTest
     describe("Creo un itinerario ") {
         val pepe = Usuario("Juan", "Pelotas", "Pelotas01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3).apply{criterio = Relajado()}
@@ -83,6 +88,11 @@ class TestDeItinerarios:DescribeSpec ({
         }
         it("Test de dificultad cuando todas las dificultades tengan la misma cantidad de actividades. La dificultad final sera la mas alta"){
             otroItinerario.dificultad() shouldBe Dificultades.alta.numero
+        }
+
+        it("No se puede agregar una actividad a un determinado dia porque coincide con el horario de otra actividad"){
+            shouldThrow<Exception> { unItinerario.agregarActividad(lunes, actividad2) }
+
         }
     }
 })
