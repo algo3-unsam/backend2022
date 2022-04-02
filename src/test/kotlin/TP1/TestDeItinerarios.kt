@@ -1,13 +1,15 @@
 package TP1
 
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-class TestDeItinerarios:DescribeSpec ({
+class TestDeItinerarios : DescribeSpec({
+    isolationMode = IsolationMode.InstancePerTest
     describe("Creo un itinerario ") {
         val pepe = Usuario("Juan", "Pelotas", "Pelotas01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3).apply{criterio = Relajado()}
         val destino1 = Destino(pais = "Argentina", ciudad = "BuenosAires", costoBase = 3000F)
