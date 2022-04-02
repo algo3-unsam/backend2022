@@ -12,8 +12,22 @@ enum class Dificultades(val numero: Int){
 class Dia(var actividades: MutableList<Actividad> = mutableListOf()) {
     fun verificarHorario(unaActividad: Actividad): Boolean {
         //debo verificar que el horario de inicio de la actividad a agendar sea mayor al del horario final de las demas actividades
-        return actividades.all { (unaActividad.inicio >= it.fin) }
+        return actividades.any {this.activdadActualTerminaATiempo(it,unaActividad) and this.hayEspacioParaNuevaActividad(it,unaActividad)  }
     }
+
+    fun esUltimaActividad(unaActividad: Actividad) = (actividades.indexOf(unaActividad)+1) == actividades.size
+
+    fun hayEspacioParaNuevaActividad(unaActividad: Actividad, nuevaActividad: Actividad) = (this.esUltimaActividad(unaActividad)) or (this.actividadSiguienteEmpiezaATiempo(unaActividad,nuevaActividad))
+
+    fun activdadActualTerminaATiempo(unaActividad: Actividad,nuevaActividad: Actividad) = (unaActividad.fin <= nuevaActividad.inicio)
+
+    fun actividadSiguienteEmpiezaATiempo(unaActividad: Actividad, nuevaActividad: Actividad): Boolean{
+        var index= actividades.indexOf(unaActividad)
+        var actividadSiguiente = actividades.get(index+1)
+        return actividadSiguiente.inicio >= nuevaActividad.fin
+    }
+
+
 
     fun agregarActividad(unaActividad: Actividad) {
         //primero debo revisar que mi lista de actividades para el dia no este vacia, en ese caso
@@ -26,6 +40,7 @@ class Dia(var actividades: MutableList<Actividad> = mutableListOf()) {
         } else {
             throw Exception("No se puede agregar la actividad porque el horario esta ocupado")
         }
+        actividades.sortBy { it.inicio }
     }
 }
 

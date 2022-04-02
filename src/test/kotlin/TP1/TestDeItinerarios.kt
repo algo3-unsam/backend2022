@@ -2,7 +2,10 @@ package TP1
 
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
+import io.kotest.matchers.collections.shouldBeOneOf
+import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeSameInstanceAs
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import java.time.LocalDate
@@ -137,6 +140,59 @@ class TestDias:DescribeSpec({
         it("Ingreso un actividad valida"){
             var actividadValida = Actividad(400.0,"Circuito Lagos", LocalTime.of(13,0),LocalTime.of(14,0),Dificultades.media.numero)
             assertDoesNotThrow { dia.agregarActividad(actividadValida) }
+        }
+    }
+})
+
+class TestDeUsuarios:DescribeSpec({
+    isolationMode = IsolationMode.InstancePerTest
+    describe("Test de Usuarios"){
+        describe("Test de validez de Usuarios"){
+            var newYork = Destino("EEUU", "Nueva York",60000F)
+            it("Testeo un usuario invalido por falta de parametros"){
+                var usuarioIncompleto = Usuario("","","",LocalDate.of(2012,3,12),"",9)
+                usuarioIncompleto.destinosDeseados.add(newYork)
+                assertThrows<Exception> {  usuarioIncompleto.esValido()  }
+            }
+            it("Testeo un usuario invalido por fecha del futuro"){
+                var usuarioDelFuturo = Usuario("Martin","Mcfly","Mmcfly",LocalDate.now().plusYears(2),"Estados Unidos",7)
+                usuarioDelFuturo.destinosDeseados.add(newYork)
+                assertThrows<Exception> {  usuarioDelFuturo.esValido()  }
+            }
+            it("Testeo un usuario invalido por dias para viajar menor a 0"){
+                var usuarioSinViaje = Usuario("Martin","Mcfly","Mmcfly",LocalDate.now().minusYears(2),"Estados Unidos",-7)
+                usuarioSinViaje.destinosDeseados.add(newYork)
+                assertThrows<Exception> {  usuarioSinViaje.esValido()  }
+            }
+            it("Testeo un usuario invalido por falta de Destino deseado"){
+                var usuarioSinDeseo = Usuario("Martin","Mcfly","Mmcfly",LocalDate.now().minusYears(2),"Estados Unidos",7)
+                assertThrows<Exception> { usuarioSinDeseo.esValido() }
+            }
+            it("Testo un usuario valido"){
+                var usuarioValido = Usuario("Martin","Mcfly","Mmcfly",LocalDate.now().minusYears(2),"Estados Unidos",7)
+                usuarioValido.destinosDeseados.add(newYork)
+                assertDoesNotThrow { usuarioValido.esValido() }
+            }
+        }
+        describe("Testeo Cambio de criterio"){
+            var unUsuario = Usuario("Leandro","Amarilla","LeaAmarilla",LocalDate.of(2012,1,18),"Argentina",10)
+            unUsuario.criterio = Relajado()
+            it("El criterio es Relajado"){
+                unUsuario.criterio.nombre() shouldBe "Relajado"
+            }
+            unUsuario.cambiarCriterio(Localista())
+            it("El criterio es Localista"){
+                unUsuario.criterio.nombre() shouldBe "Localista"
+            }
+        }
+        describe("Testeo capacidad de realizar un itinerario segun criterio"){
+            var unUsuario = Usuario("Leandro","Amarilla","LeaAmarilla",LocalDate.of(2012,1,18),"Argentina",2)
+            var tokio = Destino("Japon","Tokio",70000F)
+            var unItinerario = Itinerario(unUsuario,tokio,4)
+            unUsuario.cambiarCriterio(Relajado())
+            it("Testeo que el usuario No puede realizar este itinerarios por no tener suficiente dias para viajar"){
+                unUsuario.puedeRealizarItinerario(unItinerario) shouldBe false
+            }
         }
     }
 })

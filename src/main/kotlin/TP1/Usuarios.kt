@@ -20,7 +20,13 @@ class Usuario(
         var ANTIGUEDAD_MAXIMA = 15
     }
 
-    fun esValido() = this.tienenInformacionCargadaEnLosStrings() and (this.fechaDeAlta > LocalDate.now()) and (this.diasParaViajar > 0)
+    fun tieneDestinoSoñado() = destinosDeseados.size > 0
+
+    fun esValido(){
+        if(!this.tienenInformacionCargadaEnLosStrings() or (this.fechaDeAlta > LocalDate.now()) or (this.diasParaViajar < 0) or (!this.tieneDestinoSoñado())){
+            throw Exception("Hay informacion vacia")
+        }
+    }
 
     fun cambiarCriterio(unCriterio: Criterio){
         criterio = unCriterio
