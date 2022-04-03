@@ -1,4 +1,6 @@
 
+
+
 import java.time.LocalDate
 import java.time.Period
 import java.time.temporal.ChronoUnit
@@ -30,4 +32,5 @@ class Destino(var pais: String, var ciudad: String, var costoBase: Float){
     fun descuento(unUsuario: Usuario) = if (unUsuario.esDelMismoPaisQueDestino((this))) (costoBase * (unUsuario.descuentoPorAntiguedad()*0.01)) else 0.0
 
 }
+
 
