@@ -66,7 +66,7 @@ class Usuario(
 
     fun descuentoPorAntiguedad() = if (antiguedad() > ANTIGUEDAD_MAXIMA) 15 else antiguedad()
 
-    fun esDelMismoPaisQueDestino(unDestino: Destino) = this.paisDeResidencia == unDestino.pais
+    fun esDelMismoPaisQueDestino(unDestino: Destino) = this.paisDeResidencia.equals(unDestino.pais, ignoreCase = true)
 
     fun estaEnDeseados(unItinerario: Itinerario) = destinosDeseados.contains(unItinerario.destino)
 
@@ -76,7 +76,7 @@ class Usuario(
         unItinerario.destino.costoBase > this.deseadoMasCaro()
 
     fun puedeRealizarItinerario(unItinerario: Itinerario) =
-        this.diasSuficientes(unItinerario) and criterio.criterioSegunTipo(unItinerario, this)
+        this.diasSuficientes(unItinerario) and criterio.criterioSegunTipo(unItinerario)
 
     fun diasSuficientes(unItinerario: Itinerario) = diasParaViajar >= unItinerario.cantDias
 }

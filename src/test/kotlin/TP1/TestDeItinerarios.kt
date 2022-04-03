@@ -203,11 +203,12 @@ class TestDeUsuarios:DescribeSpec({
             var unUsuario = Usuario("Leandro","Amarilla","LeaAmarilla",LocalDate.of(2012,1,18),"Argentina",10)
             unUsuario.criterio = Relajado()
             it("El criterio es Relajado"){
-                unUsuario.criterio.nombre() shouldBe "Relajado"
+
+                unUsuario.criterio.nombre().equals("Relajado", ignoreCase = true) shouldBe true
             }
             unUsuario.cambiarCriterio(Localista())
             it("El criterio es Localista"){
-                unUsuario.criterio.nombre() shouldBe "Localista"
+                unUsuario.criterio.nombre().equals("Localista", ignoreCase = true) shouldBe true
             }
         }
         describe("Testeo capacidad de realizar un itinerario segun criterio"){
@@ -225,7 +226,7 @@ class TestDeUsuarios:DescribeSpec({
                 }
             }
             describe("Testeo un usuario precavido"){
-                unUsuario.cambiarCriterio(Precavido())
+                unUsuario.cambiarCriterio(Precavido(unUsuario))
                 it("El usuario no puede realizar el itinerario por no conocerlo anteriormente"){
                     unUsuario.puedeRealizarItinerario(unItinerario) shouldBe  false
                 }
@@ -252,7 +253,7 @@ class TestDeUsuarios:DescribeSpec({
                 }
             }
             describe("Testeo un usuario soñador"){
-                unUsuario.cambiarCriterio(Soñadores())
+                unUsuario.cambiarCriterio(Soñadores(unUsuario))
                 var unDestinoSoñado = Destino("Qatar","Lusai",80000F)
                 unUsuario.destinosDeseados.add(unDestinoSoñado)
                 it("Testeo que no puede realizar el itineario por no tenerlo en destino Soñados y no ser mas caro que el destino mas caro"){
