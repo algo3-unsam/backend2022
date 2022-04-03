@@ -21,8 +21,15 @@ class Usuario(
         var ANTIGUEDAD_MAXIMA = 15
     }
 
-    fun esValido() =
-        this.tienenInformacionCargadaEnLosStrings() and (this.fechaDeAlta > LocalDate.now()) and (this.diasParaViajar > 0)
+
+    fun tieneDestinoSoñado() = destinosDeseados.size > 0
+
+    fun esValido(){
+        if(!this.tienenInformacionCargadaEnLosStrings() or (this.fechaDeAlta > LocalDate.now()) or (this.diasParaViajar < 0) or (!this.tieneDestinoSoñado())){
+            throw Exception("Hay informacion vacia")
+        }
+    }
+
 
     fun cambiarCriterio(unCriterio: Criterio) {
         criterio = unCriterio
@@ -33,8 +40,24 @@ class Usuario(
 
     fun agregarAmigo(unUsuario: Usuario) = amigos.add(unUsuario)
 
-    fun itinerariosAPuntuar(listaDeItirenarios: MutableList<Itinerario>) =
-        listaDeItirenarios.filter { !it.sosMiCreador(this) and this.conoceDestino(it.destino) }
+    fun consultarPuntaje(unItinerario: Itinerario) = unItinerario.verPuntaje(this)
+
+
+    fun puedoPuntuar(unItinerario: Itinerario) = !((unItinerario.sosMiCreador(this)) or (this.yaPuntee(unItinerario))) and this.conoceDestino(unItinerario.destino)
+
+    fun yaPuntee(unItinerario: Itinerario) = unItinerario.puntajes.containsKey(this.username)
+
+    fun puntuar(unItinerario: Itinerario, puntaje: Int){
+        if((puntaje<1) or (puntaje>10)){
+            throw Exception("El puntaje tiene que ser del 1 al 10")
+        }
+        else if(!puedoPuntuar(unItinerario)){
+                throw Exception("No puedo puntuar")
+        }
+        else {
+            unItinerario.darPuntaje(this, puntaje)
+        }
+    }
 
     fun conoceDestino(unDestino: Destino) =
         (destinosDeseados.contains(unDestino) or destinosVisitados.contains(unDestino))
@@ -44,10 +67,6 @@ class Usuario(
     fun descuentoPorAntiguedad() = if (antiguedad() > ANTIGUEDAD_MAXIMA) 15 else antiguedad()
 
     fun esDelMismoPaisQueDestino(unDestino: Destino) = this.paisDeResidencia == unDestino.pais
-
-
-    fun amigoConoceDestino(unItinerario: Itinerario) = amigos.any { it.conoceDestino(unItinerario.destino) }
-
 
     fun estaEnDeseados(unItinerario: Itinerario) = destinosDeseados.contains(unItinerario.destino)
 
