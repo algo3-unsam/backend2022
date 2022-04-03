@@ -7,6 +7,12 @@ class Itinerario(
     var dias: MutableList<Dia> = mutableListOf()
 ) {
 
+    val puntajes = mutableMapOf<String, Int>()
+
+    fun darPuntaje(unUsuario: Usuario, puntaje : Int){
+        puntajes[unUsuario.username] = puntaje
+    }
+
     fun unDiaConActividad() = dias.any{ it.actividades.size > 0}
 
     //fun tieneCreadorYDestino() = !this.creador.isNullorEmpty() and !this.destino.isNullorEmpty()
@@ -33,11 +39,11 @@ class Itinerario(
     }
 
     //reviso que todos los dias asignados al itinerario tengan actividades
-    fun todoLosDiasOcupados() = dias.all { it.actividades.size > 0 }
+    fun todoLosDiasOcupados() = (dias.all { it.actividades.size > 0 } )and (dias.size == this.cantDias)
 
     fun sosMiCreador(unUsuario: Usuario) = (unUsuario.username == creador.username)
 
-    fun cantidadDeActividades() = dias.map { dia -> dia.actividades }.size
+    fun cantidadDeActividades() = dias.fold(0) { acum, dia -> dia.actividades.size + acum }
 
     fun actividadesTotalDificultad(unaDificultad: Int) = dias.flatMap { dia -> dia.actividades.filter { it.dificultad == unaDificultad } }.size
 
@@ -56,4 +62,11 @@ class Itinerario(
 
     fun porcentajeDeActividadXDificultad(unaDificultad: Int) =
         ((dias.flatMap { dia -> dia.actividades.filter { it.dificultad == unaDificultad } }.size) * 100) / cantidadDeActividades()
+
+    fun verPuntaje(usuario: Usuario): Int{
+        if(!puntajes.containsKey(usuario.username)){
+            throw Exception("El usuario nunca lo puntuo")
+        }
+        return puntajes.getValue(usuario.username)
+    }
 }
