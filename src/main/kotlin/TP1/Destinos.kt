@@ -14,7 +14,7 @@ class Destino(var pais: String, var ciudad: String, var costoBase: Float){
 
     fun tieneInformacionCargadaEnStrings() = !(this.pais.isNullOrEmpty() and this.ciudad.isNullOrEmpty())
 
-    fun esLocal() = pais == LOCAL
+    fun esLocal() = pais.equals(LOCAL, ignoreCase = true)
 
     fun precio(unUsuario: Usuario) = costoBase + porcentajeDestino() - descuento(unUsuario)
 
