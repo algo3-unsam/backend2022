@@ -28,4 +28,7 @@ jobs:
           configuration-cache-enabled: true
 
       # Send JaCoCo reports to codecov
-      - run: bash <(curl -s https://codecov.io/bash) -f 7e518329-bba5-4325-b160-c8492d653381
+      - run: |
+          curl -Os https://uploader.codecov.io/latest/linux/codecov
+          chmod +x codecov
+          ./codecov -t 7e518329-bba5-4325-b160-c8492d653381
