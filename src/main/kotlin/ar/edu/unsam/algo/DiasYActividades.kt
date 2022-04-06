@@ -1,12 +1,12 @@
-package TP1
+package ar.edu.unsam.algo
 
 import java.time.LocalTime
 import java.time.temporal.ChronoUnit
 
-enum class Dificultades(val numero: Int){
-    baja(1),
-    media(2),
-    alta(3)
+enum class Dificultades(){
+    BAJA,
+    MEDIA,
+    ALTA
 }
 
 class Dia(var actividades: MutableList<Actividad> = mutableListOf()) {
@@ -29,12 +29,19 @@ class Dia(var actividades: MutableList<Actividad> = mutableListOf()) {
         }
         actividades.sortBy { it.horarioInicio }
     }
+
+    fun cantindadDeActidades() = actividades.size
+
+    fun costoDeTotalDeActividades() = actividades.sumOf {it.costo }
+
+    fun actividadesDeUnTipo(unaDificultad: Dificultades) = actividades.filter { it.dificultad == unaDificultad }
+
 }
 
-data class Actividad(var costo: Double, var descrpcion: String, var horarioInicio: LocalTime, var horarioFin: LocalTime, var dificultad: Int) {
+data class Actividad(var costo: Double, var descrpcion: String, var horarioInicio: LocalTime, var horarioFin: LocalTime, var dificultad: Dificultades) {
     fun duracion() = ChronoUnit.MINUTES.between(horarioInicio,horarioFin).toInt()
 
-    fun validarDificultad() = (this.dificultad >= Dificultades.baja.numero) and (this.dificultad <= Dificultades.alta.numero)
+    fun validarDificultad() = (this.dificultad >= Dificultades.BAJA) && (this.dificultad <= Dificultades.ALTA)
 
     fun tieneInformacionCargadaEnDescripcion() = !this.descrpcion.isNullOrEmpty()
 
@@ -43,7 +50,7 @@ data class Actividad(var costo: Double, var descrpcion: String, var horarioInici
     fun validarCosto() = costo >=0
 
     fun validar(){
-        if(!this.validarDificultad() or !this.tieneInformacionCargadaEnDescripcion() or ! this.validarCosto() or !this.validarDuracion()){
+        if(!this.validarDificultad() or !this.tieneInformacionCargadaEnDescripcion() || ! this.validarCosto() || !this.validarDuracion()){
             throw Exception("No se puede crear esta Actividad")
         }
     }

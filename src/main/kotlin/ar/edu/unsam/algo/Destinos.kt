@@ -1,4 +1,4 @@
-package TP1
+package ar.edu.unsam.algo
 
 class Destino(var pais: String, var ciudad: String, var costoBase: Float){
 
@@ -8,9 +8,9 @@ class Destino(var pais: String, var ciudad: String, var costoBase: Float){
 
     fun validar() {if(!this.esValido()){throw Exception("No se puede crear esta Destino")}}
     
-    fun esValido()= (this.costoBase > 0) and this.tieneInformacionCargadaEnStrings()
+    fun esValido()= (this.costoBase > 0) && this.tieneInformacionCargadaEnStrings()
 
-    fun tieneInformacionCargadaEnStrings() = !(this.pais.isNullOrEmpty() and this.ciudad.isNullOrEmpty())
+    fun tieneInformacionCargadaEnStrings() = !(this.pais.isNullOrEmpty() && this.ciudad.isNullOrEmpty())
 
     fun esLocal() = pais.equals(LOCAL, ignoreCase = true)
 

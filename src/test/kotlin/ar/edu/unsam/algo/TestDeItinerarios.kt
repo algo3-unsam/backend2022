@@ -1,14 +1,11 @@
-package TP1
+package ar.edu.unsam.algo
 
 
 import io.kotest.assertions.throwables.shouldThrow
 
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
-import io.kotest.matchers.collections.shouldBeOneOf
-import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.types.shouldBeSameInstanceAs
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import java.time.LocalDate
@@ -49,12 +46,12 @@ class TestDeItinerarios:DescribeSpec ({
 
     isolationMode = IsolationMode.InstancePerTest
     describe("Creo un itinerario ") {
-        val pepe = Usuario("Juan", "Pelotas", "Pelotas01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3).apply{criterio = Relajado()}
+        val pepe = Usuario("Juan", "Pelotas", "Pelotas01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3).apply{criterio = Relajado }
         val destino1 = Destino(pais = "Argentina", ciudad = "BuenosAires", costoBase = 3000F)
-        val actividad = Actividad(100.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultades.alta.numero)
-        val actividad2 = Actividad(150.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultades.baja.numero)
-        val actividad3 = Actividad(300.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultades.baja.numero)
-        val actividad4 = Actividad(350.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultades.media.numero)
+        val actividad = Actividad(100.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultades.ALTA)
+        val actividad2 = Actividad(150.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultades.BAJA)
+        val actividad3 = Actividad(300.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultades.BAJA)
+        val actividad4 = Actividad(350.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultades.MEDIA)
         val unItinerario = Itinerario(pepe, destino1, 5)
         val dia1 = Dia()
         val dia2 = Dia()
@@ -75,7 +72,7 @@ class TestDeItinerarios:DescribeSpec ({
         }
 
         it("Test de Dificultad del Itinerario. Al tener ser dificultad BAJA la que mas actividades tiene, el itinerario tendra esa dificultad") {
-            unItinerario.dificultad() shouldBe Dificultades.baja.numero
+            unItinerario.dificultad() shouldBe Dificultades.BAJA
         }
         var otroItinerario = Itinerario(pepe, destino1, 5)
         val lunes = Dia()
@@ -90,12 +87,12 @@ class TestDeItinerarios:DescribeSpec ({
             agregarActividad(miercoles, actividad4)
         }
         it("Test de dificultad cuando todas las dificultades tengan la misma cantidad de actividades. La dificultad final sera la mas alta"){
-            otroItinerario.dificultad() shouldBe Dificultades.alta.numero
+            otroItinerario.dificultad() shouldBe Dificultades.ALTA
         }
         it("prueba de no se agrega actividad"){
-            val actividad5 = Actividad(150.0, "Hola!", LocalTime.of(9,0), LocalTime.of(10,0), Dificultades.baja.numero)
-            val actividad6 = Actividad(300.0, "Hola!", LocalTime.of(10,0), LocalTime.of(12,0), Dificultades.baja.numero)
-            val actividad7 = Actividad(350.0, "Hola!", LocalTime.of(10,30), LocalTime.of(11,30), Dificultades.media.numero)
+            val actividad5 = Actividad(150.0, "Hola!", LocalTime.of(9,0), LocalTime.of(10,0), Dificultades.BAJA)
+            val actividad6 = Actividad(300.0, "Hola!", LocalTime.of(10,0), LocalTime.of(12,0), Dificultades.BAJA)
+            val actividad7 = Actividad(350.0, "Hola!", LocalTime.of(10,30), LocalTime.of(11,30), Dificultades.MEDIA)
 
             val jueves = Dia()
 
@@ -105,11 +102,11 @@ class TestDeItinerarios:DescribeSpec ({
             otroItinerario.agregarActividad(jueves, actividad6)
             shouldThrow<Exception> { otroItinerario.agregarActividad(jueves, actividad7) }
 
-            val actividad8 = Actividad(350.0, "Hola!", LocalTime.of(10,30), LocalTime.of(11,0), Dificultades.media.numero)
+            val actividad8 = Actividad(350.0, "Hola!", LocalTime.of(10,30), LocalTime.of(11,0), Dificultades.MEDIA)
 
             shouldThrow<Exception> {otroItinerario.agregarActividad(jueves, actividad8) }
 
-            val actividad9 = Actividad(350.0, "Hola!", LocalTime.of(9,0), LocalTime.of(12,30), Dificultades.media.numero)
+            val actividad9 = Actividad(350.0, "Hola!", LocalTime.of(9,0), LocalTime.of(12,30), Dificultades.MEDIA)
             shouldThrow<Exception> {otroItinerario.agregarActividad(jueves, actividad9) }
         }
     }
@@ -119,26 +116,29 @@ class TestDeActividades:DescribeSpec({
     isolationMode = IsolationMode.InstancePerTest
     describe("Test de validez de Actividades"){
         it("Testeo una Actividad invalida por falta de parametros"){
-            var actividadIncompleta = Actividad(0.0,"",LocalTime.of(9,30),LocalTime.of(11,0),Dificultades.alta.numero)
+            var actividadIncompleta = Actividad(0.0,"",LocalTime.of(9,30),LocalTime.of(11,0), Dificultades.ALTA)
             assertThrows<Exception> { actividadIncompleta.validar() }
         }
         it("Testeo una Activida invalida por error en hora de inicio y final"){
-            var actividadConMalHorario = Actividad(0.0,"Visita al Museo",LocalTime.of(10,0),LocalTime.of(8,30),Dificultades.baja.numero)
+            var actividadConMalHorario = Actividad(0.0,"Visita al Museo",LocalTime.of(10,0),LocalTime.of(8,30),
+                Dificultades.BAJA)
             assertThrows<Exception> { actividadConMalHorario.validar() }
         }
         it("Testeo una Actividad invalidad por costo menor a 0"){
-            var actividadSinCosto = Actividad(-500.0,"Visita al Museo",LocalTime.of(8,30),LocalTime.of(10,0),Dificultades.baja.numero)
+            var actividadSinCosto = Actividad(-500.0,"Visita al Museo",LocalTime.of(8,30),LocalTime.of(10,0),
+                Dificultades.BAJA)
             assertThrows<Exception> { actividadSinCosto.validar() }
         }
-        it("Testeo una actividad invalidad por dificultad invalida"){
-            var actividadDificultadInvalida = Actividad(500.0,"Visita al Museo",LocalTime.of(8,30),LocalTime.of(10,0),4)
+        /*it("Testeo una actividad invalidad por dificultad invalida"){
+            var actividadDificultadInvalida = Actividad(500.0,"Visita al Museo",LocalTime.of(8,30),LocalTime.of(10,0),)
             assertThrows<Exception> { actividadDificultadInvalida.validar() }
         }
         it("Testeo una actividad invalidad por dificultad invalida"){
             var actividadDificultadInvalida = Actividad(500.0,"Visita al Museo",LocalTime.of(8,30),LocalTime.of(10,0),-4)
             assertThrows<Exception> { actividadDificultadInvalida.validar() }
-        }
-        var actividadValida = Actividad(500.0,"Visita al Museo",LocalTime.of(8,30),LocalTime.of(10,0),Dificultades.baja.numero)
+        }*/
+        var actividadValida = Actividad(500.0,"Visita al Museo",LocalTime.of(8,30),LocalTime.of(10,0),
+            Dificultades.BAJA)
         it("Testeo una Actividad valida"){
            assertDoesNotThrow { actividadValida.validar() }
         }
@@ -151,19 +151,20 @@ class TestDeActividades:DescribeSpec({
 class TestDias:DescribeSpec({
     isolationMode = IsolationMode.InstancePerTest
     var dia = Dia()
-    var primerActividad = Actividad(300.0,"Circuito Chico",LocalTime.of(8,30),LocalTime.of(10,0),Dificultades.media.numero)
-    var segundaActividad = Actividad(400.0,"Parapente",LocalTime.of(10,30),LocalTime.of(12,0),Dificultades.alta.numero)
+    var primerActividad = Actividad(300.0,"Circuito Chico",LocalTime.of(8,30),LocalTime.of(10,0), Dificultades.MEDIA)
+    var segundaActividad = Actividad(400.0,"Parapente",LocalTime.of(10,30),LocalTime.of(12,0), Dificultades.ALTA)
     dia.apply {
         agregarActividad(primerActividad)
         agregarActividad(segundaActividad)
     }
     describe("Test de ingreso de actividad"){
         it("prueba de no se agrega actividad"){
-            val actividad5 = Actividad(150.0, "Hola!", LocalTime.of(9,0), LocalTime.of(10,0), Dificultades.baja.numero)
+            val actividad5 = Actividad(150.0, "Hola!", LocalTime.of(9,0), LocalTime.of(10,0), Dificultades.BAJA)
             assertThrows<Exception> { dia.agregarActividad(actividad5) }
         }
         it("Ingreso un actividad valida"){
-            var actividadValida = Actividad(400.0,"Circuito Lagos", LocalTime.of(13,0),LocalTime.of(14,0),Dificultades.media.numero)
+            var actividadValida = Actividad(400.0,"Circuito Lagos", LocalTime.of(13,0),LocalTime.of(14,0),
+                Dificultades.MEDIA)
             assertDoesNotThrow { dia.agregarActividad(actividadValida) }
         }
     }
@@ -199,30 +200,22 @@ class TestDeUsuarios:DescribeSpec({
                 assertDoesNotThrow { usuarioValido.esValido() }
             }
         }
-        describe("Testeo Cambio de criterio"){
-            var unUsuario = Usuario("Leandro","Amarilla","LeaAmarilla",LocalDate.of(2012,1,18),"Argentina",10)
-            unUsuario.criterio = Relajado()
-            it("El criterio es Relajado"){
-
-                unUsuario.criterio.nombre().equals("Relajado", ignoreCase = true) shouldBe true
-            }
-            unUsuario.cambiarCriterio(Localista())
-            it("El criterio es Localista"){
-                unUsuario.criterio.nombre().equals("Localista", ignoreCase = true) shouldBe true
-            }
-        }
         describe("Testeo capacidad de realizar un itinerario segun criterio"){
             var unUsuario = Usuario("Leandro", "Amarilla", "LeaAmarilla", LocalDate.of(2012, 1, 18), "Argentina", 5)
             var tokio = Destino("Japon", "Tokio", 70000F)
             var unItinerario = Itinerario(unUsuario, tokio, 4)
             describe("Testeo un usuario relajado") {
-                unUsuario.cambiarCriterio(Relajado())
+                unUsuario.cambiarCriterio(Relajado)
                 it("Testeo que el usuario No puede realizar este itinerarios por no tener suficiente dias para viajar") {
                     unUsuario.diasParaViajar = 3
                     unUsuario.puedeRealizarItinerario(unItinerario) shouldBe false
                 }
                 it("Testeo que el usuario ahora puede realziar el itinerario") {
                     unUsuario.puedeRealizarItinerario(unItinerario) shouldBe true
+                }
+                it("Testeo cambio de criterio: con el nuevo criterio no puede realizar itinerario"){
+                    unUsuario.cambiarCriterio(Localista)
+                    unUsuario.puedeRealizarItinerario(unItinerario) shouldBe false
                 }
             }
             describe("Testeo un usuario precavido"){
@@ -242,7 +235,7 @@ class TestDeUsuarios:DescribeSpec({
                 }
             }
             describe("Testeo un usuario localista"){
-                unUsuario.cambiarCriterio(Localista())
+                unUsuario.cambiarCriterio(Localista)
                 it("No puede realizar el itinerario porque no es un destino local"){
                     unUsuario.puedeRealizarItinerario(unItinerario) shouldBe false
                 }
@@ -253,7 +246,7 @@ class TestDeUsuarios:DescribeSpec({
                 }
             }
             describe("Testeo un usuario soñador"){
-                unUsuario.cambiarCriterio(Soñadores(unUsuario))
+                unUsuario.cambiarCriterio(Soniadores(unUsuario))
                 var unDestinoSoñado = Destino("Qatar","Lusai",80000F)
                 unUsuario.destinosDeseados.add(unDestinoSoñado)
                 it("Testeo que no puede realizar el itineario por no tenerlo en destino Soñados y no ser mas caro que el destino mas caro"){
@@ -270,9 +263,9 @@ class TestDeUsuarios:DescribeSpec({
                 }
             }
             describe("Testeo un usuario activo"){
-                unUsuario.cambiarCriterio(Activo())
+                unUsuario.cambiarCriterio(Activo)
                 var dia = Dia()
-                var unaActividad = Actividad(100.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultades.alta.numero)
+                var unaActividad = Actividad(100.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultades.ALTA)
                 dia.agregarActividad(unaActividad)
                 unItinerario.ocuparDia(dia)
                 it("No puede realizar porque no tiene todos los dias ocupados"){
@@ -295,17 +288,17 @@ class TestDeUsuarios:DescribeSpec({
                 }
             }
             describe("Testeo un usuario exigente"){
-                unUsuario.cambiarCriterio(Exigente(Dificultades.media.numero,40))
-                var unaActividadAlta = Actividad(100.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultades.alta.numero)
-                var unaActividadMedia = Actividad(100.0, "Hola!", LocalTime.of(10,50), LocalTime.of(11,30), Dificultades.media.numero)
-                var otraActividadMedia = Actividad(100.0, "Hola!", LocalTime.of(19,30), LocalTime.of(20,30), Dificultades.media.numero)
+                unUsuario.cambiarCriterio(Exigente(Dificultades.MEDIA,40))
+                var unaActividadAlta = Actividad(100.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultades.ALTA)
+                var unaActividadMedia = Actividad(100.0, "Hola!", LocalTime.of(10,50), LocalTime.of(11,30), Dificultades.MEDIA)
+                var otraActividadMedia = Actividad(100.0, "Hola!", LocalTime.of(19,30), LocalTime.of(20,30), Dificultades.MEDIA)
                 var dia1 = Dia().apply { agregarActividad(unaActividadAlta); agregarActividad(unaActividadMedia) }
                 var dia2 = Dia().apply { agregarActividad(otraActividadMedia) }
                 unItinerario.apply { ocuparDia(dia1);ocuparDia(dia2)}
                 it("El porcentaje preferido del usuario coincide con el porcentaje de activades de determinada dificultad deseada"){
                     unUsuario.puedeRealizarItinerario(unItinerario) shouldBe true
                 }
-                unUsuario.cambiarCriterio(Exigente(Dificultades.alta.numero,40))
+                unUsuario.cambiarCriterio(Exigente(Dificultades.ALTA,40))
                 it("El porcentaje que hay no es suficiente entonces no puede realizar porcentaje"){
                     unUsuario.puedeRealizarItinerario(unItinerario) shouldBe false
                 }

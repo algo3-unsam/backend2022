@@ -1,4 +1,4 @@
-package TP1
+package ar.edu.unsam.algo
 
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec

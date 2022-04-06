@@ -1,4 +1,4 @@
-package TP1
+package ar.edu.unsam.algo
 
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
@@ -24,7 +24,7 @@ class Usuario(
     fun tieneDestinoSoñado() = destinosDeseados.size > 0
 
     fun esValido(){
-        if(!this.tienenInformacionCargadaEnLosStrings() or (this.fechaDeAlta > LocalDate.now()) or (this.diasParaViajar < 0) or (!this.tieneDestinoSoñado())){
+        if(!this.tienenInformacionCargadaEnLosStrings() || (this.fechaDeAlta > LocalDate.now()) || (this.diasParaViajar < 0) || (!this.tieneDestinoSoñado())){
             throw Exception("Hay informacion vacia")
         }
     }
@@ -34,19 +34,19 @@ class Usuario(
     }
 
     fun tienenInformacionCargadaEnLosStrings() =
-        !(this.nombre.isNullOrEmpty() and this.apellido.isNullOrEmpty() and this.username.isNullOrEmpty() and this.paisDeResidencia.isNullOrEmpty())
+        !(this.nombre.isNullOrEmpty() && this.apellido.isNullOrEmpty() && this.username.isNullOrEmpty() && this.paisDeResidencia.isNullOrEmpty())
 
     fun agregarAmigo(unUsuario: Usuario) = amigos.add(unUsuario)
 
     fun consultarPuntaje(unItinerario: Itinerario) = unItinerario.verPuntaje(this)
 
 
-    fun puedoPuntuar(unItinerario: Itinerario) = !((unItinerario.sosMiCreador(this)) or (this.yaPuntee(unItinerario))) and this.conoceDestino(unItinerario.destino)
+    fun puedoPuntuar(unItinerario: Itinerario) = !((unItinerario.sosMiCreador(this)) || (this.yaPuntee(unItinerario))) && this.conoceDestino(unItinerario.destino)
 
     fun yaPuntee(unItinerario: Itinerario) = unItinerario.puntajes.containsKey(this.username)
 
     fun puntuar(unItinerario: Itinerario, puntaje: Int){
-        if((puntaje<1) or (puntaje>10)){
+        if((puntaje<1) || (puntaje>10)){
             throw Exception("El puntaje tiene que ser del 1 al 10")
         }
         else if(!puedoPuntuar(unItinerario)){
@@ -58,7 +58,7 @@ class Usuario(
     }
 
     fun conoceDestino(unDestino: Destino) =
-        (destinosDeseados.contains(unDestino) or destinosVisitados.contains(unDestino))
+        (destinosDeseados.contains(unDestino) || destinosVisitados.contains(unDestino))
 
     fun antiguedad() = ChronoUnit.YEARS.between(fechaDeAlta, LocalDate.now())
 

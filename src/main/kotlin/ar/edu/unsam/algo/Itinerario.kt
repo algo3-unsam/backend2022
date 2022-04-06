@@ -1,4 +1,4 @@
-package TP1
+package ar.edu.unsam.algo
 
 class Itinerario(
     var creador: Usuario,
@@ -23,7 +23,7 @@ class Itinerario(
         }
     }
 
-    fun totalCosto() = dias.sumOf { dia -> (dia.actividades.sumOf { it.costo }) }
+    fun totalCosto() = dias.sumOf { it.costoDeTotalDeActividades() }
 
     fun ocuparDia(undia: Dia) {
         dias.add(undia)
@@ -39,29 +39,31 @@ class Itinerario(
     }
 
     //reviso que todos los dias asignados al itinerario tengan actividades
-    fun todoLosDiasOcupados() = (dias.all { it.actividades.size > 0 } )and (dias.size == this.cantDias)
+    fun todoLosDiasOcupados() = (dias.all { it.cantindadDeActidades() > 0 } ) && todosLosDiasIniciados()
 
-    fun sosMiCreador(unUsuario: Usuario) = (unUsuario.username == creador.username)
+    fun todosLosDiasIniciados() = dias.size == this.cantDias
 
-    fun cantidadDeActividades() = dias.fold(0) { acum, dia -> dia.actividades.size + acum }
+    fun sosMiCreador(unUsuario: Usuario) = unUsuario.username.equals(creador.username,ignoreCase = true)
 
-    fun actividadesTotalDificultad(unaDificultad: Int) = dias.flatMap { dia -> dia.actividades.filter { it.dificultad == unaDificultad } }.size
+    fun cantidadDeActividades() = dias.sumOf { it.cantindadDeActidades() }
 
-    fun dificultad(): Int {
+    fun actividadesTotalDificultad(unaDificultad: Dificultades) = dias.flatMap { dia -> dia.actividadesDeUnTipo(unaDificultad) }.size
 
-        if (actividadesTotalDificultad(Dificultades.alta.numero) >= actividadesTotalDificultad(Dificultades.media.numero)) {
-            return if (actividadesTotalDificultad(Dificultades.alta.numero) >= actividadesTotalDificultad(Dificultades.baja.numero)) {
-                Dificultades.alta.numero
+    fun dificultad(): Dificultades {
+
+        if (actividadesTotalDificultad(Dificultades.ALTA) >= actividadesTotalDificultad(Dificultades.MEDIA)) {
+            return if (actividadesTotalDificultad(Dificultades.ALTA) >= actividadesTotalDificultad(Dificultades.BAJA)) {
+                return Dificultades.ALTA
             } else
-                Dificultades.baja.numero
-        } else if (actividadesTotalDificultad(Dificultades.media.numero) >= actividadesTotalDificultad(Dificultades.baja.numero)) {
-            Dificultades.media.numero
+                return Dificultades.BAJA
+        } else if (actividadesTotalDificultad(Dificultades.MEDIA) >= actividadesTotalDificultad(Dificultades.BAJA)) {
+            return Dificultades.MEDIA
         }
-        return Dificultades.baja.numero
+        return Dificultades.BAJA
     }
 
-    fun porcentajeDeActividadXDificultad(unaDificultad: Int) =
-        ((dias.flatMap { dia -> dia.actividades.filter { it.dificultad == unaDificultad } }.size) * 100) / cantidadDeActividades()
+    fun porcentajeDeActividadXDificultad(unaDificultad: Dificultades) =
+        (actividadesTotalDificultad(unaDificultad) * 100) / cantidadDeActividades()
 
     fun verPuntaje(usuario: Usuario): Int{
         if(!puntajes.containsKey(usuario.username)){
