@@ -1,5 +1,6 @@
 package ar.edu.unsam.algo
 
+import java.rmi.activation.ActivationID
 import java.time.LocalTime
 import java.time.temporal.ChronoUnit
 
@@ -12,9 +13,14 @@ enum class Dificultades(){
 class Dia(var actividades: MutableList<Actividad> = mutableListOf()) {
 
     fun verificarHorario(unaActividad: Actividad): Boolean {
-        //debo verificar que el horario de inicio de la actividad a agendar sea mayor al del horario final de las demas actividades
-        return actividades.all { (unaActividad.horarioInicio >= it.horarioFin && unaActividad.horarioFin>= it.horarioInicio)}
+        return actividades.all { compararHorarios(unaActividad, it)}
     }
+
+    fun compararHorarios(actividadAEvaluar: Actividad, actividades: Actividad) =  compararInicioYFin(actividadAEvaluar, actividades) && compararFinEInicio(actividadAEvaluar, actividades)
+
+    fun compararInicioYFin(actividadAEvaluar: Actividad, actividades: Actividad) = actividades.horarioInicio.bettwen(actividadAEvaluar.horarioFin)
+
+    fun compararFinEInicio(actividadAEvaluar: Actividad, actividades: Actividad) = actividades.horarioFin.bettwen(actividadAEvaluar.horarioInicio)
 
     fun agregarActividad(unaActividad: Actividad) {
         //primero debo revisar que mi lista de actividades para el dia no este vacia, en ese caso
@@ -25,7 +31,7 @@ class Dia(var actividades: MutableList<Actividad> = mutableListOf()) {
             actividades.add(unaActividad)
 
         } else {
-            throw Exception("No se puede agregar la actividad porque el horario esta ocupado")
+            throw CustomException("No se puede agregar la actividad porque el horario esta ocupado")
         }
         actividades.sortBy { it.horarioInicio }
     }
@@ -51,7 +57,8 @@ data class Actividad(var costo: Double, var descrpcion: String, var horarioInici
 
     fun validar(){
         if(!this.validarDificultad() or !this.tieneInformacionCargadaEnDescripcion() || ! this.validarCosto() || !this.validarDuracion()){
-            throw Exception("No se puede crear esta Actividad")
+            throw CustomException("No se puede crear esta Actividad")
         }
     }
+
 }

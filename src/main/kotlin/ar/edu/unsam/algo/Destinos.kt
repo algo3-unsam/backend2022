@@ -6,7 +6,7 @@ class Destino(var pais: String, var ciudad: String, var costoBase: Float){
         var LOCAL = "Argentina"
     }
 
-    fun validar() {if(!this.esValido()){throw Exception("No se puede crear esta Destino")}}
+    fun validar() {if(!this.esValido()){throw CustomException("No se puede crear esta Destino")}}
     
     fun esValido()= (this.costoBase > 0) && this.tieneInformacionCargadaEnStrings()
 

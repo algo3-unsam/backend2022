@@ -100,14 +100,14 @@ class TestDeItinerarios:DescribeSpec ({
 
             otroItinerario.agregarActividad(jueves, actividad5)
             otroItinerario.agregarActividad(jueves, actividad6)
-            shouldThrow<Exception> { otroItinerario.agregarActividad(jueves, actividad7) }
+            shouldThrow<CustomException> { otroItinerario.agregarActividad(jueves, actividad7) }
 
             val actividad8 = Actividad(350.0, "Hola!", LocalTime.of(10,30), LocalTime.of(11,0), Dificultades.MEDIA)
 
-            shouldThrow<Exception> {otroItinerario.agregarActividad(jueves, actividad8) }
+            shouldThrow<CustomException> {otroItinerario.agregarActividad(jueves, actividad8) }
 
             val actividad9 = Actividad(350.0, "Hola!", LocalTime.of(9,0), LocalTime.of(12,30), Dificultades.MEDIA)
-            shouldThrow<Exception> {otroItinerario.agregarActividad(jueves, actividad9) }
+            shouldThrow<CustomException> {otroItinerario.agregarActividad(jueves, actividad9) }
         }
     }
 })

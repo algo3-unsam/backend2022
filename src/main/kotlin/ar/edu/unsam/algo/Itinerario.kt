@@ -19,7 +19,7 @@ class Itinerario(
 
     fun validar(){
         if(!this.unDiaConActividad()){
-            throw Exception("Este Itinerario es Invalido")
+            throw CustomException("Este Itinerario es Invalido")
         }
     }
 
@@ -34,7 +34,7 @@ class Itinerario(
         if (dias.contains(undia)) {
             dias[dias.indexOf(undia)].agregarActividad(unaActividad)
         } else {
-            throw Exception("No se encontro el dia en el itinerario")
+            throw CustomException("No se encontro el dia en el itinerario")
         }
     }
 
@@ -67,7 +67,7 @@ class Itinerario(
 
     fun verPuntaje(usuario: Usuario): Int{
         if(!puntajes.containsKey(usuario.username)){
-            throw Exception("El usuario nunca lo puntuo")
+            throw CustomException("El usuario nunca lo puntuo")
         }
         return puntajes.getValue(usuario.username)
     }

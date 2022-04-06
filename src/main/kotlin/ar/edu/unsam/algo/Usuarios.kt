@@ -25,7 +25,7 @@ class Usuario(
 
     fun esValido(){
         if(!this.tienenInformacionCargadaEnLosStrings() || (this.fechaDeAlta > LocalDate.now()) || (this.diasParaViajar < 0) || (!this.tieneDestinoSoñado())){
-            throw Exception("Hay informacion vacia")
+            throw CustomException("Hay informacion vacia")
         }
     }
 
@@ -47,10 +47,10 @@ class Usuario(
 
     fun puntuar(unItinerario: Itinerario, puntaje: Int){
         if((puntaje<1) || (puntaje>10)){
-            throw Exception("El puntaje tiene que ser del 1 al 10")
+            throw CustomException("El puntaje tiene que ser del 1 al 10")
         }
         else if(!puedoPuntuar(unItinerario)){
-                throw Exception("No puedo puntuar")
+                throw CustomException("No puedo puntuar")
         }
         else {
             unItinerario.darPuntaje(this, puntaje)
