@@ -9,17 +9,20 @@ class Itinerario(
 
     val puntajes = mutableMapOf<String, Int>()
 
-    fun darPuntaje(unUsuario: Usuario, puntaje : Int){
+    fun recibirPuntaje(unUsuario: Usuario, puntaje : Int){
         puntajes[unUsuario.username] = puntaje
     }
 
     fun unDiaConActividad() = dias.any{ it.actividades.size > 0}
 
+    fun hayDiasInciados() = dias.isNotEmpty()
+
+    fun existeDiaConActividadInciado() = this.hayDiasInciados() and this.unDiaConActividad()
     //fun tieneCreadorYDestino() = !this.creador.isNullorEmpty() and !this.destino.isNullorEmpty()
 
     fun validar(){
-        if(!this.unDiaConActividad()){
-            throw CustomException("Este Itinerario es Invalido")
+        if(!this.existeDiaConActividadInciado()){
+            throw FaltaCargarInformacion("El Itinerario no tiene ninguna actividad")
         }
     }
 
@@ -34,7 +37,7 @@ class Itinerario(
         if (dias.contains(undia)) {
             dias[dias.indexOf(undia)].agregarActividad(unaActividad)
         } else {
-            throw CustomException("No se encontro el dia en el itinerario")
+            throw FaltaCargarInformacion("No se encontro el dia en el itinerario")
         }
     }
 
@@ -67,7 +70,7 @@ class Itinerario(
 
     fun verPuntaje(usuario: Usuario): Int{
         if(!puntajes.containsKey(usuario.username)){
-            throw CustomException("El usuario nunca lo puntuo")
+            throw FaltaCargarInformacion("El usuario nunca lo puntuo")
         }
         return puntajes.getValue(usuario.username)
     }

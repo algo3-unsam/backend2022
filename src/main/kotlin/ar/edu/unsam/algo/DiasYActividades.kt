@@ -1,6 +1,5 @@
 package ar.edu.unsam.algo
 
-import java.rmi.activation.ActivationID
 import java.time.LocalTime
 import java.time.temporal.ChronoUnit
 
@@ -31,7 +30,7 @@ class Dia(var actividades: MutableList<Actividad> = mutableListOf()) {
             actividades.add(unaActividad)
 
         } else {
-            throw CustomException("No se puede agregar la actividad porque el horario esta ocupado")
+            throw FaltaCargarInformacion("No se puede agregar la actividad porque el horario esta ocupado")
         }
         actividades.sortBy { it.horarioInicio }
     }
@@ -57,7 +56,7 @@ data class Actividad(var costo: Double, var descrpcion: String, var horarioInici
 
     fun validar(){
         if(!this.validarDificultad() or !this.tieneInformacionCargadaEnDescripcion() || ! this.validarCosto() || !this.validarDuracion()){
-            throw CustomException("No se puede crear esta Actividad")
+            throw FaltaCargarInformacion("No se puede crear esta Actividad")
         }
     }
 

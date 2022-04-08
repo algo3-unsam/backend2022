@@ -21,13 +21,24 @@ class Usuario(
         var ANTIGUEDAD_MAXIMA = 15
     }
 
-    fun tieneDestinoSoñado() = destinosDeseados.size > 0
+    fun tieneDestinoSoñado() = destinosDeseados.isNotEmpty()
 
     fun esValido(){
-        if(!this.tienenInformacionCargadaEnLosStrings() || (this.fechaDeAlta > LocalDate.now()) || (this.diasParaViajar < 0) || (!this.tieneDestinoSoñado())){
-            throw CustomException("Hay informacion vacia")
+        if(!this.tienenInformacionCargadaEnLosStrings()  || (this.tieneDiasParaViajarValidos()) || (!this.tieneDestinoSoñado())){
+            throw FaltaCargarInformacion("Hay informacion vacia")
+        }
+        if( (this.tieneFechaAltaValida())){
+            throw FechaInvalida("La fecha es invalida por ser posterior a la fecha del dia de hoy")
         }
     }
+
+     fun tieneDiasParaViajarValidos(): Boolean = this.diasParaViajar < 0
+
+
+
+    fun tieneFechaAltaValida(): Boolean = this.fechaDeAlta > LocalDate.now()
+
+
 
     fun cambiarCriterio(unCriterio: Criterio) {
         criterio = unCriterio
@@ -47,18 +58,18 @@ class Usuario(
 
     fun puntuar(unItinerario: Itinerario, puntaje: Int){
         if((puntaje<1) || (puntaje>10)){
-            throw CustomException("El puntaje tiene que ser del 1 al 10")
+            throw FaltaCargarInformacion("El puntaje tiene que ser del 1 al 10")
         }
         else if(!puedoPuntuar(unItinerario)){
-                throw CustomException("No puedo puntuar")
+                throw FaltaCargarInformacion("No puedo puntuar")
         }
         else {
-            unItinerario.darPuntaje(this, puntaje)
+            unItinerario.recibirPuntaje(this, puntaje)
         }
     }
 
     fun conoceDestino(unDestino: Destino) =
-        (destinosDeseados.contains(unDestino) || destinosVisitados.contains(unDestino))
+        (this.estaEnDeseados(unDestino) || destinosVisitados.contains(unDestino))
 
     fun antiguedad() = ChronoUnit.YEARS.between(fechaDeAlta, LocalDate.now())
 
@@ -66,7 +77,7 @@ class Usuario(
 
     fun esDelMismoPaisQueDestino(unDestino: Destino) = this.paisDeResidencia.equals(unDestino.pais, ignoreCase = true)
 
-    fun estaEnDeseados(unItinerario: Itinerario) = destinosDeseados.contains(unItinerario.destino)
+    fun estaEnDeseados(destino: Destino) = destinosDeseados.contains(destino)
 
     fun deseadoMasCaro() = destinosDeseados.maxOf { it.costoBase }
 
@@ -77,4 +88,6 @@ class Usuario(
         this.diasSuficientes(unItinerario) and criterio.criterioSegunTipo(unItinerario)
 
     fun diasSuficientes(unItinerario: Itinerario) = diasParaViajar >= unItinerario.cantDias
+
+    fun amigoConoceDestino(unDestino: Destino) = amigos.any{it.conoceDestino(unDestino)}
 }

@@ -13,8 +13,8 @@ object Relajado: Criterio {
 
 class Precavido(var unUsuario: Usuario): Criterio {
 
-    override fun criterioSegunTipo(unItinerario: Itinerario) = unUsuario.conoceDestino(unItinerario.destino) || amigoConoceDestino(unItinerario)
-    fun amigoConoceDestino(unItinerario: Itinerario) = unUsuario.amigos.any{it.conoceDestino(unItinerario.destino)}
+    override fun criterioSegunTipo(unItinerario: Itinerario) = unUsuario.conoceDestino(unItinerario.destino) || unUsuario.amigoConoceDestino(unItinerario.destino)
+
 }
 
 object Localista: Criterio {
@@ -24,7 +24,7 @@ object Localista: Criterio {
 
 class Soniadores(var unUsuario: Usuario): Criterio {
 
-    override fun criterioSegunTipo(unItinerario: Itinerario) = unUsuario.estaEnDeseados(unItinerario) || unUsuario.destinoMasCaroQueDeseadoMasCaro(unItinerario)
+    override fun criterioSegunTipo(unItinerario: Itinerario) = unUsuario.estaEnDeseados(unItinerario.destino) || unUsuario.destinoMasCaroQueDeseadoMasCaro(unItinerario)
 }
 
 object Activo: Criterio {

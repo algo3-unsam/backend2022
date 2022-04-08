@@ -48,6 +48,18 @@ class TestDeItinerarios:DescribeSpec ({
     describe("Creo un itinerario ") {
         val pepe = Usuario("Juan", "Pelotas", "Pelotas01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3).apply{criterio = Relajado }
         val destino1 = Destino(pais = "Argentina", ciudad = "BuenosAires", costoBase = 3000F)
+        describe("Creo un itinerario invalido por falta de dias"){
+            var itinerarioInvalido = Itinerario(pepe,destino1,4)
+            it("Test de itinerario invalido por falta de dias iniciados"){
+                assertThrows<FaltaCargarInformacion> { itinerarioInvalido.validar() }
+            }
+            var dia =Dia()
+            var dia2 = Dia()
+            itinerarioInvalido.apply{ocuparDia(dia); ocuparDia(dia2)}
+            it("Test de itinerario invalido porque ningun dia tiene actividades"){
+                assertThrows<FaltaCargarInformacion> { itinerarioInvalido.validar() }
+            }
+        }
         val actividad = Actividad(100.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultades.ALTA)
         val actividad2 = Actividad(150.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultades.BAJA)
         val actividad3 = Actividad(300.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultades.BAJA)
@@ -66,6 +78,9 @@ class TestDeItinerarios:DescribeSpec ({
             agregarActividad(dia2, actividad2)
             agregarActividad(dia3, actividad3)
             agregarActividad(dia4, actividad4)
+        }
+        it("Testeo la validez de un itinerario valido"){
+            assertDoesNotThrow { unItinerario.validar() }
         }
         it("Test de Costo De Itinerarios") {
             unItinerario.totalCosto() shouldBe 900.0
@@ -100,14 +115,14 @@ class TestDeItinerarios:DescribeSpec ({
 
             otroItinerario.agregarActividad(jueves, actividad5)
             otroItinerario.agregarActividad(jueves, actividad6)
-            shouldThrow<CustomException> { otroItinerario.agregarActividad(jueves, actividad7) }
+            shouldThrow<FaltaCargarInformacion> { otroItinerario.agregarActividad(jueves, actividad7) }
 
             val actividad8 = Actividad(350.0, "Hola!", LocalTime.of(10,30), LocalTime.of(11,0), Dificultades.MEDIA)
 
-            shouldThrow<CustomException> {otroItinerario.agregarActividad(jueves, actividad8) }
+            shouldThrow<FaltaCargarInformacion> {otroItinerario.agregarActividad(jueves, actividad8) }
 
             val actividad9 = Actividad(350.0, "Hola!", LocalTime.of(9,0), LocalTime.of(12,30), Dificultades.MEDIA)
-            shouldThrow<CustomException> {otroItinerario.agregarActividad(jueves, actividad9) }
+            shouldThrow<FaltaCargarInformacion> {otroItinerario.agregarActividad(jueves, actividad9) }
         }
     }
 })
@@ -129,14 +144,6 @@ class TestDeActividades:DescribeSpec({
                 Dificultades.BAJA)
             assertThrows<Exception> { actividadSinCosto.validar() }
         }
-        /*it("Testeo una actividad invalidad por dificultad invalida"){
-            var actividadDificultadInvalida = Actividad(500.0,"Visita al Museo",LocalTime.of(8,30),LocalTime.of(10,0),)
-            assertThrows<Exception> { actividadDificultadInvalida.validar() }
-        }
-        it("Testeo una actividad invalidad por dificultad invalida"){
-            var actividadDificultadInvalida = Actividad(500.0,"Visita al Museo",LocalTime.of(8,30),LocalTime.of(10,0),-4)
-            assertThrows<Exception> { actividadDificultadInvalida.validar() }
-        }*/
         var actividadValida = Actividad(500.0,"Visita al Museo",LocalTime.of(8,30),LocalTime.of(10,0),
             Dificultades.BAJA)
         it("Testeo una Actividad valida"){
@@ -183,7 +190,7 @@ class TestDeUsuarios:DescribeSpec({
             it("Testeo un usuario invalido por fecha del futuro"){
                 var usuarioDelFuturo = Usuario("Martin","Mcfly","Mmcfly",LocalDate.now().plusYears(2),"Estados Unidos",7)
                 usuarioDelFuturo.destinosDeseados.add(newYork)
-                assertThrows<Exception> {  usuarioDelFuturo.esValido()  }
+                assertThrows<FechaInvalida> {  usuarioDelFuturo.esValido()  }
             }
             it("Testeo un usuario invalido por dias para viajar menor a 0"){
                 var usuarioSinViaje = Usuario("Martin","Mcfly","Mmcfly",LocalDate.now().minusYears(2),"Estados Unidos",-7)
