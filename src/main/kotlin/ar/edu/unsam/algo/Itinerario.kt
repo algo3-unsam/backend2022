@@ -13,7 +13,9 @@ class Itinerario(
         puntajes[unUsuario.username] = puntaje
     }
 
-    fun unDiaConActividad() = dias.any{ it.actividades.size > 0}
+    fun yaPuntuo(username : String) = puntajes.containsKey(username)
+
+    fun unDiaConActividad() = dias.any{ it.tengoActividades()}
 
     fun hayDiasInciados() = dias.isNotEmpty()
 
@@ -33,40 +35,40 @@ class Itinerario(
     }
 
     fun agregarActividad(undia: Dia, unaActividad: Actividad) {
-        //obtengo el indice del dia correspondiente y se revisa si puede agregarse la actividad
         if (dias.contains(undia)) {
-            dias[dias.indexOf(undia)].agregarActividad(unaActividad)
+           undia.agregarActividadAlDia(unaActividad)
         } else {
             throw FaltaCargarInformacion("No se encontro el dia en el itinerario")
         }
     }
 
     //reviso que todos los dias asignados al itinerario tengan actividades
-    fun todoLosDiasOcupados() = (dias.all { it.cantindadDeActidades() > 0 } ) && todosLosDiasIniciados()
+    fun todoLosDiasOcupados() = (dias.all { it.tengoActividades() } ) && todosLosDiasIniciados()
 
     fun todosLosDiasIniciados() = dias.size == this.cantDias
 
     fun sosMiCreador(unUsuario: Usuario) = unUsuario.username.equals(creador.username,ignoreCase = true)
 
-    fun cantidadDeActividades() = dias.sumOf { it.cantindadDeActidades() }
+    fun cantidadDeActividades() = dias.sumOf { it.cantidadDeActidades() }
 
-    fun actividadesTotalDificultad(unaDificultad: Dificultades) = dias.flatMap { dia -> dia.actividadesDeUnTipo(unaDificultad) }.size
+    fun actividadesXDificultad() = dias.map{it.actividadesDeUnTipo()}
 
-    fun dificultad(): Dificultades {
-
-        if (actividadesTotalDificultad(Dificultades.ALTA) >= actividadesTotalDificultad(Dificultades.MEDIA)) {
-            return if (actividadesTotalDificultad(Dificultades.ALTA) >= actividadesTotalDificultad(Dificultades.BAJA)) {
-                return Dificultades.ALTA
+    fun dificultad(): Dificultad {
+        /*var cantidadXDificultad = actividadesXDificultad()
+        if (cantidadXDificultad.get(Dificultad.ALTA) >= actividadesXDificultad(Dificultad.MEDIA)) {
+            return if (actividadesXDificultad(Dificultad.ALTA) >= actividadesXDificultad(Dificultad.BAJA)) {
+                return Dificultad.ALTA
             } else
-                return Dificultades.BAJA
-        } else if (actividadesTotalDificultad(Dificultades.MEDIA) >= actividadesTotalDificultad(Dificultades.BAJA)) {
-            return Dificultades.MEDIA
+                return Dificultad.BAJA
+        } else if (actividadesXDificultad(Dificultad.MEDIA) >= actividadesXDificultad(Dificultad.BAJA)) {
+            return Dificultad.MEDIA
         }
-        return Dificultades.BAJA
+        return Dificultad.BAJA*/
+        return Dificultad.ALTA
     }
 
-    fun porcentajeDeActividadXDificultad(unaDificultad: Dificultades) =
-        (actividadesTotalDificultad(unaDificultad) * 100) / cantidadDeActividades()
+    fun porcentajeDeActividadXDificultad(unaDificultad: Dificultad) =
+        (/*actividadesXDificultad(unaDificultad)*/ 100* 100) / cantidadDeActividades()
 
     fun verPuntaje(usuario: Usuario): Int{
         if(!puntajes.containsKey(usuario.username)){
@@ -74,4 +76,12 @@ class Itinerario(
         }
         return puntajes.getValue(usuario.username)
     }
+
+    fun editar(unUsuario: Usuario){
+        if(!unUsuario.puedoEditar(this)){
+            throw Exception("Este usuario no puede editar el itinerario")
+        }
+    }
+
+    fun tieneDestinoLocal() = destino.esLocal()
 }

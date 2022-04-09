@@ -34,11 +34,7 @@ class Usuario(
 
      fun tieneDiasParaViajarValidos(): Boolean = this.diasParaViajar < 0
 
-
-
     fun tieneFechaAltaValida(): Boolean = this.fechaDeAlta > LocalDate.now()
-
-
 
     fun cambiarCriterio(unCriterio: Criterio) {
         criterio = unCriterio
@@ -51,10 +47,7 @@ class Usuario(
 
     fun consultarPuntaje(unItinerario: Itinerario) = unItinerario.verPuntaje(this)
 
-
-    fun puedoPuntuar(unItinerario: Itinerario) = !((unItinerario.sosMiCreador(this)) || (this.yaPuntee(unItinerario))) && this.conoceDestino(unItinerario.destino)
-
-    fun yaPuntee(unItinerario: Itinerario) = unItinerario.puntajes.containsKey(this.username)
+    fun puedoPuntuar(unItinerario: Itinerario) = !(unItinerario.sosMiCreador(this)) && !unItinerario.yaPuntuo(this.username) && this.conoceDestino(unItinerario.destino)
 
     fun puntuar(unItinerario: Itinerario, puntaje: Int){
         if((puntaje<1) || (puntaje>10)){
@@ -79,15 +72,22 @@ class Usuario(
 
     fun estaEnDeseados(destino: Destino) = destinosDeseados.contains(destino)
 
-    fun deseadoMasCaro() = destinosDeseados.maxOf { it.costoBase }
+    fun deseadoMasCaro() = destinosDeseados.maxOf { it.precio(this) }
 
     fun destinoMasCaroQueDeseadoMasCaro(unItinerario: Itinerario) =
-        unItinerario.destino.costoBase > this.deseadoMasCaro()
+        unItinerario.destino.precio(this) > this.deseadoMasCaro()
 
     fun puedeRealizarItinerario(unItinerario: Itinerario) =
-        this.diasSuficientes(unItinerario) and criterio.criterioSegunTipo(unItinerario)
+        this.diasSuficientes(unItinerario) and criterio.acepta(unItinerario)
 
     fun diasSuficientes(unItinerario: Itinerario) = diasParaViajar >= unItinerario.cantDias
 
     fun amigoConoceDestino(unDestino: Destino) = amigos.any{it.conoceDestino(unDestino)}
+
+    fun puedoEditar(unItinerario: Itinerario) = unItinerario.sosMiCreador(this) || this.soyAmigoEditor(unItinerario)
+
+    fun soyAmigoEditor(unItinerario: Itinerario) = (this.soyAmigoDelCreador(unItinerario.creador) && this.conoceDestino(unItinerario.destino))
+
+   fun soyAmigoDelCreador(otroUsuario: Usuario) = amigos.contains(otroUsuario)
+
 }
