@@ -24,7 +24,7 @@ class Usuario(
     fun tieneDestinoSoñado() = destinosDeseados.isNotEmpty()
 
     fun esValido() {
-        if (!this.tienenInformacionCargadaEnLosStrings() || (this.fechaDeAlta > LocalDate.now()) || (this.diasParaViajar < 0) || (!this.tieneDestinoSoñado())) {
+        if (!this.tienenInformacionCargadaEnLosStrings() || (tieneFechaAltaValida()) || (tieneDiasParaViajarValidos()) || (!this.tieneDestinoSoñado())) {
             throw FaltaCargarInformacionException(
                 "Hay informacion vacia, Nombre: $nombre, apellido: $apellido, username: $username, pais de residencia: $paisDeResidencia\n" + "dias para viajar: $diasParaViajar, destinos deseados: $destinosDeseados"
             )

@@ -51,24 +51,33 @@ class Itinerario(
 
     fun cantidadDeActividades() = dias.sumOf { it.cantidadDeActidades() }
 
-    fun actividadesXDificultad(unaDificultad: Dificultad) = dias.flatMap { dia -> dia.actividadesDeUnTipo(unaDificultad) }.size
 
+    fun todasLasActividades():MutableList<Actividad>{
+        var todasLasActividades: MutableList<Actividad> = mutableListOf()
+        dias.forEach { todasLasActividades.addAll(it.actividades)}
+        return todasLasActividades
+    }
+
+    fun actividadesXDificultad() = todasLasActividades().groupingBy { it.dificultad }.eachCount()
 
     fun dificultad(): Dificultad {
-        if (actividadesXDificultad(Dificultad.ALTA) >= actividadesXDificultad(Dificultad.MEDIA)) {
-            return if (actividadesXDificultad(Dificultad.ALTA) >= actividadesXDificultad(Dificultad.BAJA)) {
+        var cantActividadAlta = actividadesXDificultad()[Dificultad.ALTA]
+        var cantActividadMedia = actividadesXDificultad()[Dificultad.MEDIA]
+        var cantActividadBaja = actividadesXDificultad()[Dificultad.BAJA]
+        if (cantActividadAlta!! >= cantActividadMedia!!) {
+            return if (cantActividadAlta!! >= cantActividadBaja!!) {
                 return Dificultad.ALTA
             } else
                 return Dificultad.BAJA
-        } else if (actividadesXDificultad(Dificultad.MEDIA) >= actividadesXDificultad(Dificultad.BAJA)) {
+        } else if (cantActividadMedia!! >= cantActividadBaja!!) {
             return Dificultad.MEDIA
         }
         return Dificultad.BAJA
-        return Dificultad.ALTA
+        //return Dificultad.ALTA
     }
 
     fun porcentajeDeActividadXDificultad(unaDificultad: Dificultad) =
-        (actividadesXDificultad(unaDificultad) * 100) / cantidadDeActividades()
+        (actividadesXDificultad()[unaDificultad]!! * 100) / cantidadDeActividades()
 
     fun verPuntaje(usuario: Usuario): Int{
         if(!puntajes.containsKey(usuario.username)){
