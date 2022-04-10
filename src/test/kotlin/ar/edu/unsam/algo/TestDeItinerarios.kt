@@ -5,6 +5,8 @@ import io.kotest.assertions.throwables.shouldThrow
 
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
+import io.kotest.matchers.booleans.shouldBeFalse
+import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
@@ -32,11 +34,11 @@ class TestDestinos:DescribeSpec({
         describe("Test de Destinos Locales"){
             it("Testeo un destino en el pais local"){
                 var unDestinoLocal = Destino("Argentina","Mendoza", 10000F)
-                unDestinoLocal.esLocal() shouldBe true
+                unDestinoLocal.esLocal().shouldBeTrue()
             }
             it("Testeo un destino que no es local"){
                 var unDestinoNoLocal = Destino("Brasil","Sao Pablo", 15000F)
-                unDestinoNoLocal.esLocal() shouldBe false
+                unDestinoNoLocal.esLocal().shouldBeFalse()
             }
         }
     }
@@ -51,13 +53,13 @@ class TestDeItinerarios:DescribeSpec ({
         describe("Creo un itinerario invalido por falta de dias"){
             var itinerarioInvalido = Itinerario(pepe,destino1,4)
             it("Test de itinerario invalido por falta de dias iniciados"){
-                assertThrows<FaltaCargarInformacion> { itinerarioInvalido.validar() }
+                assertThrows<FaltaCargarInformacionException> { itinerarioInvalido.validar() }
             }
             var dia =Dia()
             var dia2 = Dia()
             itinerarioInvalido.apply{ocuparDia(dia); ocuparDia(dia2)}
             it("Test de itinerario invalido porque ningun dia tiene actividades"){
-                assertThrows<FaltaCargarInformacion> { itinerarioInvalido.validar() }
+                assertThrows<FaltaCargarInformacionException> { itinerarioInvalido.validar() }
             }
         }
         val actividad = Actividad(100.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultad.ALTA)
@@ -115,14 +117,14 @@ class TestDeItinerarios:DescribeSpec ({
 
             otroItinerario.agregarActividad(jueves, actividad5)
             otroItinerario.agregarActividad(jueves, actividad6)
-            shouldThrow<FaltaCargarInformacion> { otroItinerario.agregarActividad(jueves, actividad7) }
+            shouldThrow<BusinessException> { otroItinerario.agregarActividad(jueves, actividad7) }
 
             val actividad8 = Actividad(350.0, "Hola!", LocalTime.of(10,30), LocalTime.of(11,0), Dificultad.MEDIA)
 
-            shouldThrow<FaltaCargarInformacion> {otroItinerario.agregarActividad(jueves, actividad8) }
+            shouldThrow<BusinessException> {otroItinerario.agregarActividad(jueves, actividad8) }
 
             val actividad9 = Actividad(350.0, "Hola!", LocalTime.of(9,0), LocalTime.of(12,30), Dificultad.MEDIA)
-            shouldThrow<FaltaCargarInformacion> {otroItinerario.agregarActividad(jueves, actividad9) }
+            shouldThrow<BusinessException> {otroItinerario.agregarActividad(jueves, actividad9) }
         }
     }
 })
@@ -186,21 +188,21 @@ class TestDeUsuarios:DescribeSpec({
             it("Testeo un usuario invalido por falta de parametros"){
                 var usuarioIncompleto = Usuario("","","",LocalDate.of(2012,3,12),"",9)
                 usuarioIncompleto.destinosDeseados.add(newYork)
-                assertThrows<Exception> {  usuarioIncompleto.esValido()  }
+                assertThrows<FaltaCargarInformacionException> {  usuarioIncompleto.esValido()  }
             }
             it("Testeo un usuario invalido por fecha del futuro"){
                 var usuarioDelFuturo = Usuario("Martin","Mcfly","Mmcfly",LocalDate.now().plusYears(2),"Estados Unidos",7)
                 usuarioDelFuturo.destinosDeseados.add(newYork)
-                assertThrows<FechaInvalida> {  usuarioDelFuturo.esValido()  }
+                assertThrows<FaltaCargarInformacionException> {  usuarioDelFuturo.esValido()  }
             }
             it("Testeo un usuario invalido por dias para viajar menor a 0"){
                 var usuarioSinViaje = Usuario("Martin","Mcfly","Mmcfly",LocalDate.now().minusYears(2),"Estados Unidos",-7)
                 usuarioSinViaje.destinosDeseados.add(newYork)
-                assertThrows<Exception> {  usuarioSinViaje.esValido()  }
+                assertThrows<FaltaCargarInformacionException> {  usuarioSinViaje.esValido()  }
             }
             it("Testeo un usuario invalido por falta de Destino deseado"){
                 var usuarioSinDeseo = Usuario("Martin","Mcfly","Mmcfly",LocalDate.now().minusYears(2),"Estados Unidos",7)
-                assertThrows<Exception> { usuarioSinDeseo.esValido() }
+                assertThrows<FaltaCargarInformacionException> { usuarioSinDeseo.esValido() }
             }
             it("Testo un usuario valido"){
                 var usuarioValido = Usuario("Martin","Mcfly","Mmcfly",LocalDate.now().minusYears(2),"Estados Unidos",7)
@@ -216,14 +218,14 @@ class TestDeUsuarios:DescribeSpec({
                 unUsuario.cambiarCriterio(Relajado)
                 it("Testeo que el usuario No puede realizar este itinerarios por no tener suficiente dias para viajar") {
                     unUsuario.diasParaViajar = 3
-                    unUsuario.puedeRealizarItinerario(unItinerario) shouldBe false
+                    unUsuario.puedeRealizarItinerario(unItinerario).shouldBeFalse()
                 }
                 it("Testeo que el usuario ahora puede realziar el itinerario") {
-                    unUsuario.puedeRealizarItinerario(unItinerario) shouldBe true
+                    unUsuario.puedeRealizarItinerario(unItinerario).shouldBeTrue()
                 }
                 it("Testeo cambio de criterio: con el nuevo criterio no puede realizar itinerario"){
                     unUsuario.cambiarCriterio(Localista)
-                    unUsuario.puedeRealizarItinerario(unItinerario) shouldBe false
+                    unUsuario.puedeRealizarItinerario(unItinerario).shouldBeFalse()
                 }
             }
             describe("Testeo un usuario precavido"){
@@ -233,24 +235,24 @@ class TestDeUsuarios:DescribeSpec({
                 }
                 it("El usuario puede realizar el itinerario porque ya lo concoce"){
                     unUsuario.destinosVisitados.add(tokio)
-                    unUsuario.puedeRealizarItinerario(unItinerario) shouldBe true
+                    unUsuario.puedeRealizarItinerario(unItinerario).shouldBeTrue()
                 }
                 it("El usuario puede realizar el itinerario porque un amigo suyo lo conoce"){
                     var amigo = Usuario("Juan","Perez","JpErez",LocalDate.of(2012,1,17),"Argentina",5)
                     amigo.destinosVisitados.add(tokio)
                     unUsuario.agregarAmigo(amigo)
-                    unUsuario.puedeRealizarItinerario(unItinerario) shouldBe true
+                    unUsuario.puedeRealizarItinerario(unItinerario).shouldBeTrue()
                 }
             }
             describe("Testeo un usuario localista"){
                 unUsuario.cambiarCriterio(Localista)
                 it("No puede realizar el itinerario porque no es un destino local"){
-                    unUsuario.puedeRealizarItinerario(unItinerario) shouldBe false
+                    unUsuario.puedeRealizarItinerario(unItinerario).shouldBeFalse()
                 }
                 var destinoLocal = Destino("Argentina", "Mendoza", 3000F)
                 unItinerario.destino = destinoLocal
                 it("Testeo que si puede realizar este itinerario"){
-                    unUsuario.puedeRealizarItinerario(unItinerario) shouldBe true
+                    unUsuario.puedeRealizarItinerario(unItinerario).shouldBeTrue()
                 }
             }
             describe("Testeo un usuario soñador"){
@@ -258,16 +260,16 @@ class TestDeUsuarios:DescribeSpec({
                 var unDestinoSoñado = Destino("Qatar","Lusai",80000F)
                 unUsuario.destinosDeseados.add(unDestinoSoñado)
                 it("Testeo que no puede realizar el itineario por no tenerlo en destino Soñados y no ser mas caro que el destino mas caro"){
-                    unUsuario.puedeRealizarItinerario(unItinerario) shouldBe false
+                    unUsuario.puedeRealizarItinerario(unItinerario).shouldBeFalse()
                 }
                 unUsuario.destinosDeseados.add(tokio)
                 it("Testeo que ahora puede realizar el itinerario por soñar el destino"){
-                    unUsuario.puedeRealizarItinerario(unItinerario) shouldBe true
+                    unUsuario.puedeRealizarItinerario(unItinerario).shouldBeTrue()
                 }
                 var unDestinoCaro = Destino("Alemania", "Berlin", 1000000F)
                 var itinerarioCaro = Itinerario(unUsuario,unDestinoCaro,4)
                 it("Testeo que puede realizar el itinerario por ser mas caro que sus soñados"){
-                    unUsuario.puedeRealizarItinerario(itinerarioCaro) shouldBe true
+                    unUsuario.puedeRealizarItinerario(itinerarioCaro).shouldBeTrue()
                 }
             }
             describe("Testeo un usuario activo"){
@@ -277,7 +279,7 @@ class TestDeUsuarios:DescribeSpec({
                 dia.agregarActividadAlDia(unaActividad)
                 unItinerario.ocuparDia(dia)
                 it("No puede realizar porque no tiene todos los dias ocupados"){
-                    unUsuario.puedeRealizarItinerario(unItinerario) shouldBe false
+                    unUsuario.puedeRealizarItinerario(unItinerario).shouldBeFalse()
                 }
                 var dia2 = Dia().apply { agregarActividadAlDia(unaActividad) }
                 var dia3 = Dia().apply { agregarActividadAlDia(unaActividad) }
@@ -288,11 +290,11 @@ class TestDeUsuarios:DescribeSpec({
                     ocuparDia(dia4)
                 }
                 it("No puede realizar itinerario porque no todos los dias tienen actividades"){
-                    unUsuario.puedeRealizarItinerario(unItinerario) shouldBe false
+                    unUsuario.puedeRealizarItinerario(unItinerario).shouldBeFalse()
                 }
                 unItinerario.agregarActividad(dia4,unaActividad)
                 it("Ahora puede realizar itinerario porque todos los dias tienen actividades"){
-                    unUsuario.puedeRealizarItinerario(unItinerario) shouldBe true
+                    unUsuario.puedeRealizarItinerario(unItinerario).shouldBeTrue()
                 }
             }
             describe("Testeo un usuario exigente"){
@@ -304,11 +306,11 @@ class TestDeUsuarios:DescribeSpec({
                 var dia2 = Dia().apply { agregarActividadAlDia(otraActividadMedia) }
                 unItinerario.apply { ocuparDia(dia1);ocuparDia(dia2)}
                 it("El porcentaje preferido del usuario coincide con el porcentaje de activades de determinada dificultad deseada"){
-                    unUsuario.puedeRealizarItinerario(unItinerario) shouldBe true
+                    unUsuario.puedeRealizarItinerario(unItinerario).shouldBeTrue()
                 }
                 unUsuario.cambiarCriterio(Exigente(Dificultad.ALTA,40))
                 it("El porcentaje que hay no es suficiente entonces no puede realizar porcentaje"){
-                    unUsuario.puedeRealizarItinerario(unItinerario) shouldBe false
+                    unUsuario.puedeRealizarItinerario(unItinerario).shouldBeFalse()
                 }
 
             }
@@ -318,12 +320,12 @@ class TestDeUsuarios:DescribeSpec({
             var tokio = Destino("Japon", "Tokio", 70000F)
             var unItinerario = Itinerario(unUsuario, tokio, 4)
             it("Testeo no puntuar por ser creador de itinearario"){
-                assertThrows<Exception> { unUsuario.puntuar(unItinerario,9)}
+                assertThrows<BusinessException> { unUsuario.puntuar(unItinerario,9)}
             }
             var otroUsuario = Usuario("Juan","Perez","JpErez",LocalDate.of(2012,1,17),"Argentina",5)
             unItinerario.creador = otroUsuario
             it("Testeo no puntuar por no conocer el destino"){
-                assertThrows<Exception> { unUsuario.puntuar(unItinerario,5)}
+                assertThrows<BusinessException> { unUsuario.puntuar(unItinerario,5)}
             }
             unUsuario.destinosVisitados.add(unItinerario.destino)
             it("Testeo que pueda puntuar"){
@@ -331,14 +333,14 @@ class TestDeUsuarios:DescribeSpec({
             }
             it("Testeo que no pueda puntuar por haber puntuado antes"){
                 unUsuario.puntuar(unItinerario,5)
-                assertThrows<Exception> { unUsuario.puntuar(unItinerario,5) }
+                assertThrows<BusinessException> { unUsuario.puntuar(unItinerario,5) }
             }
             it("Test de chequeo de puntuaje"){
                 unUsuario.puntuar(unItinerario,5)
                 unUsuario.consultarPuntaje(unItinerario) shouldBe 5
             }
             it("Testeo consultar puntaje donde no se haya puntuado"){
-                assertThrows<Exception> { unUsuario.consultarPuntaje(unItinerario) }
+                assertThrows<BusinessException> { unUsuario.consultarPuntaje(unItinerario) }
             }
         }
     }
