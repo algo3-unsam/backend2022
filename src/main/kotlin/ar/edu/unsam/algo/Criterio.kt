@@ -2,41 +2,41 @@ package ar.edu.unsam.algo
 
 interface Criterio{
 
-    fun criterioSegunTipo(unItinerario: Itinerario): Boolean
+    fun acepta(unItinerario: Itinerario): Boolean
 
 }
 
 object Relajado: Criterio {
-    override fun criterioSegunTipo(unItinerario: Itinerario) = true
+    override fun acepta(unItinerario: Itinerario) = true
 
 }
 
 class Precavido(var unUsuario: Usuario): Criterio {
 
-    override fun criterioSegunTipo(unItinerario: Itinerario) = unUsuario.conoceDestino(unItinerario.destino) || unUsuario.amigoConoceDestino(unItinerario.destino)
+    override fun acepta(unItinerario: Itinerario) = unUsuario.conoceDestino(unItinerario.destino) || unUsuario.amigoConoceDestino(unItinerario.destino)
 
 }
 
 object Localista: Criterio {
 
-    override fun criterioSegunTipo(unItinerario: Itinerario) = unItinerario.destino.pais.equals(Destino.LOCAL, ignoreCase = true)
+    override fun acepta(unItinerario: Itinerario) = unItinerario.tieneDestinoLocal()
 }
 
-class Soniadores(var unUsuario: Usuario): Criterio {
+class Soniador(var unUsuario: Usuario): Criterio {
 
-    override fun criterioSegunTipo(unItinerario: Itinerario) = unUsuario.estaEnDeseados(unItinerario.destino) || unUsuario.destinoMasCaroQueDeseadoMasCaro(unItinerario)
+    override fun acepta(unItinerario: Itinerario) = unUsuario.estaEnDeseados(unItinerario.destino) || unUsuario.destinoMasCaroQueDeseadoMasCaro(unItinerario)
 }
 
 object Activo: Criterio {
 
-    override fun criterioSegunTipo(unItinerario: Itinerario) = unItinerario.todoLosDiasOcupados()
+    override fun acepta(unItinerario: Itinerario) = unItinerario.todoLosDiasOcupados()
 }
 
-class Exigente(var dificultadPreferida: Dificultades, var porcentajeDeseado: Int): Criterio {
+class Exigente(var dificultadPreferida: Dificultad, var porcentajeDeseado: Int): Criterio {
 
-    override fun criterioSegunTipo(unItinerario: Itinerario) = porcentajeSuficiente(unItinerario)
+    override fun acepta(unItinerario: Itinerario) = porcentajeSuficiente(unItinerario)
 
-    fun cambiarDificultad(nuevaDificultad: Dificultades) { dificultadPreferida = nuevaDificultad}
+    fun cambiarDificultad(nuevaDificultad: Dificultad) { dificultadPreferida = nuevaDificultad}
 
     fun cambiarPorcentaje(nuevaPorcentaje: Int){
         porcentajeDeseado = nuevaPorcentaje

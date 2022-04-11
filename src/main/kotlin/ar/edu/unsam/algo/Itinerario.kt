@@ -13,7 +13,9 @@ class Itinerario(
         puntajes[unUsuario.username] = puntaje
     }
 
-    fun unDiaConActividad() = dias.any{ it.actividades.size > 0}
+    fun yaPuntuo(username : String) = puntajes.containsKey(username)
+
+    fun unDiaConActividad() = dias.any{ it.tengoActividades()}
 
     fun hayDiasInciados() = dias.isNotEmpty()
 
@@ -22,7 +24,7 @@ class Itinerario(
 
     fun validar(){
         if(!this.existeDiaConActividadInciado()){
-            throw FaltaCargarInformacion("El Itinerario no tiene ninguna actividad")
+            throw FaltaCargarInformacionException("El Itinerario no tiene ninguna actividad")
         }
     }
 
@@ -33,45 +35,62 @@ class Itinerario(
     }
 
     fun agregarActividad(undia: Dia, unaActividad: Actividad) {
-        //obtengo el indice del dia correspondiente y se revisa si puede agregarse la actividad
         if (dias.contains(undia)) {
-            dias[dias.indexOf(undia)].agregarActividad(unaActividad)
+           undia.agregarActividadAlDia(unaActividad)
         } else {
-            throw FaltaCargarInformacion("No se encontro el dia en el itinerario")
+            throw BusinessException("No se encontro el dia en el itinerario")
         }
     }
 
     //reviso que todos los dias asignados al itinerario tengan actividades
-    fun todoLosDiasOcupados() = (dias.all { it.cantindadDeActidades() > 0 } ) && todosLosDiasIniciados()
+    fun todoLosDiasOcupados() = (dias.all { it.tengoActividades() } ) && todosLosDiasIniciados()
 
     fun todosLosDiasIniciados() = dias.size == this.cantDias
 
     fun sosMiCreador(unUsuario: Usuario) = unUsuario.username.equals(creador.username,ignoreCase = true)
 
-    fun cantidadDeActividades() = dias.sumOf { it.cantindadDeActidades() }
+    fun cantidadDeActividades() = dias.sumOf { it.cantidadDeActidades() }
 
-    fun actividadesTotalDificultad(unaDificultad: Dificultades) = dias.flatMap { dia -> dia.actividadesDeUnTipo(unaDificultad) }.size
 
-    fun dificultad(): Dificultades {
-
-        if (actividadesTotalDificultad(Dificultades.ALTA) >= actividadesTotalDificultad(Dificultades.MEDIA)) {
-            return if (actividadesTotalDificultad(Dificultades.ALTA) >= actividadesTotalDificultad(Dificultades.BAJA)) {
-                return Dificultades.ALTA
-            } else
-                return Dificultades.BAJA
-        } else if (actividadesTotalDificultad(Dificultades.MEDIA) >= actividadesTotalDificultad(Dificultades.BAJA)) {
-            return Dificultades.MEDIA
-        }
-        return Dificultades.BAJA
+    fun todasLasActividades():MutableList<Actividad>{
+        var todasLasActividades: MutableList<Actividad> = mutableListOf()
+        dias.forEach { todasLasActividades.addAll(it.actividades)}
+        return todasLasActividades
     }
 
-    fun porcentajeDeActividadXDificultad(unaDificultad: Dificultades) =
-        (actividadesTotalDificultad(unaDificultad) * 100) / cantidadDeActividades()
+    fun actividadesXDificultad() = todasLasActividades().groupingBy { it.dificultad }.eachCount()
+
+    fun dificultad(): Dificultad {
+        var cantActividadAlta = actividadesXDificultad()[Dificultad.ALTA]
+        var cantActividadMedia = actividadesXDificultad()[Dificultad.MEDIA]
+        var cantActividadBaja = actividadesXDificultad()[Dificultad.BAJA]
+        if (cantActividadAlta!! >= cantActividadMedia!!) {
+            return if (cantActividadAlta!! >= cantActividadBaja!!) {
+                return Dificultad.ALTA
+            } else
+                return Dificultad.BAJA
+        } else if (cantActividadMedia!! >= cantActividadBaja!!) {
+            return Dificultad.MEDIA
+        }
+        return Dificultad.BAJA
+        //return Dificultad.ALTA
+    }
+
+    fun porcentajeDeActividadXDificultad(unaDificultad: Dificultad) =
+        (actividadesXDificultad()[unaDificultad]!! * 100) / cantidadDeActividades()
 
     fun verPuntaje(usuario: Usuario): Int{
         if(!puntajes.containsKey(usuario.username)){
-            throw FaltaCargarInformacion("El usuario nunca lo puntuo")
+            throw BusinessException("El usuario nunca puntuo el itinerario")
         }
         return puntajes.getValue(usuario.username)
     }
+
+    fun editar(unUsuario: Usuario){
+        if(!unUsuario.puedoEditar(this)){
+            throw BusinessException("Este usuario no puede editar el itinerario")
+        }
+    }
+
+    fun tieneDestinoLocal() = destino.esLocal()
 }
