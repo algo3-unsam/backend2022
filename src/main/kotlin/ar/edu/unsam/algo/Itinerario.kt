@@ -58,22 +58,15 @@ class Itinerario(
         return todasLasActividades
     }
 
-    fun actividadesXDificultad() = todasLasActividades().groupingBy { it.dificultad }.eachCount()
+    fun actividadesXDificultad():MutableMap<Dificultad,Int>{
+        var mapDeDificultades = todasLasActividades().groupingBy { it.dificultad }.eachCount().toMutableMap()
+        enumValues<Dificultad>().forEach { rellenarDificultades(mapDeDificultades,it) }
+        return mapDeDificultades
+    }
 
     fun dificultad(): Dificultad {
-        var cantActividadAlta = actividadesXDificultad()[Dificultad.ALTA]
-        var cantActividadMedia = actividadesXDificultad()[Dificultad.MEDIA]
-        var cantActividadBaja = actividadesXDificultad()[Dificultad.BAJA]
-        if (cantActividadAlta!! >= cantActividadMedia!!) {
-            return if (cantActividadAlta!! >= cantActividadBaja!!) {
-                return Dificultad.ALTA
-            } else
-                return Dificultad.BAJA
-        } else if (cantActividadMedia!! >= cantActividadBaja!!) {
-            return Dificultad.MEDIA
-        }
-        return Dificultad.BAJA
-        //return Dificultad.ALTA
+        var dificultadSobrevivienteAltaMedia = dificultadConMasActividades(this,Dificultad.ALTA,Dificultad.MEDIA)
+        return dificultadConMasActividades(this,dificultadSobrevivienteAltaMedia,Dificultad.BAJA)
     }
 
     fun porcentajeDeActividadXDificultad(unaDificultad: Dificultad) =

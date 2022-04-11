@@ -79,10 +79,9 @@ class TestDeItinerarios:DescribeSpec ({
             agregarActividad(dia1, actividad)
             agregarActividad(dia2, actividad2)
             agregarActividad(dia3, actividad3)
-            agregarActividad(dia4, actividad4)
+            //agregarActividad(dia4, actividad4)
         }
         it("Testeo la validez de un itinerario valido"){
-            println(unItinerario.actividadesXDificultad())
             assertDoesNotThrow { unItinerario.validar() }
         }
         it("Test de Costo De Itinerarios") {

@@ -19,10 +19,10 @@ class Dia(var actividades: MutableList<Actividad> = mutableListOf()) {
         compararInicioYFin(actividadAEvaluar, actividades) && compararFinEInicio(actividadAEvaluar, actividades)
 
     fun compararInicioYFin(actividadAEvaluar: Actividad, actividades: Actividad) =
-        actividades.horarioInicio.bettwen(actividadAEvaluar.horarioFin)
+        actividades.horarioInicio.between(actividadAEvaluar.horarioFin)
 
     fun compararFinEInicio(actividadAEvaluar: Actividad, actividades: Actividad) =
-        actividades.horarioFin.bettwen(actividadAEvaluar.horarioInicio)
+        actividades.horarioFin.between(actividadAEvaluar.horarioInicio)
 
     fun agregarActividadAlDia(unaActividad: Actividad) {
         if (verificarHorario(unaActividad)) {
