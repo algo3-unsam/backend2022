@@ -66,12 +66,12 @@ class TestDeItinerarios:DescribeSpec ({
         val actividad2 = Actividad(150.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultad.BAJA)
         val actividad3 = Actividad(300.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultad.BAJA)
         val actividad4 = Actividad(350.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultad.MEDIA)
-        val unItinerario = Itinerario(pepe, destino1, 5)
+        val itinerarioConDificultadBaja = Itinerario(pepe, destino1, 5)
         val dia1 = Dia()
         val dia2 = Dia()
         val dia3 = Dia()
         val dia4 = Dia()
-        unItinerario.apply {
+        itinerarioConDificultadBaja.apply {
             ocuparDia(dia1)
             ocuparDia(dia2)
             ocuparDia(dia3)
@@ -82,20 +82,20 @@ class TestDeItinerarios:DescribeSpec ({
             agregarActividad(dia4, actividad4)
         }
         it("Testeo la validez de un itinerario valido"){
-            assertDoesNotThrow { unItinerario.validar() }
+            assertDoesNotThrow { itinerarioConDificultadBaja.validar() }
         }
         it("Test de Costo De Itinerarios") {
-            unItinerario.totalCosto() shouldBe 900.0
+            itinerarioConDificultadBaja.totalCosto() shouldBe 900.0
         }
 
         it("Test de Dificultad del Itinerario. Al tener ser dificultad BAJA la que mas actividades tiene, el itinerario tendra esa dificultad") {
-            unItinerario.dificultad() shouldBe Dificultad.BAJA
+            itinerarioConDificultadBaja.dificultad() shouldBe Dificultad.BAJA
         }
-        var otroItinerario = Itinerario(pepe, destino1, 5)
+        var itinerarioConDificultadAlta = Itinerario(pepe, destino1, 5)
         val lunes = Dia()
         val martes = Dia()
         val miercoles = Dia()
-        otroItinerario.apply {
+        itinerarioConDificultadAlta.apply {
             ocuparDia(lunes)
             ocuparDia(martes)
             ocuparDia(miercoles)
@@ -104,7 +104,7 @@ class TestDeItinerarios:DescribeSpec ({
             agregarActividad(miercoles, actividad4)
         }
         it("Test de dificultad cuando todas las dificultades tengan la misma cantidad de actividades. La dificultad final sera la mas alta"){
-            otroItinerario.dificultad() shouldBe Dificultad.ALTA
+            itinerarioConDificultadAlta.dificultad() shouldBe Dificultad.ALTA
         }
         it("prueba de no se agrega actividad"){
             val actividad5 = Actividad(150.0, "Hola!", LocalTime.of(9,0), LocalTime.of(10,0), Dificultad.BAJA)
@@ -113,18 +113,18 @@ class TestDeItinerarios:DescribeSpec ({
 
             val jueves = Dia()
 
-            otroItinerario.ocuparDia(jueves)
+            itinerarioConDificultadAlta.ocuparDia(jueves)
 
-            otroItinerario.agregarActividad(jueves, actividad5)
-            otroItinerario.agregarActividad(jueves, actividad6)
-            shouldThrow<BusinessException> { otroItinerario.agregarActividad(jueves, actividad7) }
+            itinerarioConDificultadAlta.agregarActividad(jueves, actividad5)
+            itinerarioConDificultadAlta.agregarActividad(jueves, actividad6)
+            shouldThrow<BusinessException> { itinerarioConDificultadAlta.agregarActividad(jueves, actividad7) }
 
             val actividad8 = Actividad(350.0, "Hola!", LocalTime.of(10,30), LocalTime.of(11,0), Dificultad.MEDIA)
 
-            shouldThrow<BusinessException> {otroItinerario.agregarActividad(jueves, actividad8) }
+            shouldThrow<BusinessException> {itinerarioConDificultadAlta.agregarActividad(jueves, actividad8) }
 
             val actividad9 = Actividad(350.0, "Hola!", LocalTime.of(9,0), LocalTime.of(12,30), Dificultad.MEDIA)
-            shouldThrow<BusinessException> {otroItinerario.agregarActividad(jueves, actividad9) }
+            shouldThrow<BusinessException> {itinerarioConDificultadAlta.agregarActividad(jueves, actividad9) }
         }
     }
 })
@@ -160,11 +160,11 @@ class TestDeActividades:DescribeSpec({
 class TestDias:DescribeSpec({
     isolationMode = IsolationMode.InstancePerTest
     var dia = Dia()
-    var primerActividad = Actividad(300.0,"Circuito Chico",LocalTime.of(8,30),LocalTime.of(10,0), Dificultad.MEDIA)
-    var segundaActividad = Actividad(400.0,"Parapente",LocalTime.of(10,30),LocalTime.of(12,0), Dificultad.ALTA)
+    var actividadConDificultadMedia = Actividad(300.0,"Circuito Chico",LocalTime.of(8,30),LocalTime.of(10,0), Dificultad.MEDIA)
+    var actividadConDificultadAlta = Actividad(400.0,"Parapente",LocalTime.of(10,30),LocalTime.of(12,0), Dificultad.ALTA)
     dia.apply {
-        agregarActividadAlDia(primerActividad)
-        agregarActividadAlDia(segundaActividad)
+        agregarActividadAlDia(actividadConDificultadMedia)
+        agregarActividadAlDia(actividadConDificultadAlta)
     }
     describe("Test de ingreso de actividad"){
         it("prueba de no se agrega actividad"){
@@ -275,14 +275,14 @@ class TestDeUsuarios:DescribeSpec({
             describe("Testeo un usuario activo"){
                 unUsuario.cambiarCriterio(Activo)
                 var dia = Dia()
-                var unaActividad = Actividad(100.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultad.ALTA)
-                dia.agregarActividadAlDia(unaActividad)
+                var actividadConDificultadAlta = Actividad(100.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultad.ALTA)
+                dia.agregarActividadAlDia(actividadConDificultadAlta)
                 unItinerario.ocuparDia(dia)
                 it("No puede realizar porque no tiene todos los dias ocupados"){
                     unUsuario.puedeRealizarItinerario(unItinerario).shouldBeFalse()
                 }
-                var dia2 = Dia().apply { agregarActividadAlDia(unaActividad) }
-                var dia3 = Dia().apply { agregarActividadAlDia(unaActividad) }
+                var dia2 = Dia().apply { agregarActividadAlDia(actividadConDificultadAlta) }
+                var dia3 = Dia().apply { agregarActividadAlDia(actividadConDificultadAlta) }
                 var dia4 = Dia()
                 unItinerario.apply {
                     ocuparDia(dia2)
@@ -292,18 +292,18 @@ class TestDeUsuarios:DescribeSpec({
                 it("No puede realizar itinerario porque no todos los dias tienen actividades"){
                     unUsuario.puedeRealizarItinerario(unItinerario).shouldBeFalse()
                 }
-                unItinerario.agregarActividad(dia4,unaActividad)
+                unItinerario.agregarActividad(dia4,actividadConDificultadAlta)
                 it("Ahora puede realizar itinerario porque todos los dias tienen actividades"){
                     unUsuario.puedeRealizarItinerario(unItinerario).shouldBeTrue()
                 }
             }
             describe("Testeo un usuario exigente"){
                 unUsuario.cambiarCriterio(Exigente(Dificultad.MEDIA,40))
-                var unaActividadAlta = Actividad(100.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultad.ALTA)
-                var unaActividadMedia = Actividad(100.0, "Hola!", LocalTime.of(10,50), LocalTime.of(11,30), Dificultad.MEDIA)
-                var otraActividadMedia = Actividad(100.0, "Hola!", LocalTime.of(19,30), LocalTime.of(20,30), Dificultad.MEDIA)
-                var dia1 = Dia().apply { agregarActividadAlDia(unaActividadAlta); agregarActividadAlDia(unaActividadMedia) }
-                var dia2 = Dia().apply { agregarActividadAlDia(otraActividadMedia) }
+                var actividadConDificultadAlta = Actividad(100.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultad.ALTA)
+                var actividadConDificultadMedia = Actividad(100.0, "Hola!", LocalTime.of(10,50), LocalTime.of(11,30), Dificultad.MEDIA)
+                var otraActividadConDificultadMedia = Actividad(100.0, "Hola!", LocalTime.of(19,30), LocalTime.of(20,30), Dificultad.MEDIA)
+                var dia1 = Dia().apply { agregarActividadAlDia(actividadConDificultadAlta); agregarActividadAlDia(actividadConDificultadMedia) }
+                var dia2 = Dia().apply { agregarActividadAlDia(otraActividadConDificultadMedia) }
                 unItinerario.apply { ocuparDia(dia1);ocuparDia(dia2)}
                 it("El porcentaje preferido del usuario coincide con el porcentaje de activades de determinada dificultad deseada"){
                     unUsuario.puedeRealizarItinerario(unItinerario).shouldBeTrue()
