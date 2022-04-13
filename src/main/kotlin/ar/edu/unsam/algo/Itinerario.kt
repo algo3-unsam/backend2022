@@ -58,19 +58,16 @@ class Itinerario(
         return todasLasActividades
     }
 
-    fun actividadesXDificultad():MutableMap<Dificultad,Int>{
-        var mapDeDificultades = todasLasActividades().groupingBy { it.dificultad }.eachCount().toMutableMap()
-        enumValues<Dificultad>().forEach { rellenarDificultades(mapDeDificultades,it) }
-        return mapDeDificultades
-    }
+    fun actividadesXDificultad() = todasLasActividades().groupingBy { it.dificultad }.eachCount()
 
-    fun dificultad(): Dificultad {
-        var dificultadSobrevivienteAltaMedia = dificultadConMasActividades(this,Dificultad.ALTA,Dificultad.MEDIA)
-        return dificultadConMasActividades(this,dificultadSobrevivienteAltaMedia,Dificultad.BAJA)
-    }
+    fun mapDeActividadesOrdenado() = actividadesXDificultad().toSortedMap(compareByDescending { it })
+
+    fun dificultad(): Dificultad = mapDeActividadesOrdenado().maxByOrNull { it.value }!!.key
+
+    fun cantDeActividadesDeDifcultad(unaDificultad: Dificultad) = actividadesXDificultad()[unaDificultad]!!
 
     fun porcentajeDeActividadXDificultad(unaDificultad: Dificultad) =
-        (actividadesXDificultad()[unaDificultad]!! * 100) / cantidadDeActividades()
+        (cantDeActividadesDeDifcultad(unaDificultad) * 100) / cantidadDeActividades()
 
     fun verPuntaje(usuario: Usuario): Int{
         if(!puntajes.containsKey(usuario.username)){
