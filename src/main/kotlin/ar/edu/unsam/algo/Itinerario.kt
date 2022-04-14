@@ -34,9 +34,9 @@ class Itinerario(
         dias.add(undia)
     }
 
-    fun agregarActividad(undia: Dia, unaActividad: Actividad) {
+    fun agregarActividadAlDia(undia: Dia, unaActividad: Actividad) {
         if (dias.contains(undia)) {
-           undia.agregarActividadAlDia(unaActividad)
+           undia.agregarActividad(unaActividad)
         } else {
             throw BusinessException("No se encontro el dia en el itinerario")
         }

@@ -11,27 +11,13 @@ enum class Dificultad() {
 
 class Dia(var actividades: MutableList<Actividad> = mutableListOf()) {
 
-    fun verificarHorario(unaActividad: Actividad): Boolean {
-        return actividades.all { compararHorarios(unaActividad, it) }
-    }
 
-    fun compararHorarios(actividadAEvaluar: Actividad, actividades: Actividad) =
-        compararInicioYFin(actividadAEvaluar, actividades) && compararFinEInicio(actividadAEvaluar, actividades)
-
-    fun compararInicioYFin(actividadAEvaluar: Actividad, actividades: Actividad) =
-        actividades.horarioInicio.between(actividadAEvaluar.horarioFin)
-
-    fun compararFinEInicio(actividadAEvaluar: Actividad, actividades: Actividad) =
-        actividades.horarioFin.between(actividadAEvaluar.horarioInicio)
-
-    fun agregarActividadAlDia(unaActividad: Actividad) {
-        if (verificarHorario(unaActividad)) {
-            actividades.add(unaActividad)
-
+    fun agregarActividad(actividad: Actividad) {
+        if (!actividades.all{actividad.validarHorarioActividad(it)}) {
+            throw BusinessException("No se puede agregar la actividad porque el horario de Inicio: ${actividad.horarioFin} parecer estar ocupado\"")
         } else {
-            throw BusinessException("No se puede agregar la actividad porque el horario esta ocupado")
+            actividades.add(actividad)
         }
-        actividades.sortBy { it.horarioInicio }
     }
 
     fun cantidadDeActidades() = actividades.size
@@ -69,4 +55,15 @@ data class Actividad(
         }
     }
 
+    fun validarHorarioActividad(actividad: Actividad): Boolean {
+        return if(!this.validarRangoInicioActividad(actividad)){
+            throw BusinessException("No se puede agregar la actividad porque el horario de Inicio: ${this.horarioInicio} parecer estar ocupado")
+        }else{
+            this.validarRangoFinActividad(actividad)
+        }
+    }
+
+    fun validarRangoFinActividad(actividad: Actividad) = actividad.horarioFin.between(this.horarioInicio, this.horarioFin)
+
+    fun validarRangoInicioActividad(actividad: Actividad) = actividad.horarioInicio.between(this.horarioInicio, this.horarioFin)
 }
