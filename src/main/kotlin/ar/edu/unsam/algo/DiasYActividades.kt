@@ -14,10 +14,10 @@ class Dia(var actividades: MutableList<Actividad> = mutableListOf()) {
 
     fun agregarActividad(actividad: Actividad) {
         if (!actividades.all{actividad.validarHorarioActividad(it)}) {
-            throw BusinessException("No se puede agregar la actividad porque el horario de Inicio: ${actividad.horarioFin} parecer estar ocupado\"")
-        } else {
-            actividades.add(actividad)
+            throw BusinessException("No se puede agregar la actividad porque el horario de Fin: ${actividad.horarioFin} parecer estar ocupado\"")
         }
+        actividades.add(actividad)
+
     }
 
     fun cantidadDeActidades() = actividades.size
