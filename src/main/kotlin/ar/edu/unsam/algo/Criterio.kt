@@ -3,18 +3,15 @@ package ar.edu.unsam.algo
 interface Criterio{
 
     fun acepta(unItinerario: Itinerario): Boolean
-
 }
 
 object Relajado: Criterio {
     override fun acepta(unItinerario: Itinerario) = true
-
 }
 
 class Precavido(var unUsuario: Usuario): Criterio {
 
     override fun acepta(unItinerario: Itinerario) = unUsuario.conoceDestino(unItinerario.destino) || unUsuario.amigoConoceDestino(unItinerario.destino)
-
 }
 
 object Localista: Criterio {
@@ -43,5 +40,4 @@ class Exigente(var dificultadPreferida: Dificultad, var porcentajeDeseado: Int):
     }
 
     fun porcentajeSuficiente(unItinerario: Itinerario) = unItinerario.porcentajeDeActividadXDificultad(dificultadPreferida) >= porcentajeDeseado
-
 }

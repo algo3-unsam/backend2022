@@ -35,59 +35,58 @@ class Usuario(
 
     fun tieneFechaAltaValida(): Boolean = this.fechaDeAlta > LocalDate.now()
 
-    fun cambiarCriterio(unCriterio: Criterio) {
-        criterio = unCriterio
+    fun cambiarCriterio(criterio: Criterio) {
+        this.criterio = criterio
     }
 
     fun tienenInformacionCargadaEnLosStrings() =
         !(this.nombre.isNullOrEmpty() && this.apellido.isNullOrEmpty() && this.username.isNullOrEmpty() && this.paisDeResidencia.isNullOrEmpty())
 
-    fun agregarAmigo(unUsuario: Usuario) = amigos.add(unUsuario)
+    fun agregarAmigo(usuario: Usuario) = amigos.add(usuario)
 
-    fun consultarPuntaje(unItinerario: Itinerario) = unItinerario.verPuntaje(this)
+    fun consultarPuntaje(itinerario: Itinerario) = itinerario.verPuntaje(this)
 
-    fun puedoPuntuar(unItinerario: Itinerario) =
-            !(esCreadorDe(unItinerario)) && !unItinerario.yaPuntuo(this.username) && this.conoceDestino(unItinerario.destino)
+    fun puedoPuntuar(itinerario: Itinerario) =
+            !(esCreadorDe(itinerario)) && !itinerario.yaPuntuo(this.username) && this.conoceDestino(itinerario.destino)
 
-    fun puntuar(unItinerario: Itinerario, puntaje: Int) {
-        if ((puntaje < 1) || (puntaje > 10) || !puedoPuntuar(unItinerario)) {
+    fun puntuar(itinerario: Itinerario, puntaje: Int) {
+        if ((puntaje < 1) || (puntaje > 10) || !puedoPuntuar(itinerario)) {
             throw BusinessException("No puede puntuar el itinerario, usted es el creador o ya puntuo el itinerario o no conce el destino\n" +
                     "Revise que el puntaje ingresado sea mayor a 1 y menor que 10 puntaje: $puntaje")
         }else {
-            unItinerario.recibirPuntaje(this, puntaje)
+            itinerario.recibirPuntaje(this, puntaje)
         }
     }
 
-    fun esCreadorDe(Itinerario: Itinerario) = Itinerario.creador === this
+    fun esCreadorDe(itinerario: Itinerario) = itinerario.creador === this
 
-    fun conoceDestino(unDestino: Destino) =
-        (this.estaEnDeseados(unDestino) || destinosVisitados.contains(unDestino))
+    fun conoceDestino(destino: Destino) =
+        (this.estaEnDeseados(destino) || destinosVisitados.contains(destino))
 
     fun antiguedad() = ChronoUnit.YEARS.between(fechaDeAlta, LocalDate.now())
 
     fun descuentoPorAntiguedad() = if (antiguedad() > ANTIGUEDAD_MAXIMA) 15 else antiguedad()
 
-    fun esDelMismoPaisQueDestino(unDestino: Destino) = this.paisDeResidencia.equals(unDestino.pais, ignoreCase = true)
+    fun esDelMismoPaisQueDestino(destino: Destino) = this.paisDeResidencia.equals(destino.pais, ignoreCase = true)
 
     fun estaEnDeseados(destino: Destino) = destinosDeseados.contains(destino)
 
     fun deseadoMasCaro() = destinosDeseados.maxOf { it.precio(this) }
 
-    fun destinoMasCaroQueDeseadoMasCaro(unItinerario: Itinerario) =
-        unItinerario.destino.precio(this) > this.deseadoMasCaro()
+    fun destinoMasCaroQueDeseadoMasCaro(itinerario: Itinerario) =
+        itinerario.destino.precio(this) > this.deseadoMasCaro()
 
-    fun puedeRealizarItinerario(unItinerario: Itinerario) =
-        this.diasSuficientes(unItinerario) and criterio.acepta(unItinerario)
+    fun puedeRealizarItinerario(itinerario: Itinerario) =
+        this.diasSuficientes(itinerario) and criterio.acepta(itinerario)
 
-    fun diasSuficientes(unItinerario: Itinerario) = diasParaViajar >= unItinerario.cantDias
+    fun diasSuficientes(itinerario: Itinerario) = diasParaViajar >= itinerario.cantDias
 
-    fun amigoConoceDestino(unDestino: Destino) = amigos.any { it.conoceDestino(unDestino) }
+    fun amigoConoceDestino(destino: Destino) = amigos.any { it.conoceDestino(destino) }
 
-    fun puedoEditar(unItinerario: Itinerario) = esCreadorDe(unItinerario) || this.soyAmigoEditor(unItinerario)
+    fun puedoEditar(itinerario: Itinerario) = esCreadorDe(itinerario) || this.soyAmigoEditor(itinerario)
 
-    fun soyAmigoEditor(unItinerario: Itinerario) =
-        (this.soyAmigoDelCreador(unItinerario.creador) && this.conoceDestino(unItinerario.destino))
+    fun soyAmigoEditor(itinerario: Itinerario) =
+        (this.soyAmigoDelCreador(itinerario.creador) && this.conoceDestino(itinerario.destino))
 
     fun soyAmigoDelCreador(otroUsuario: Usuario) = amigos.contains(otroUsuario)
-
 }

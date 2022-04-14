@@ -11,24 +11,20 @@ enum class Dificultad() {
 
 class Dia(var actividades: MutableList<Actividad> = mutableListOf()) {
 
-
     fun agregarActividad(actividad: Actividad) {
         if (!actividades.all{actividad.validarHorarioActividad(it)}) {
             throw BusinessException("No se puede agregar la actividad porque el horario de Fin: ${actividad.horarioFin} parecer estar ocupado\"")
         }
         actividades.add(actividad)
-
     }
 
     fun cantidadDeActidades() = actividades.size
 
     fun costoDeTotalDeActividades() = actividades.sumOf { it.costo }
 
-    fun actividadesDeUnTipo(unaDificultad: Dificultad) = actividades.filter { it.dificultad == unaDificultad }
-
+    fun actividadesDeUnTipo(dificultad: Dificultad) = actividades.filter { it.dificultad == dificultad }
 
     fun tengoActividades() = actividades.isNotEmpty()
-
 }
 
 data class Actividad(

@@ -9,8 +9,8 @@ class Itinerario(
 
     val puntajes = mutableMapOf<String, Int>()
 
-    fun recibirPuntaje(unUsuario: Usuario, puntaje : Int){
-        puntajes[unUsuario.username] = puntaje
+    fun recibirPuntaje(usuario: Usuario, puntaje : Int){
+        puntajes[usuario.username] = puntaje
     }
 
     fun yaPuntuo(username : String) = puntajes.containsKey(username)
@@ -30,16 +30,15 @@ class Itinerario(
 
     fun totalCosto() = dias.sumOf { it.costoDeTotalDeActividades() }
 
-    fun ocuparDia(undia: Dia) {
-        dias.add(undia)
+    fun ocuparDia(dia: Dia) {
+        dias.add(dia)
     }
 
-    fun agregarActividadAlDia(undia: Dia, unaActividad: Actividad) {
-        if (dias.contains(undia)) {
-           undia.agregarActividad(unaActividad)
-        } else {
+    fun agregarActividadAlDia(dia: Dia, actividad: Actividad) {
+        if (!dias.contains(dia)) {
             throw BusinessException("No se encontro el dia en el itinerario")
         }
+        dia.agregarActividad(actividad)
     }
 
     //reviso que todos los dias asignados al itinerario tengan actividades
@@ -47,10 +46,9 @@ class Itinerario(
 
     fun todosLosDiasIniciados() = dias.size == this.cantDias
 
-    fun sosMiCreador(unUsuario: Usuario) = unUsuario.username.equals(creador.username,ignoreCase = true)
+    fun sosMiCreador(usuario: Usuario) = usuario.username.equals(creador.username,ignoreCase = true)
 
     fun cantidadDeActividades() = dias.sumOf { it.cantidadDeActidades() }
-
 
     fun todasLasActividades():MutableList<Actividad>{
         var todasLasActividades: MutableList<Actividad> = mutableListOf()
@@ -64,10 +62,10 @@ class Itinerario(
 
     fun dificultad(): Dificultad = mapDeActividadesOrdenado().maxByOrNull { it.value }!!.key
 
-    fun cantDeActividadesDeDifcultad(unaDificultad: Dificultad) = actividadesXDificultad()[unaDificultad]!!
+    fun cantDeActividadesDeDifcultad(dificultad: Dificultad) = actividadesXDificultad()[dificultad]!!
 
-    fun porcentajeDeActividadXDificultad(unaDificultad: Dificultad) =
-        (cantDeActividadesDeDifcultad(unaDificultad) * 100) / cantidadDeActividades()
+    fun porcentajeDeActividadXDificultad(dificultad: Dificultad) =
+        (cantDeActividadesDeDifcultad(dificultad) * 100) / cantidadDeActividades()
 
     fun verPuntaje(usuario: Usuario): Int{
         if(!puntajes.containsKey(usuario.username)){
@@ -76,8 +74,8 @@ class Itinerario(
         return puntajes.getValue(usuario.username)
     }
 
-    fun editar(unUsuario: Usuario){
-        if(!unUsuario.puedoEditar(this)){
+    fun editar(usuario: Usuario){
+        if(!usuario.puedoEditar(this)){
             throw BusinessException("Este usuario no puede editar el itinerario")
         }
     }

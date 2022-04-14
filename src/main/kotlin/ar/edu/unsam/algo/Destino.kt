@@ -18,11 +18,11 @@ class Destino(var pais: String, var ciudad: String, var costoBase: Float) {
 
     fun esLocal() = pais.equals(LOCAL, ignoreCase = true)
 
-    fun precio(unUsuario: Usuario) = costoBase + porcentajeDestino() - descuento(unUsuario)
+    fun precio(usuario: Usuario) = costoBase + porcentajeDestino() - descuento(usuario)
 
     fun porcentajeDestino() = if (!esLocal()) costoBase * 0.2 else 0.0
 
-    fun descuento(unUsuario: Usuario) =
-        if (unUsuario.esDelMismoPaisQueDestino((this))) (costoBase * (unUsuario.descuentoPorAntiguedad() * 0.01)) else 0.0
+    fun descuento(usuario: Usuario) =
+        if (usuario.esDelMismoPaisQueDestino((this))) (costoBase * (usuario.descuentoPorAntiguedad() * 0.01)) else 0.0
 
 }
