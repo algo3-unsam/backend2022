@@ -2,36 +2,36 @@ package ar.edu.unsam.algo
 
 interface Criterio{
 
-    fun acepta(unItinerario: Itinerario): Boolean
+    fun acepta(itinerario: Itinerario): Boolean
 }
 
 object Relajado: Criterio {
-    override fun acepta(unItinerario: Itinerario) = true
+    override fun acepta(itinerario: Itinerario) = true
 }
 
 class Precavido(var unUsuario: Usuario): Criterio {
 
-    override fun acepta(unItinerario: Itinerario) = unUsuario.conoceDestino(unItinerario.destino) || unUsuario.amigoConoceDestino(unItinerario.destino)
+    override fun acepta(itinerario: Itinerario) = unUsuario.conoceDestino(itinerario.destino) || unUsuario.amigoConoceDestino(itinerario.destino)
 }
 
 object Localista: Criterio {
 
-    override fun acepta(unItinerario: Itinerario) = unItinerario.tieneDestinoLocal()
+    override fun acepta(itinerario: Itinerario) = itinerario.tieneDestinoLocal()
 }
 
 class Soniador(var unUsuario: Usuario): Criterio {
 
-    override fun acepta(unItinerario: Itinerario) = unUsuario.estaEnDeseados(unItinerario.destino) || unUsuario.destinoMasCaroQueDeseadoMasCaro(unItinerario)
+    override fun acepta(itinerario: Itinerario) = unUsuario.estaEnDeseados(itinerario.destino) || unUsuario.destinoMasCaroQueDeseadoMasCaro(itinerario)
 }
 
 object Activo: Criterio {
 
-    override fun acepta(unItinerario: Itinerario) = unItinerario.todoLosDiasOcupados()
+    override fun acepta(itinerario: Itinerario) = itinerario.todoLosDiasOcupados()
 }
 
 class Exigente(var dificultadPreferida: Dificultad, var porcentajeDeseado: Int): Criterio {
 
-    override fun acepta(unItinerario: Itinerario) = porcentajeSuficiente(unItinerario)
+    override fun acepta(itinerario: Itinerario) = porcentajeSuficiente(itinerario)
 
     fun cambiarDificultad(nuevaDificultad: Dificultad) { dificultadPreferida = nuevaDificultad}
 
