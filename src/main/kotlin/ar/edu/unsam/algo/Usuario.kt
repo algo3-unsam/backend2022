@@ -15,7 +15,7 @@ class Usuario(
     var destinosVisitados: MutableList<Destino> = mutableListOf()
 ) {
 
-    lateinit var criterio: Criterio
+    lateinit var criterio: CriterioItinerario
 
     companion object {
         var ANTIGUEDAD_MAXIMA = 15
@@ -35,7 +35,7 @@ class Usuario(
 
     fun tieneFechaAltaValida(): Boolean = this.fechaDeAlta > LocalDate.now()
 
-    fun cambiarCriterio(criterio: Criterio) {
+    fun cambiarCriterio(criterio: CriterioItinerario) {
         this.criterio = criterio
     }
 
@@ -89,4 +89,9 @@ class Usuario(
         (this.soyAmigoDelCreador(itinerario.creador) && this.conoceDestino(itinerario.destino))
 
     fun soyAmigoDelCreador(otroUsuario: Usuario) = amigos.contains(otroUsuario)
+
+    fun leGustaLosVehiculosAntiguos(vehiculo: Vehiculo) = vehiculo.antiguedad() < 2
+
+    fun soySupersticioso(vehiculo: Vehiculo) = vehiculo.anioDeFabricacion.year % 2 == 0
+
 }
