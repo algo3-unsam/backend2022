@@ -13,12 +13,17 @@ class Usuario(
     var amigos: MutableList<Usuario> = mutableListOf(),
     var destinosDeseados: MutableList<Destino> = mutableListOf(),
     var destinosVisitados: MutableList<Destino> = mutableListOf()
-) {
+):Datos {
 
     lateinit var criterio: CriterioItinerario
+    lateinit var tipoDeUsario : TipoUsuario
 
     companion object {
         var ANTIGUEDAD_MAXIMA = 15
+    }
+
+    override fun coincidencia(cadena: String): Boolean {
+        TODO("Not yet implemented")
     }
 
     fun tieneDestinoSoñado() = destinosDeseados.isNotEmpty()
@@ -90,8 +95,7 @@ class Usuario(
 
     fun soyAmigoDelCreador(otroUsuario: Usuario) = amigos.contains(otroUsuario)
 
-    fun leGustaLosVehiculosAntiguos(vehiculo: Vehiculo) = vehiculo.antiguedad() < 2
-
-    fun soySupersticioso(vehiculo: Vehiculo) = vehiculo.anioDeFabricacion.year % 2 == 0
+    fun leGustaVehiculo(unVehiculo: Vehiculo) = tipoDeUsario.aceptaVehiculo(unVehiculo)
 
 }
+

@@ -1,6 +1,6 @@
 package ar.edu.unsam.algo
 
-class Destino(var pais: String, var ciudad: String, var costoBase: Float) {
+class Destino(var pais: String, var ciudad: String, var costoBase: Float):Datos {
 
     companion object {
         var LOCAL = "Argentina"
@@ -11,6 +11,12 @@ class Destino(var pais: String, var ciudad: String, var costoBase: Float) {
             throw FaltaCargarInformacionException("destino invalido,falta informacion\n costo base: $costoBase, pais: $pais, ciudad: $ciudad")
         }
     }
+
+    override fun coincidencia(cadena: String): Boolean {
+        TODO("Not yet implemented")
+    }
+
+
 
     fun esValido() = (this.costoBase > 0) && this.tieneInformacionCargadaEnStrings()
 
