@@ -33,7 +33,7 @@ class Combinado(): TipoUsuario{
 
     var listaDeTipos = mutableListOf<TipoUsuario>()
 
-    fun agregarTipo(unTipoUsuario: TipoUsuario) = listaDeTipos.add(unTipoUsuario)
+    fun agregarTipo(tipoUsuario: TipoUsuario) = listaDeTipos.add(tipoUsuario)
 
     fun validarLista() = listaDeTipos.size >= 2
 
