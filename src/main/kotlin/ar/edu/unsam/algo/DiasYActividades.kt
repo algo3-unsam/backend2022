@@ -9,7 +9,7 @@ enum class Dificultad() {
     ALTA
 }
 
-class Dia(var actividades: MutableList<Actividad> = mutableListOf()) {
+class Dia(val actividades: MutableList<Actividad> = mutableListOf()) {
 
     fun agregarActividad(actividad: Actividad) {
         if (!actividades.all{actividad.validarHorarioActividad(it)}) {
