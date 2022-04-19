@@ -84,7 +84,7 @@ class Usuario(
     fun puedeRealizarItinerario(itinerario: Itinerario) =
         this.diasSuficientes(itinerario) and criterioItinerarioUsuario.acepta(itinerario)
 
-    fun diasSuficientes(itinerario: Itinerario) = diasParaViajar >= itinerario.cantDias
+    fun diasSuficientes(itinerario: Itinerario) = diasParaViajar >= itinerario.cantidadDeDias()
 
     fun amigoConoceDestino(destino: Destino) = amigos.any { it.conoceDestino(destino) }
 

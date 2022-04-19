@@ -48,7 +48,7 @@ class TestDeItinerarios:DescribeSpec ({
         val pepe = Usuario("Juan", "Pelotas", "Pelotas01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3).apply{criterioItinerarioUsuario = Relajado }
         val destino1 = Destino(pais = "Argentina", ciudad = "BuenosAires", costoBase = 3000F)
         describe("Creo un itinerario invalido por falta de dias"){
-            var itinerarioInvalido = Itinerario(pepe,destino1,4)
+            var itinerarioInvalido = Itinerario(pepe,destino1)
             it("Test de itinerario invalido por falta de dias iniciados"){
                 assertThrows<FaltaCargarInformacionException> { itinerarioInvalido.validar() }
             }
@@ -63,7 +63,7 @@ class TestDeItinerarios:DescribeSpec ({
         val actividad2 = Actividad(150.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultad.BAJA)
         val actividad3 = Actividad(300.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultad.BAJA)
         val actividad4 = Actividad(350.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultad.MEDIA)
-        val itinerarioConDificultadBaja = Itinerario(pepe, destino1, 5)
+        val itinerarioConDificultadBaja = Itinerario(pepe, destino1, )
         val dia1 = Dia()
         val dia2 = Dia()
         val dia3 = Dia()
@@ -88,7 +88,7 @@ class TestDeItinerarios:DescribeSpec ({
         it("Test de Dificultad del Itinerario. Al tener ser dificultad BAJA la que mas actividades tiene, el itinerario tendra esa dificultad") {
             itinerarioConDificultadBaja.dificultad() shouldBe Dificultad.BAJA
         }
-        var itinerarioConDificultadAlta = Itinerario(pepe, destino1, 5)
+        var itinerarioConDificultadAlta = Itinerario(pepe, destino1)
         val lunes = Dia()
         val martes = Dia()
         val miercoles = Dia()
@@ -210,46 +210,51 @@ class TestDeUsuarios:DescribeSpec({
         describe("Testeo capacidad de realizar un itinerario segun criterio"){
             var usuario = Usuario("Leandro", "Amarilla", "LeaAmarilla", LocalDate.of(2012, 1, 18), "Argentina", 5)
             var tokio = Destino("Japon", "Tokio", 70000F)
-            var itinerario = Itinerario(usuario, tokio, 4)
+            var itinerario1 = Itinerario(usuario, tokio)
             describe("Testeo un usuario relajado") {
+                var dia = Dia()
+                var dia2 = Dia()
+                var dia3 = Dia()
+                var dia4 = Dia()
+                itinerario1.apply { ocuparDia(dia);ocuparDia(dia2);ocuparDia(dia3);ocuparDia(dia4) }
                 usuario.cambiarCriterio(Relajado)
                 it("Testeo que el usuario No puede realizar este itinerarios por no tener suficiente dias para viajar") {
                     usuario.diasParaViajar = 3
-                    usuario.puedeRealizarItinerario(itinerario).shouldBeFalse()
+                    usuario.puedeRealizarItinerario(itinerario1).shouldBeFalse()
                 }
                 it("Testeo que el usuario ahora puede realziar el itinerario") {
-                    usuario.puedeRealizarItinerario(itinerario).shouldBeTrue()
+                    usuario.puedeRealizarItinerario(itinerario1).shouldBeTrue()
                 }
                 it("Testeo cambio de criterio: con el nuevo criterio no puede realizar itinerario"){
                     usuario.cambiarCriterio(Localista)
-                    usuario.puedeRealizarItinerario(itinerario).shouldBeFalse()
+                    usuario.puedeRealizarItinerario(itinerario1).shouldBeFalse()
                 }
             }
             describe("Testeo un usuario precavido"){
                 usuario.cambiarCriterio(Precavido(usuario))
                 it("El usuario no puede realizar el itinerario por no conocerlo anteriormente"){
-                    usuario.puedeRealizarItinerario(itinerario) shouldBe  false
+                    usuario.puedeRealizarItinerario(itinerario1) shouldBe  false
                 }
                 it("El usuario puede realizar el itinerario porque ya lo concoce"){
                     usuario.destinosVisitados.add(tokio)
-                    usuario.puedeRealizarItinerario(itinerario).shouldBeTrue()
+                    usuario.puedeRealizarItinerario(itinerario1).shouldBeTrue()
                 }
                 it("El usuario puede realizar el itinerario porque un amigo suyo lo conoce"){
                     var amigo = Usuario("Juan","Perez","JpErez",LocalDate.of(2012,1,17),"Argentina",5)
                     amigo.destinosVisitados.add(tokio)
                     usuario.agregarAmigo(amigo)
-                    usuario.puedeRealizarItinerario(itinerario).shouldBeTrue()
+                    usuario.puedeRealizarItinerario(itinerario1).shouldBeTrue()
                 }
             }
             describe("Testeo un usuario localista"){
                 usuario.cambiarCriterio(Localista)
                 it("No puede realizar el itinerario porque no es un destino local"){
-                    usuario.puedeRealizarItinerario(itinerario).shouldBeFalse()
+                    usuario.puedeRealizarItinerario(itinerario1).shouldBeFalse()
                 }
                 var destinoLocal = Destino("Argentina", "Mendoza", 3000F)
-                itinerario.destino = destinoLocal
+                itinerario1.destino = destinoLocal
                 it("Testeo que si puede realizar este itinerario"){
-                    usuario.puedeRealizarItinerario(itinerario).shouldBeTrue()
+                    usuario.puedeRealizarItinerario(itinerario1).shouldBeTrue()
                 }
             }
             describe("Testeo un usuario soñador"){
@@ -257,14 +262,14 @@ class TestDeUsuarios:DescribeSpec({
                 var destinoSoñado = Destino("Qatar","Lusai",80000F)
                 usuario.destinosDeseados.add(destinoSoñado)
                 it("Testeo que no puede realizar el itineario por no tenerlo en destino Soñados y no ser mas caro que el destino mas caro"){
-                    usuario.puedeRealizarItinerario(itinerario).shouldBeFalse()
+                    usuario.puedeRealizarItinerario(itinerario1).shouldBeFalse()
                 }
                 usuario.destinosDeseados.add(tokio)
                 it("Testeo que ahora puede realizar el itinerario por soñar el destino"){
-                    usuario.puedeRealizarItinerario(itinerario).shouldBeTrue()
+                    usuario.puedeRealizarItinerario(itinerario1).shouldBeTrue()
                 }
                 var destinoCaro = Destino("Alemania", "Berlin", 1000000F)
-                var itinerarioCaro = Itinerario(usuario,destinoCaro,4)
+                var itinerarioCaro = Itinerario(usuario,destinoCaro)
                 it("Testeo que puede realizar el itinerario por ser mas caro que sus soñados"){
                     usuario.puedeRealizarItinerario(itinerarioCaro).shouldBeTrue()
                 }
@@ -274,24 +279,21 @@ class TestDeUsuarios:DescribeSpec({
                 var dia = Dia()
                 var actividadConDificultadAlta = Actividad(100.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultad.ALTA)
                 dia.agregarActividad(actividadConDificultadAlta)
-                itinerario.ocuparDia(dia)
-                it("No puede realizar porque no tiene todos los dias ocupados"){
-                    usuario.puedeRealizarItinerario(itinerario).shouldBeFalse()
-                }
+                itinerario1.ocuparDia(dia)
                 var dia2 = Dia().apply { agregarActividad(actividadConDificultadAlta) }
                 var dia3 = Dia().apply { agregarActividad(actividadConDificultadAlta) }
                 var dia4 = Dia()
-                itinerario.apply {
+                itinerario1.apply {
                     ocuparDia(dia2)
                     ocuparDia(dia3)
                     ocuparDia(dia4)
                 }
                 it("No puede realizar itinerario porque no todos los dias tienen actividades"){
-                    usuario.puedeRealizarItinerario(itinerario).shouldBeFalse()
+                    usuario.puedeRealizarItinerario(itinerario1).shouldBeFalse()
                 }
-                itinerario.agregarActividadAlDia(dia4,actividadConDificultadAlta)
+                itinerario1.agregarActividadAlDia(dia4,actividadConDificultadAlta)
                 it("Ahora puede realizar itinerario porque todos los dias tienen actividades"){
-                    usuario.puedeRealizarItinerario(itinerario).shouldBeTrue()
+                    usuario.puedeRealizarItinerario(itinerario1).shouldBeTrue()
                 }
             }
             describe("Testeo un usuario exigente"){
@@ -301,13 +303,13 @@ class TestDeUsuarios:DescribeSpec({
                 var otraActividadConDificultadMedia = Actividad(100.0, "Hola!", LocalTime.of(19,30), LocalTime.of(20,30), Dificultad.MEDIA)
                 var dia1 = Dia().apply { agregarActividad(actividadConDificultadAlta); agregarActividad(actividadConDificultadMedia) }
                 var dia2 = Dia().apply { agregarActividad(otraActividadConDificultadMedia) }
-                itinerario.apply { ocuparDia(dia1);ocuparDia(dia2)}
+                itinerario1.apply { ocuparDia(dia1);ocuparDia(dia2)}
                 it("El porcentaje preferido del usuario coincide con el porcentaje de activades de determinada dificultad deseada"){
-                    usuario.puedeRealizarItinerario(itinerario).shouldBeTrue()
+                    usuario.puedeRealizarItinerario(itinerario1).shouldBeTrue()
                 }
                 usuario.cambiarCriterio(Exigente(Dificultad.ALTA,40))
                 it("El porcentaje que hay no es suficiente entonces no puede realizar porcentaje"){
-                    usuario.puedeRealizarItinerario(itinerario).shouldBeFalse()
+                    usuario.puedeRealizarItinerario(itinerario1).shouldBeFalse()
                 }
 
             }
@@ -315,7 +317,7 @@ class TestDeUsuarios:DescribeSpec({
         describe("Testeo puntuar a un itinerario"){
             var usuario = Usuario("Leandro", "Amarilla", "LeaAmarilla", LocalDate.of(2012, 1, 18), "Argentina", 5)
             var tokio = Destino("Japon", "Tokio", 70000F)
-            var itinerario = Itinerario(usuario, tokio, 4)
+            var itinerario = Itinerario(usuario, tokio)
             it("Testeo no puntuar por ser creador de itinearario"){
                 assertThrows<BusinessException> { usuario.puntuar(itinerario,9)}
             }

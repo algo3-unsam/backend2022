@@ -3,7 +3,7 @@ package ar.edu.unsam.algo
 class Itinerario(
     var creador: Usuario,
     var destino: Destino,
-    var cantDias: Int,
+    //var cantDias: Int,
     val dias: MutableList<Dia> = mutableListOf()
 ) {
 
@@ -18,6 +18,8 @@ class Itinerario(
     fun unDiaConActividad() = dias.any{ it.tengoActividades()}
 
     fun hayDiasInciados() = dias.isNotEmpty()
+
+    fun cantidadDeDias() = dias.size
 
     fun existeDiaConActividadInciado() = this.hayDiasInciados() and this.unDiaConActividad()
     //fun tieneCreadorYDestino() = !this.creador.isNullorEmpty() and !this.destino.isNullorEmpty()
@@ -42,18 +44,16 @@ class Itinerario(
     }
 
     //reviso que todos los dias asignados al itinerario tengan actividades
-    fun todoLosDiasOcupados() = (dias.all { it.tengoActividades() } ) && todosLosDiasIniciados()
+    fun todoLosDiasOcupados() = (dias.all { it.tengoActividades() } )
 
-    fun todosLosDiasIniciados() = dias.size == this.cantDias
+    //fun todosLosDiasIniciados() = dias.size == this.cantDias
 
     fun sosMiCreador(usuario: Usuario) = usuario.username.equals(creador.username,ignoreCase = true)
 
     fun cantidadDeActividades() = dias.sumOf { it.cantidadDeActidades() }
 
-    fun todasLasActividades():MutableList<Actividad>{
-        var todasLasActividades: MutableList<Actividad> = mutableListOf()
-        dias.forEach { todasLasActividades.addAll(it.actividades)}
-        return todasLasActividades
+    fun todasLasActividades(): MutableList<Actividad> {
+        return dias.flatMap { it.actividades }.toMutableList()
     }
 
     fun actividadesXDificultad() = todasLasActividades().groupingBy { it.dificultad }.eachCount()
