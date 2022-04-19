@@ -4,7 +4,7 @@ class Itinerario(
     var creador: Usuario,
     var destino: Destino,
     var cantDias: Int,
-    var dias: MutableList<Dia> = mutableListOf()
+    val dias: MutableList<Dia> = mutableListOf()
 ) {
 
     val puntajes = mutableMapOf<String, Int>()

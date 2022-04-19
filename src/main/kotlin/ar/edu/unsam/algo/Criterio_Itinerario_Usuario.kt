@@ -39,5 +39,5 @@ class Exigente(var dificultadPreferida: Dificultad, var porcentajeDeseado: Int):
         porcentajeDeseado = nuevaPorcentaje
     }
 
-    fun porcentajeSuficiente(unItinerario: Itinerario) = unItinerario.porcentajeDeActividadXDificultad(dificultadPreferida) >= porcentajeDeseado
+    fun porcentajeSuficiente(itinerario: Itinerario) = itinerario.porcentajeDeActividadXDificultad(dificultadPreferida) >= porcentajeDeseado
 }

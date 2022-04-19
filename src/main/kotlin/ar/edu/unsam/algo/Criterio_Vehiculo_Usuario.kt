@@ -1,18 +1,18 @@
 package ar.edu.unsam.algo
 
-interface TipoUsuario{
+interface CriterioVehiculo{
     fun aceptaVehiculo(vehiculo: Vehiculo): Boolean
 }
 
-object Neofilo: TipoUsuario{
+object Neofilo: CriterioVehiculo{
     override fun aceptaVehiculo(vehiculo: Vehiculo) = vehiculo.antiguedad() < 2
 }
 
-object Supersticioso : TipoUsuario {
+object Supersticioso : CriterioVehiculo {
     override fun aceptaVehiculo(vehiculo: Vehiculo) = vehiculo.anioDeFabricacion.year % 2 == 0
 }
 
-object Caprichoso : TipoUsuario{
+object Caprichoso : CriterioVehiculo{
     override fun aceptaVehiculo(vehiculo: Vehiculo) = compararMarcaModelo(vehiculo)
 
     fun compararMarcaModelo(vehiculo: Vehiculo) = obtenerInicial(vehiculo.marca) == obtenerInicial(vehiculo.modelo)
@@ -21,19 +21,19 @@ object Caprichoso : TipoUsuario{
 
 }
 
-class Selectivo(var marcaPreferida :String) : TipoUsuario{
+class Selectivo(var marcaPreferida :String) : CriterioVehiculo{
     override fun aceptaVehiculo(vehiculo: Vehiculo) = marcaPreferida.equals(vehiculo.marca,ignoreCase = true)
 }
 
-object SinLimite : TipoUsuario{
+object SinLimite : CriterioVehiculo{
     override fun aceptaVehiculo(vehiculo: Vehiculo) = vehiculo.kilometrajeLibre()
 }
 
-class Combinado(): TipoUsuario{
+class Combinado(): CriterioVehiculo{
 
-    var listaDeTipos = mutableListOf<TipoUsuario>()
+    var listaDeTipos = mutableListOf<CriterioVehiculo>()
 
-    fun agregarTipo(tipoUsuario: TipoUsuario) = listaDeTipos.add(tipoUsuario)
+    fun agregarTipo(tipoUsuario: CriterioVehiculo) = listaDeTipos.add(tipoUsuario)
 
     fun validarLista() = listaDeTipos.size >= 2
 

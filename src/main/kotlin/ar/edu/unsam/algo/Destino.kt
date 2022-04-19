@@ -1,6 +1,6 @@
 package ar.edu.unsam.algo
 
-class Destino(var pais: String, var ciudad: String, var costoBase: Float):Datos {
+class Destino(val pais: String, val ciudad: String, var costoBase: Float):Datos {
 
     companion object {
         var LOCAL = "Argentina"

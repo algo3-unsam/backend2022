@@ -4,19 +4,19 @@ import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
 class Usuario(
-    var nombre: String,
-    var apellido: String,
+    val nombre: String,
+    val apellido: String,
     var username: String,
     var fechaDeAlta: LocalDate,
-    var paisDeResidencia: String,
+    val paisDeResidencia: String,
     var diasParaViajar: Int,
-    var amigos: MutableList<Usuario> = mutableListOf(),
-    var destinosDeseados: MutableList<Destino> = mutableListOf(),
-    var destinosVisitados: MutableList<Destino> = mutableListOf()
+    val amigos: MutableList<Usuario> = mutableListOf(),
+    val destinosDeseados: MutableList<Destino> = mutableListOf(),
+    val destinosVisitados: MutableList<Destino> = mutableListOf()
 ):Datos {
 
-    lateinit var criterio: CriterioItinerario
-    lateinit var tipoDeUsario : TipoUsuario
+    lateinit var criterioItinerarioUsuario: CriterioItinerario
+    lateinit var criterioVehiculoUsuario : CriterioVehiculo
 
     companion object {
         var ANTIGUEDAD_MAXIMA = 15
@@ -41,7 +41,7 @@ class Usuario(
     fun tieneFechaAltaValida(): Boolean = this.fechaDeAlta > LocalDate.now()
 
     fun cambiarCriterio(criterio: CriterioItinerario) {
-        this.criterio = criterio
+        this.criterioItinerarioUsuario = criterio
     }
 
     fun tienenInformacionCargadaEnLosStrings() =
@@ -82,7 +82,7 @@ class Usuario(
         itinerario.destino.precio(this) > this.deseadoMasCaro()
 
     fun puedeRealizarItinerario(itinerario: Itinerario) =
-        this.diasSuficientes(itinerario) and criterio.acepta(itinerario)
+        this.diasSuficientes(itinerario) and criterioItinerarioUsuario.acepta(itinerario)
 
     fun diasSuficientes(itinerario: Itinerario) = diasParaViajar >= itinerario.cantDias
 
@@ -95,7 +95,7 @@ class Usuario(
 
     fun soyAmigoDelCreador(otroUsuario: Usuario) = amigos.contains(otroUsuario)
 
-    fun leGustaVehiculo(unVehiculo: Vehiculo) = tipoDeUsario.aceptaVehiculo(unVehiculo)
+    fun leGustaVehiculo(vehiculo: Vehiculo) = criterioVehiculoUsuario.aceptaVehiculo(vehiculo)
 
 }
 
