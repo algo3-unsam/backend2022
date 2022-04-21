@@ -5,7 +5,8 @@ class Itinerario(
     var destino: Destino,
     //var cantDias: Int,
     val dias: MutableList<Dia> = mutableListOf()
-) {
+): Datos{
+    override var id: Int = 0
 
     val puntajes = mutableMapOf<String, Int>()
 
@@ -24,11 +25,19 @@ class Itinerario(
     fun existeDiaConActividadInciado() = this.hayDiasInciados() and this.unDiaConActividad()
     //fun tieneCreadorYDestino() = !this.creador.isNullorEmpty() and !this.destino.isNullorEmpty()
 
-    fun validar(){
+    fun validacion(){
         if(!this.existeDiaConActividadInciado()){
             throw FaltaCargarInformacionException("El Itinerario no tiene ninguna actividad")
         }
     }
+
+    override fun validar(): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun coincidencia(cadena: String): Boolean = destino.coincidencia(cadena) || coincidenciaConActividades(cadena)
+
+    fun coincidenciaConActividades(cadena:String) = todasLasActividades().any{it.coincidenciaConNombre(cadena)}
 
     fun totalCosto() = dias.sumOf { it.costoDeTotalDeActividades() }
 

@@ -1,24 +1,23 @@
 package ar.edu.unsam.algo
 
 class Destino(val pais: String, val ciudad: String, var costoBase: Float):Datos {
+    override var id = 0
 
     companion object {
         var LOCAL = "Argentina"
     }
 
-    fun validar() {
-        if (!this.esValido()) {
+    fun validacion() {
+        if (!this.validar()) {
             throw FaltaCargarInformacionException("destino invalido,falta informacion\n costo base: $costoBase, pais: $pais, ciudad: $ciudad")
         }
     }
 
-    override fun coincidencia(cadena: String): Boolean {
-        TODO("Not yet implemented")
-    }
+    override fun coincidencia(cadena: String): Boolean = coincidenciaParcialCiudadPais(cadena)
 
+    fun coincidenciaParcialCiudadPais(cadena:String) = coincidenciaParcial(pais,cadena) || coincidenciaParcial(ciudad,cadena)
 
-
-    fun esValido() = (this.costoBase > 0) && this.tieneInformacionCargadaEnStrings()
+    override fun validar() = (this.costoBase > 0) && this.tieneInformacionCargadaEnStrings()
 
     fun tieneInformacionCargadaEnStrings() = !(this.pais.isNullOrEmpty() && this.ciudad.isNullOrEmpty())
 

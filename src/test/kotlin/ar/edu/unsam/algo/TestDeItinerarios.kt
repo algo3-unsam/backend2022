@@ -17,15 +17,15 @@ class TestDestinos:DescribeSpec({
         describe("Test de Validez de Destino") {
             it("Creo un Destino invalido porque tiene vacias sus parametros") {
                 var destinoIncompleto = Destino("", "", 0F)
-               assertThrows<Exception> { destinoIncompleto.validar() }
+               assertThrows<Exception> { destinoIncompleto.validacion() }
             }
             it("Creo un Destino Invalido porque su costo es menor a 0"){
                 var destinoSinCosto = Destino("Argentina", "Buenos Aires",-7F)
-                assertThrows<Exception> { destinoSinCosto.validar() }
+                assertThrows<Exception> { destinoSinCosto.validacion() }
             }
             it("Creo un Destino valido") {
                 var destinoValido = Destino("Argentina", "Mendoza", 5000f)
-                assertDoesNotThrow { destinoValido.validar() }
+                assertDoesNotThrow { destinoValido.validacion() }
             }
         }
         describe("Test de Destinos Locales"){
@@ -50,13 +50,13 @@ class TestDeItinerarios:DescribeSpec ({
         describe("Creo un itinerario invalido por falta de dias"){
             var itinerarioInvalido = Itinerario(pepe,destino1)
             it("Test de itinerario invalido por falta de dias iniciados"){
-                assertThrows<FaltaCargarInformacionException> { itinerarioInvalido.validar() }
+                assertThrows<FaltaCargarInformacionException> { itinerarioInvalido.validacion() }
             }
             var dia =Dia()
             var dia2 = Dia()
             itinerarioInvalido.apply{ocuparDia(dia); ocuparDia(dia2)}
             it("Test de itinerario invalido porque ningun dia tiene actividades"){
-                assertThrows<FaltaCargarInformacionException> { itinerarioInvalido.validar() }
+                assertThrows<FaltaCargarInformacionException> { itinerarioInvalido.validacion() }
             }
         }
         val actividad = Actividad(100.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultad.ALTA)
@@ -79,7 +79,7 @@ class TestDeItinerarios:DescribeSpec ({
             agregarActividadAlDia(dia4, actividad4)
         }
         it("Testeo la validez de un itinerario valido"){
-            assertDoesNotThrow { itinerarioConDificultadBaja.validar() }
+            assertDoesNotThrow { itinerarioConDificultadBaja.validacion() }
         }
         it("Test de Costo De Itinerarios") {
             itinerarioConDificultadBaja.totalCosto() shouldBe 900.0

@@ -1,20 +1,50 @@
 package ar.edu.unsam.algo
 
 class Repositorio<Elemento : Datos> {
-    val elementos: MutableMap<Int,Elemento> = mutableMapOf<Int,Elemento>()
+    val elementos: MutableList<Elemento> = mutableListOf<Elemento>()
     var id = 0
 
     fun create(elemento: Elemento){
-        elementos[id] = elemento
+        creacionCorrecta(elemento)
+        yaEstaCreado(elemento)
+        agregarAlRepo(elemento)
+    }
+
+    fun creacionCorrecta(elemento: Elemento){
+        if(!elemento.validar()){
+            throw BusinessException("NO ESTA BIEN CREADO")
+        }
+    }
+
+    fun yaEstaCreado(elemento: Elemento){
+        if(estaEnRepo(elemento)){
+            throw BusinessException("YA ESTA EN EL REPO")
+        }
+    }
+    fun agregarAlRepo(elemento: Elemento){
+        elementos.add(elemento)
+        elemento.id  = id
         id++
     }
 
-   // fun delete(elemento: Elemento) = elementos.remove()
+    fun estaEnRepo(elemento: Elemento) = !elemento.esNuevo()
 
-    //fun obtenerId(elemento: Elemento)  =  elementos.
+    fun delete(elemento: Elemento) {
+        borradoImposible(elemento)
+        elemento.id = 0
+        elementos.remove(elemento)
+    }
+
+    fun borradoImposible(elemento: Elemento){
+        if(!estaEnRepo(elemento)){
+            throw BusinessException("NO ESTA EN EL REPO")
+        }
+    }
+
+
     //fun update(elemento: Elemento) =
 
-    fun getById(id: Int) = elementos[id]
+    fun getById(idABuscar: Int) = elementos.first { it.id == idABuscar  }
 
-    fun listar(cadena: String) = elementos.filter { it.value.coincidencia(cadena) }
+   fun listar(cadena: String) = elementos.filter { it.coincidencia(cadena) }
 }

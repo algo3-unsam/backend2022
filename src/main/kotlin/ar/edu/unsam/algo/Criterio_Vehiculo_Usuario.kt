@@ -26,7 +26,7 @@ class Selectivo(var marcaPreferida :String) : CriterioVehiculo{
 }
 
 object SinLimite : CriterioVehiculo{
-    override fun aceptaVehiculo(vehiculo: Vehiculo) = vehiculo.kilometrajeLibre()
+    override fun aceptaVehiculo(vehiculo: Vehiculo) = vehiculo.kilometrajeLibre
 }
 
 class Combinado(): CriterioVehiculo{

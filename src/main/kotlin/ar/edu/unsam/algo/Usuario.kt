@@ -14,7 +14,7 @@ class Usuario(
     val destinosDeseados: MutableList<Destino> = mutableListOf(),
     val destinosVisitados: MutableList<Destino> = mutableListOf()
 ):Datos {
-
+    override var id: Int = 0
     lateinit var criterioItinerarioUsuario: CriterioItinerario
     lateinit var criterioVehiculoUsuario : CriterioVehiculo
 
@@ -22,23 +22,26 @@ class Usuario(
         var ANTIGUEDAD_MAXIMA = 15
     }
 
-    override fun coincidencia(cadena: String): Boolean {
-        TODO("Not yet implemented")
-    }
+    override fun coincidencia(cadena: String): Boolean = coicidenciaParcialNombreApellido(cadena) || coincidenciaTotalUsername(cadena)
+
+    fun coincidenciaTotalUsername(cadena: String) = username.equals(cadena,ignoreCase = false)
+
+    fun coicidenciaParcialNombreApellido(cadena: String) = coincidenciaParcial(nombre,cadena) || coincidenciaParcial(apellido,cadena)
 
     fun tieneDestinoSoñado() = destinosDeseados.isNotEmpty()
 
     fun esValido() {
-        if (!this.tienenInformacionCargadaEnLosStrings() || (tieneFechaAltaValida()) || (tieneDiasParaViajarValidos()) || (!this.tieneDestinoSoñado())) {
+        if (!validar()) {
             throw FaltaCargarInformacionException(
                 "Hay informacion vacia, Nombre: $nombre, apellido: $apellido, username: $username, pais de residencia: $paisDeResidencia\n" + "dias para viajar: $diasParaViajar, destinos deseados: $destinosDeseados"
             )
         }
     }
 
-    fun tieneDiasParaViajarValidos(): Boolean = this.diasParaViajar < 0
+    override fun validar(): Boolean = this.tienenInformacionCargadaEnLosStrings() && (!tieneFechaAltaInvalida()) &&(!tieneDiasParaViajarInvalidos()) && (this.tieneDestinoSoñado())
+    fun tieneDiasParaViajarInvalidos(): Boolean = this.diasParaViajar < 0
 
-    fun tieneFechaAltaValida(): Boolean = this.fechaDeAlta > LocalDate.now()
+    fun tieneFechaAltaInvalida(): Boolean = this.fechaDeAlta > LocalDate.now()
 
     fun cambiarCriterio(criterio: CriterioItinerario) {
         this.criterioItinerarioUsuario = criterio

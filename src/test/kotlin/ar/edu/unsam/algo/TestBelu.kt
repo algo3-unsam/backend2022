@@ -1,3 +1,5 @@
+package ar.edu.unsam.algo
+
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
@@ -9,9 +11,9 @@ class TestBelu : DescribeSpec({
 
         describe("Tests Destinos") {
             describe("Dado un destino no local") {
-                val usuario1 = Usuario ("Juan", "Perez", "jperez", LocalDate.of(2021,4,13), "Francia")
-                val usuario2 = Usuario("Marilu", "Cabak", "mcabak", LocalDate.of(2000,2,13), "Chile")
-                val usuario3 = Usuario("Marilu", "Cabak", "mcabak", LocalDate.of(2000,11,3), "Brasil")
+                val usuario1 = Usuario ("Juan", "Perez", "jperez", LocalDate.of(2021,4,13), "Francia",3)
+                val usuario2 = Usuario("Marilu", "Cabak", "mcabak", LocalDate.of(2000,2,13), "Chile",3)
+                val usuario3 = Usuario("Marilu", "Cabak", "mcabak", LocalDate.of(2000,11,3), "Brasil",3)
                 val destino = Destino("Brasil", "San Pablo", 50000F)
                 it("calcular el costo del viaje teniendo menos de 15 años de antiguedad") {
                     destino.esLocal() shouldBe false
@@ -27,8 +29,8 @@ class TestBelu : DescribeSpec({
                 }
             }
             describe("Dado un destino local"){
-                val usuario4 = Usuario("Pamela", "Sosa", "psosa", LocalDate.of(2020,1,30), "Argentina")
-                val usuario5 = Usuario("Gerardo", "Lopez", "jlopez", LocalDate.of(1993,3,13), "Argentina")
+                val usuario4 = Usuario("Pamela", "Sosa", "psosa", LocalDate.of(2020,1,30), "Argentina",3)
+                val usuario5 = Usuario("Gerardo", "Lopez", "jlopez", LocalDate.of(1993,3,13), "Argentina",3)
                 val destino2 = Destino("Argentina", "Buenos Aires", 20000F)
                 it("calcular el costo del viaje teniendo menos de 15 años de antiguedad"){
                     destino2.esLocal() shouldBe true
