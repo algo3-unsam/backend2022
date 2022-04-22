@@ -28,7 +28,9 @@ interface Vehiculo:Datos{
     fun aumentoPorCondicion(diasDealquiler: Int) : Double
 
 
-    override fun coincidencia(cadena: String) = marca.equals(cadena,ignoreCase = true)
+    override fun coincidencia(cadena: String) = marca.equals(cadena,ignoreCase = true) or comienzoIgual(cadena)
+
+    fun comienzoIgual(cadena: String) = modelo.startsWith(cadena,ignoreCase = true)
 
 
     override fun validar(): Boolean {

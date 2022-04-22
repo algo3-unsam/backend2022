@@ -59,5 +59,5 @@ class Repositorio<Elemento : Datos> {
 
     fun getById(idABuscar: Int) = elementos.first { it.id == idABuscar  }
 
-   fun listar(cadena: String) = elementos.filter { it.coincidencia(cadena) }
+    fun listar(cadena: String) = elementos.filter { it.coincidencia(cadena) }
 }
