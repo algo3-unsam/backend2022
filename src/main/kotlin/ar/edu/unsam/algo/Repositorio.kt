@@ -35,6 +35,19 @@ class Repositorio<Elemento : Datos> {
         elementos.remove(elemento)
     }
 
+    /*fun updte(elemeto: Elemento){
+        borradoImposible(elemeto)
+        var elementoModificado = elemeto.modificar()
+        delete(elemeto)
+        agregaElementoModificado(elementoModificado)
+    }*/
+
+    fun agregaElementoModificado(elementoModificado: Elemento) {
+        creacionCorrecta(elementoModificado)
+        elementos.add(elementoModificado)
+    }
+
+
     fun borradoImposible(elemento: Elemento){
         if(!estaEnRepo(elemento)){
             throw BusinessException("NO ESTA EN EL REPO")
