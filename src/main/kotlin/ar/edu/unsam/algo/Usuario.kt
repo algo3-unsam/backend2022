@@ -4,39 +4,47 @@ import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
 class Usuario(
-    var nombre: String,
-    var apellido: String,
+    val nombre: String,
+    val apellido: String,
     var username: String,
     var fechaDeAlta: LocalDate,
-    var paisDeResidencia: String,
+    val paisDeResidencia: String,
     var diasParaViajar: Int,
-    var amigos: MutableList<Usuario> = mutableListOf(),
-    var destinosDeseados: MutableList<Destino> = mutableListOf(),
-    var destinosVisitados: MutableList<Destino> = mutableListOf()
-) {
-
-    lateinit var criterio: Criterio
+    val amigos: MutableList<Usuario> = mutableListOf(),
+    val destinosDeseados: MutableList<Destino> = mutableListOf(),
+    val destinosVisitados: MutableList<Destino> = mutableListOf()
+):Datos {
+    override var id: Int = 0
+    lateinit var criterioItinerarioUsuario: CriterioItinerario
+    lateinit var criterioVehiculoUsuario : CriterioVehiculo
 
     companion object {
         var ANTIGUEDAD_MAXIMA = 15
     }
 
+    override fun coincidencia(cadena: String): Boolean = coicidenciaParcialNombreApellido(cadena) || coincidenciaTotalUsername(cadena)
+
+    fun coincidenciaTotalUsername(cadena: String) = username.equals(cadena,ignoreCase = false)
+
+    fun coicidenciaParcialNombreApellido(cadena: String) = coincidenciaParcial(nombre,cadena) || coincidenciaParcial(apellido,cadena)
+
     fun tieneDestinoSoñado() = destinosDeseados.isNotEmpty()
 
     fun esValido() {
-        if (!this.tienenInformacionCargadaEnLosStrings() || (tieneFechaAltaValida()) || (tieneDiasParaViajarValidos()) || (!this.tieneDestinoSoñado())) {
+        if (!validar()) {
             throw FaltaCargarInformacionException(
                 "Hay informacion vacia, Nombre: $nombre, apellido: $apellido, username: $username, pais de residencia: $paisDeResidencia\n" + "dias para viajar: $diasParaViajar, destinos deseados: $destinosDeseados"
             )
         }
     }
 
-    fun tieneDiasParaViajarValidos(): Boolean = this.diasParaViajar < 0
+    override fun validar(): Boolean = this.tienenInformacionCargadaEnLosStrings() && (!tieneFechaAltaInvalida()) &&(!tieneDiasParaViajarInvalidos()) && (this.tieneDestinoSoñado())
+    fun tieneDiasParaViajarInvalidos(): Boolean = this.diasParaViajar < 0
 
-    fun tieneFechaAltaValida(): Boolean = this.fechaDeAlta > LocalDate.now()
+    fun tieneFechaAltaInvalida(): Boolean = this.fechaDeAlta > LocalDate.now()
 
-    fun cambiarCriterio(criterio: Criterio) {
-        this.criterio = criterio
+    fun cambiarCriterio(criterio: CriterioItinerario) {
+        this.criterioItinerarioUsuario = criterio
     }
 
     fun tienenInformacionCargadaEnLosStrings() =
@@ -77,9 +85,9 @@ class Usuario(
         itinerario.destino.precio(this) > this.deseadoMasCaro()
 
     fun puedeRealizarItinerario(itinerario: Itinerario) =
-        this.diasSuficientes(itinerario) and criterio.acepta(itinerario)
+        this.diasSuficientes(itinerario) and criterioItinerarioUsuario.acepta(itinerario)
 
-    fun diasSuficientes(itinerario: Itinerario) = diasParaViajar >= itinerario.cantDias
+    fun diasSuficientes(itinerario: Itinerario) = diasParaViajar >= itinerario.cantidadDeDias()
 
     fun amigoConoceDestino(destino: Destino) = amigos.any { it.conoceDestino(destino) }
 
@@ -89,4 +97,8 @@ class Usuario(
         (this.soyAmigoDelCreador(itinerario.creador) && this.conoceDestino(itinerario.destino))
 
     fun soyAmigoDelCreador(otroUsuario: Usuario) = amigos.contains(otroUsuario)
+
+    fun leGustaVehiculo(vehiculo: Vehiculo) = criterioVehiculoUsuario.aceptaVehiculo(vehiculo)
+
 }
+

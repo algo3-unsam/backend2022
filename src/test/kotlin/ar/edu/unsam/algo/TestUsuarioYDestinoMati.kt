@@ -31,13 +31,13 @@ class TestUsuarioYDestinoMati : DescribeSpec({
             it("Verificar que el descuento de una persona con 20 años de antiguedad es el 15%") {
                 usuarioCon20AniosDeAnt.descuentoPorAntiguedad() shouldBe 15
             }
-            it("Verificar que el descuento de una persona con 20 años de antiguedad es el 15%") {
+            it("Verificar que se realizo el descuento correspondiente del 15%") {
                 destino1.descuento(usuarioCon20AniosDeAnt) shouldBe 1500
             }
             it("Verificar que el descuento de una persona con 10 años de antiguedad es el 10%") {
                 usuarioCon10AniosDeAnt.descuentoPorAntiguedad() shouldBe 10
             }
-            it("Verificar que el descuento de una persona con 10 años de antiguedad es el 10%") {
+            it("Verificar que se realizo el descuento correspondiente del 10%") {
                 destino2.descuento(usuarioCon10AniosDeAnt) shouldBe 2000
             }
         }
@@ -59,5 +59,5 @@ class TestUsuarioYDestinoMati : DescribeSpec({
             }
         }
     }
-
+    
 })

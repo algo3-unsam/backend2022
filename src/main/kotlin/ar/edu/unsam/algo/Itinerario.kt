@@ -3,9 +3,10 @@ package ar.edu.unsam.algo
 class Itinerario(
     var creador: Usuario,
     var destino: Destino,
-    var cantDias: Int,
-    var dias: MutableList<Dia> = mutableListOf()
-) {
+    //var cantDias: Int,
+    val dias: MutableList<Dia> = mutableListOf()
+): Datos{
+    override var id: Int = 0
 
     val puntajes = mutableMapOf<String, Int>()
 
@@ -19,14 +20,24 @@ class Itinerario(
 
     fun hayDiasInciados() = dias.isNotEmpty()
 
+    fun cantidadDeDias() = dias.size
+
     fun existeDiaConActividadInciado() = this.hayDiasInciados() and this.unDiaConActividad()
     //fun tieneCreadorYDestino() = !this.creador.isNullorEmpty() and !this.destino.isNullorEmpty()
 
-    fun validar(){
+    fun validacion(){
         if(!this.existeDiaConActividadInciado()){
             throw FaltaCargarInformacionException("El Itinerario no tiene ninguna actividad")
         }
     }
+
+    override fun validar(): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun coincidencia(cadena: String): Boolean = destino.coincidencia(cadena) || coincidenciaConActividades(cadena)
+
+    fun coincidenciaConActividades(cadena:String) = todasLasActividades().any{it.coincidenciaConNombre(cadena)}
 
     fun totalCosto() = dias.sumOf { it.costoDeTotalDeActividades() }
 
@@ -42,18 +53,16 @@ class Itinerario(
     }
 
     //reviso que todos los dias asignados al itinerario tengan actividades
-    fun todoLosDiasOcupados() = (dias.all { it.tengoActividades() } ) && todosLosDiasIniciados()
+    fun todoLosDiasOcupados() = (dias.all { it.tengoActividades() } )
 
-    fun todosLosDiasIniciados() = dias.size == this.cantDias
+    //fun todosLosDiasIniciados() = dias.size == this.cantDias
 
     fun sosMiCreador(usuario: Usuario) = usuario.username.equals(creador.username,ignoreCase = true)
 
     fun cantidadDeActividades() = dias.sumOf { it.cantidadDeActidades() }
 
-    fun todasLasActividades():MutableList<Actividad>{
-        var todasLasActividades: MutableList<Actividad> = mutableListOf()
-        dias.forEach { todasLasActividades.addAll(it.actividades)}
-        return todasLasActividades
+    fun todasLasActividades(): MutableList<Actividad> {
+        return dias.flatMap { it.actividades }.toMutableList()
     }
 
     fun actividadesXDificultad() = todasLasActividades().groupingBy { it.dificultad }.eachCount()

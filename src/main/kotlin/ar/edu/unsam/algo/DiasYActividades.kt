@@ -9,7 +9,7 @@ enum class Dificultad() {
     ALTA
 }
 
-class Dia(var actividades: MutableList<Actividad> = mutableListOf()) {
+class Dia(val actividades: MutableList<Actividad> = mutableListOf()) {
 
     fun agregarActividad(actividad: Actividad) {
         if (!actividades.all{actividad.validarHorarioActividad(it)}) {
@@ -34,6 +34,8 @@ data class Actividad(
     var horarioFin: LocalTime,
     var dificultad: Dificultad
 ) {
+    fun coincidenciaConNombre(cadena:String) = descripcion.contains(cadena,ignoreCase = true)
+
     fun duracion() = ChronoUnit.MINUTES.between(horarioInicio, horarioFin).toInt()
 
     fun validarDificultad() = (this.dificultad >= Dificultad.BAJA) && (this.dificultad <= Dificultad.ALTA)
