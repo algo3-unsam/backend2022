@@ -45,7 +45,7 @@ class TestDeItinerarios:DescribeSpec ({
 
     isolationMode = IsolationMode.InstancePerTest
     describe("Creo un itinerario ") {
-        val pepe = Usuario("Juan", "Pelotas", "Pelotas01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3).apply{criterioItinerarioUsuario = Relajado }
+        val pepe = Usuario("Juan", "Pelotas", "Pelotas01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3).apply{criterioParaItinerario = Relajado }
         val destino1 = Destino(pais = "Argentina", ciudad = "BuenosAires", costoBase = 3000F)
         describe("Creo un itinerario invalido por falta de dias"){
             var itinerarioInvalido = Itinerario(pepe,destino1)

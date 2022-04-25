@@ -8,7 +8,7 @@ class Destino(val pais: String, val ciudad: String, var costoBase: Float):Datos 
     }
 
     fun validacion() {
-        if (!this.validar()) {
+        if (!this.completamenteValido()) {
             throw FaltaCargarInformacionException("destino invalido,falta informacion\n costo base: $costoBase, pais: $pais, ciudad: $ciudad")
         }
     }
@@ -17,7 +17,7 @@ class Destino(val pais: String, val ciudad: String, var costoBase: Float):Datos 
 
     fun coincidenciaParcialCiudadPais(cadena:String) = coincidenciaParcial(pais,cadena) || coincidenciaParcial(ciudad,cadena)
 
-    override fun validar() = (this.costoBase > 0) && this.tieneInformacionCargadaEnStrings()
+    override fun completamenteValido() = (this.costoBase > 0) && this.tieneInformacionCargadaEnStrings()
 
     fun tieneInformacionCargadaEnStrings() = !(this.pais.isNullOrEmpty() && this.ciudad.isNullOrEmpty())
 

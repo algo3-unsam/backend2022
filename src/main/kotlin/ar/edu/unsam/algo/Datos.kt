@@ -7,5 +7,5 @@ interface Datos {
     fun esNuevo()  = id == 0
 
     fun coincidenciaParcial(atributoPropio: String,cadena: String) = atributoPropio.contains(cadena,ignoreCase = true)
-    fun validar() : Boolean
+    fun completamenteValido() : Boolean
 }

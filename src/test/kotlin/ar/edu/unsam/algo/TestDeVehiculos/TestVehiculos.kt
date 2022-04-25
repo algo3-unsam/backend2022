@@ -1,16 +1,10 @@
 package ar.edu.unsam.algo
 
-import io.kotest.assertions.throwables.shouldThrow
 
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
-import io.kotest.matchers.booleans.shouldBeFalse
-import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.assertDoesNotThrow
-import org.junit.jupiter.api.assertThrows
 import java.time.LocalDate
-import java.time.LocalTime
 
 class TestVehiculos:DescribeSpec({
     isolationMode = IsolationMode.InstancePerTest

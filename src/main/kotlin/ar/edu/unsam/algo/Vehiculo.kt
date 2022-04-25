@@ -33,9 +33,17 @@ interface Vehiculo:Datos{
     fun comienzoIgual(cadena: String) = modelo.startsWith(cadena,ignoreCase = true)
 
 
-    override fun validar(): Boolean {
+    override fun completamenteValido(): Boolean {
         TODO("Not yet implemented")
     }
+
+    fun esModerno()= antiguedad() < 2
+    fun anioDeFabricacionPar() = anioDeFabricacion.year % 2 == 0
+
+
+    fun compararMarcaModelo(vehiculo: Vehiculo) = obtenerInicial(vehiculo.marca) == obtenerInicial(vehiculo.modelo)
+
+    fun obtenerInicial(cadena: String) = cadena.get(0)
 
 }
 
@@ -53,13 +61,13 @@ class Moto(
     fun extraPorDia(diasDealquiler: Int): Double = (diasDealquiler * 500.0)
 
     override fun aumentoPorCondicion(diasDealquiler: Int): Double {
-        if(cilindradasMaximas()) {
+        if(superaCilindradasMinimas()) {
             return extraPorDia(diasDealquiler)
         }
         return 0.0
     }
 
-    fun cilindradasMaximas() = cantidadCilindrada > 250
+    fun superaCilindradasMinimas() = cantidadCilindrada > 250
 }
 
 class Auto(
