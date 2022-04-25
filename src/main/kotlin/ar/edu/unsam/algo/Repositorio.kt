@@ -11,7 +11,7 @@ class Repositorio<Elemento : Datos> {
     }
 
     fun creacionCorrecta(elemento: Elemento){
-        if(!elemento.validar()){
+        if(!elemento.completamenteValido()){
             throw BusinessException("NO ESTA BIEN CREADO")
         }
     }
@@ -35,8 +35,7 @@ class Repositorio<Elemento : Datos> {
         elementos.remove(elemento)
     }
 
-    /*fun updte(elemeto: Elemento){
-        borradoImposible(elemeto)
+    /*fun update(elemeto: Elemento){
         var elementoModificado = elemeto.modificar()
         delete(elemeto)
         agregaElementoModificado(elementoModificado)
@@ -53,9 +52,6 @@ class Repositorio<Elemento : Datos> {
             throw BusinessException("NO ESTA EN EL REPO")
         }
     }
-
-
-    //fun update(elemento: Elemento) =
 
     fun getById(idABuscar: Int) = elementos.first { it.id == idABuscar  }
 

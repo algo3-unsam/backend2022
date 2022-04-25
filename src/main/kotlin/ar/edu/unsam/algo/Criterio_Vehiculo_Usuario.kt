@@ -5,19 +5,16 @@ interface CriterioVehiculo{
 }
 
 object Neofilo: CriterioVehiculo{
-    override fun aceptaVehiculo(vehiculo: Vehiculo) = vehiculo.antiguedad() < 2
+    override fun aceptaVehiculo(vehiculo: Vehiculo) = vehiculo.esModerno()
 }
 
 object Supersticioso : CriterioVehiculo {
-    override fun aceptaVehiculo(vehiculo: Vehiculo) = vehiculo.anioDeFabricacion.year % 2 == 0
+    override fun aceptaVehiculo(vehiculo: Vehiculo) = vehiculo.anioDeFabricacionPar()
 }
 
 object Caprichoso : CriterioVehiculo{
-    override fun aceptaVehiculo(vehiculo: Vehiculo) = compararMarcaModelo(vehiculo)
+    override fun aceptaVehiculo(vehiculo: Vehiculo) = vehiculo.compararMarcaModelo(vehiculo)
 
-    fun compararMarcaModelo(vehiculo: Vehiculo) = obtenerInicial(vehiculo.marca) == obtenerInicial(vehiculo.modelo)
-
-    fun obtenerInicial(cadena: String) = cadena.get(0)
 
 }
 

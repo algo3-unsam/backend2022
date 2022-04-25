@@ -15,8 +15,8 @@ class Usuario(
     val destinosVisitados: MutableList<Destino> = mutableListOf()
 ):Datos {
     override var id: Int = 0
-    lateinit var criterioItinerarioUsuario: CriterioItinerario
-    lateinit var criterioVehiculoUsuario : CriterioVehiculo
+    lateinit var criterioParaItinerario: CriterioItinerario
+    lateinit var criterioParaVehiculo : CriterioVehiculo
 
     companion object {
         var ANTIGUEDAD_MAXIMA = 15
@@ -31,20 +31,20 @@ class Usuario(
     fun tieneDestinoSoñado() = destinosDeseados.isNotEmpty()
 
     fun esValido() {
-        if (!validar()) {
+        if (!completamenteValido()) {
             throw FaltaCargarInformacionException(
                 "Hay informacion vacia, Nombre: $nombre, apellido: $apellido, username: $username, pais de residencia: $paisDeResidencia\n" + "dias para viajar: $diasParaViajar, destinos deseados: $destinosDeseados"
             )
         }
     }
 
-    override fun validar(): Boolean = this.tienenInformacionCargadaEnLosStrings() && (!tieneFechaAltaInvalida()) &&(!tieneDiasParaViajarInvalidos()) && (this.tieneDestinoSoñado())
+    override fun completamenteValido(): Boolean = this.tienenInformacionCargadaEnLosStrings() && (!tieneFechaAltaInvalida()) &&(!tieneDiasParaViajarInvalidos()) && (this.tieneDestinoSoñado())
     fun tieneDiasParaViajarInvalidos(): Boolean = this.diasParaViajar < 0
 
     fun tieneFechaAltaInvalida(): Boolean = this.fechaDeAlta > LocalDate.now()
 
     fun cambiarCriterio(criterio: CriterioItinerario) {
-        this.criterioItinerarioUsuario = criterio
+        this.criterioParaItinerario = criterio
     }
 
     fun tienenInformacionCargadaEnLosStrings() =
@@ -85,7 +85,7 @@ class Usuario(
         itinerario.destino.precio(this) > this.deseadoMasCaro()
 
     fun puedeRealizarItinerario(itinerario: Itinerario) =
-        this.diasSuficientes(itinerario) and criterioItinerarioUsuario.acepta(itinerario)
+        this.diasSuficientes(itinerario) and criterioParaItinerario.acepta(itinerario)
 
     fun diasSuficientes(itinerario: Itinerario) = diasParaViajar >= itinerario.cantidadDeDias()
 
@@ -98,7 +98,7 @@ class Usuario(
 
     fun soyAmigoDelCreador(otroUsuario: Usuario) = amigos.contains(otroUsuario)
 
-    fun leGustaVehiculo(vehiculo: Vehiculo) = criterioVehiculoUsuario.aceptaVehiculo(vehiculo)
+    fun leGustaVehiculo(vehiculo: Vehiculo) = criterioParaVehiculo.aceptaVehiculo(vehiculo)
 
 }
 

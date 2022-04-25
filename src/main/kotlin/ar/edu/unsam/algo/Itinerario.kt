@@ -31,7 +31,7 @@ class Itinerario(
         }
     }
 
-    override fun validar(): Boolean {
+    override fun completamenteValido(): Boolean {
         TODO("Not yet implemented")
     }
 
