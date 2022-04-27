@@ -1,6 +1,9 @@
-package ar.edu.unsam.algo
+package ar.edu.unsam.algo.TestDeVehiculos
 
 
+import ar.edu.unsam.algo.Auto
+import ar.edu.unsam.algo.Camioneta
+import ar.edu.unsam.algo.Moto
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe

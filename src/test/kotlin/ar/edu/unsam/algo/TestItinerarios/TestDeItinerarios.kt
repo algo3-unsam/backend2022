@@ -1,5 +1,6 @@
-package ar.edu.unsam.algo
+package ar.edu.unsam.algo.TestItinerarios
 
+import ar.edu.unsam.algo.*
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
@@ -52,7 +53,7 @@ class TestDeItinerarios:DescribeSpec ({
             it("Test de itinerario invalido por falta de dias iniciados"){
                 assertThrows<FaltaCargarInformacionException> { itinerarioInvalido.validacion() }
             }
-            var dia =Dia()
+            var dia = Dia()
             var dia2 = Dia()
             itinerarioInvalido.apply{ocuparDia(dia); ocuparDia(dia2)}
             it("Test de itinerario invalido porque ningun dia tiene actividades"){
@@ -135,16 +136,19 @@ class TestDeActividades:DescribeSpec({
         }
         it("Testeo una Activida invalida por error en hora de inicio y final"){
             var actividadConMalHorario = Actividad(0.0,"Visita al Museo",LocalTime.of(10,0),LocalTime.of(8,30),
-                Dificultad.BAJA)
+                Dificultad.BAJA
+            )
             assertThrows<Exception> { actividadConMalHorario.validar() }
         }
         it("Testeo una Actividad invalidad por costo menor a 0"){
             var actividadSinCosto = Actividad(-500.0,"Visita al Museo",LocalTime.of(8,30),LocalTime.of(10,0),
-                Dificultad.BAJA)
+                Dificultad.BAJA
+            )
             assertThrows<Exception> { actividadSinCosto.validar() }
         }
         var actividadValida = Actividad(500.0,"Visita al Museo",LocalTime.of(8,30),LocalTime.of(10,0),
-            Dificultad.BAJA)
+            Dificultad.BAJA
+        )
         it("Testeo una Actividad valida"){
            assertDoesNotThrow { actividadValida.validar() }
         }
@@ -171,7 +175,8 @@ class TestDias:DescribeSpec({
         }
         it("Ingreso un actividad valida"){
             var actividadValida = Actividad(400.0,"Circuito Lagos", LocalTime.of(13,0),LocalTime.of(14,0),
-                Dificultad.MEDIA)
+                Dificultad.MEDIA
+            )
             assertDoesNotThrow { dia.agregarActividad(actividadValida) }
         }
     }
