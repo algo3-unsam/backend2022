@@ -31,7 +31,6 @@ class Repositorio<Elemento : Datos> {
 
     fun delete(elemento: Elemento) {
         borradoImposible(elemento)
-        elemento.id = 0
         elementos.remove(elemento)
     }
 
@@ -45,7 +44,6 @@ class Repositorio<Elemento : Datos> {
         creacionCorrecta(elementoModificado)
         elementos.add(elementoModificado)
     }
-
 
     fun borradoImposible(elemento: Elemento){
         if(!estaEnRepo(elemento)){

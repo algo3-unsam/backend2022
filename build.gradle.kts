@@ -20,6 +20,7 @@ dependencies {
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.+")
 }
 
 tasks.withType<KotlinCompile> {
