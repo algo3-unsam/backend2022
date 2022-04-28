@@ -1,6 +1,6 @@
 package ar.edu.unsam.algo
 
-class Destino(val pais: String, val ciudad: String, var costoBase: Float):Datos {
+class Destino(val pais: String, var ciudad: String, var costoBase: Float):Datos {
     override var id = 0
 
     companion object {
