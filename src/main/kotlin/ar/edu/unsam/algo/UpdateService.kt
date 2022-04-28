@@ -1,15 +1,18 @@
 package ar.edu.unsam.algo
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-
 val mapper = jacksonObjectMapper()
 
-/*data class User (
-    val id: Int,
-    val username: String,
-    val password: String,
-    val fullName: String
-)
+class Json(val destinos: MutableList<Destino> = mutableListOf()) {
 
-val user = User(102, "test", "pass12", "Test User")
-val userJson: String = mapper.writeValueAsString(user)*/
+    fun agregarDestino(destino: Destino) {
+        destinos.add(destino)
+    }
+
+    fun contieneDestinos(destino: Destino) = destinos.contains(destino)
+
+    val destinoJson = mapper.writeValueAsString(destinos)
+}
+
+//var destino = Destino("Argentina", "BuenosAires", 10000f)
+//val destinoJson = mapper.writeValueAsString(destino)
