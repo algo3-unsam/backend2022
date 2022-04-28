@@ -1,6 +1,6 @@
 package ar.edu.unsam.algo
 
-class Destino(val pais: String, val ciudad: String, var costoBase: Float):Datos {
+class Destino(val pais: String, var ciudad: String, var costoBase: Float):Datos {
     override var id = 0
 
     companion object {
@@ -30,4 +30,5 @@ class Destino(val pais: String, val ciudad: String, var costoBase: Float):Datos 
     fun descuento(usuario: Usuario) =
         if (usuario.esDelMismoPaisQueDestino((this))) (costoBase * (usuario.descuentoPorAntiguedad() * 0.01)) else 0.0
 
+    override fun toString(): String = "id: $id, Pais: $pais, Ciudad: $ciudad, Costo: $costoBase "
 }

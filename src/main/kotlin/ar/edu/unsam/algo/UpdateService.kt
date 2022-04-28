@@ -1,18 +1,15 @@
 package ar.edu.unsam.algo
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-val mapper = jacksonObjectMapper()
+import com.google.gson.GsonBuilder
 
-class Json(val destinos: MutableList<Destino> = mutableListOf()) {
-
-    fun agregarDestino(destino: Destino) {
+class ServiceDestino {
+    val destinos = mutableListOf<Destino>()
+    val gsonPretty = GsonBuilder().setPrettyPrinting().create()
+    fun add(destino: Destino){
         destinos.add(destino)
     }
 
-    fun contieneDestinos(destino: Destino) = destinos.contains(destino)
-
-    val destinoJson = mapper.writeValueAsString(destinos)
+    fun printJson(){
+        println(gsonPretty.toJson(destinos))
+    }
 }
-
-//var destino = Destino("Argentina", "BuenosAires", 10000f)
-//val destinoJson = mapper.writeValueAsString(destino)

@@ -1,11 +1,12 @@
 package ar.edu.unsam.algo.TestUsuarios
 
 
-import ar.edu.unsam.algo.Destino
-import ar.edu.unsam.algo.Usuario
+import ar.edu.unsam.algo.*
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
+import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldHave
 import java.time.LocalDate
 
 class TestUsuarioYDestinoRodri: DescribeSpec ({
@@ -40,5 +41,22 @@ class TestUsuarioYDestinoRodri: DescribeSpec ({
             destino2.esLocal() shouldBe true
             destino2.precio(usuario2) shouldBe 8500
         }
+
+        describe("prueba de gson") {
+            val destino1 = Destino(pais = "Francia", ciudad = "Paris", costoBase = 20000F)
+            val destino2 = Destino(pais = "Argentina", ciudad = "Buenos aires", costoBase = 10000F)
+            val servicioDestino1 = ServiceDestino()
+
+            servicioDestino1.apply {
+                add(destino1)
+                add(destino2)
+            }
+
+            servicioDestino1.printJson()
+            //servicioDestino1.destinos.contains(destino2).shouldBeTrue()
+        }
     }
+
+
+
 })
