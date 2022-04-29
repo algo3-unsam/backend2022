@@ -4,6 +4,8 @@ class Repositorio<Elemento : Datos> {
     val elementos: MutableList<Elemento> = mutableListOf<Elemento>()
     var id = 1
 
+    fun cantElementos() = elementos.size
+
     fun create(elemento: Elemento){
         creacionCorrecta(elemento)
         yaEstaCreado(elemento)
@@ -61,4 +63,13 @@ class Repositorio<Elemento : Datos> {
     }
 
     fun search(cadena: String) = elementos.filter { it.coincidencia(cadena) }
+
+    fun crearOModificar(elemento: Elemento){
+        if(estaEnRepo(elemento)){
+            this.update(elemento)
+        }
+        else{
+            this.create(elemento)
+        }
+    }
 }
