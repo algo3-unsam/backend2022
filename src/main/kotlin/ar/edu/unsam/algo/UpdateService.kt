@@ -19,7 +19,7 @@ class ServiceDestino {
     }
 
     fun getDestinos(): String{
-        return gsonPretty.toJson(destinos)
+        return gsonPretty.toJson(destinos).replace("costoBase", "costo")
     }
 
     fun printJson(){
