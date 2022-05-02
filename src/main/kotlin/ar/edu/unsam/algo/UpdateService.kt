@@ -28,7 +28,7 @@ class ServiceDestino {
 }
 
 object JsonDestinosBuilder{
-    val destino1JSON = "{\"id\":2,\"pais\":\"Argentina\",\"ciudad\":\"Buenos Aires\",\"costoBase\":10000}"
+    val destino1JSON = "{\"id\":2,\"pais\":\"Argentina\",\"ciudad\":\"Buenos Aires\",\"costo\":10000}"
     val destino2JSON = "{\"pais\":\"Malasia\",\"ciudad\":\"Kuala Lumpur\",\"costoBase\":10000}"
     val destinosJSON = "[$destino1JSON,$destino2JSON]"
     val gson = Gson()

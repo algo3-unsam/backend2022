@@ -28,7 +28,7 @@ class UpdateService: DescribeSpec({
         it("Modifico bien el segundo destino"){
             var destinoModificado = repoDestino.getById(2)
             destinoModificado.ciudad shouldBe "Buenos Aires"
-            destinoModificado.costoBase shouldBe 10000f
+            destinoModificado.costo shouldBe 10000f
         }
 
     }
