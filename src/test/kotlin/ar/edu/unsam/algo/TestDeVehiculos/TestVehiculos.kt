@@ -23,7 +23,7 @@ class TestVehiculos:DescribeSpec({
             }
             var moto300cc = Moto("honda","ninja",LocalDate.of(2015,7,5),10000.0,true,300)
             it("Costo Final con Convenio de un alquiler de 3 dias con mas cilindrada"){
-                moto300cc.costoFinal(3) shouldBe 28500
+                moto300cc.costoFinal(3) shouldBe 28350
             }
         }
         describe("Test de Auto"){

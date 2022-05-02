@@ -15,21 +15,49 @@ class UpdateService: DescribeSpec({
         var destino1 = Destino("Brasil","Rio de Janeiro",5000f)
         var destino2 = Destino("Argentina","Mar Del Plata",4000f)
         var destino3 = Destino("Peru","Lima",8000f)
-        val servicioDestino = ServiceDestino()
+        val actualizadorDeRepo = ActualizadorDeDestinos()
         repoDestino.apply { create(destino1);create(destino2);create(destino3) }
         it("El repo tiene 3 elementos"){
             repoDestino.cantElementos() shouldBe 3
         }
-       servicioDestino.repositorio = repoDestino
-       servicioDestino.actualizarRepo()
+        actualizadorDeRepo.serviceDestino = StubServiceDestino()
+        actualizadorDeRepo.repositorio = repoDestino
+        actualizadorDeRepo.actualizarDestinos()
         it("El repo tiene 4 elementos"){
             repoDestino.cantElementos() shouldBe 4
         }
         it("Modifico bien el segundo destino"){
             var destinoModificado = repoDestino.getById(2)
             destinoModificado.ciudad shouldBe "Buenos Aires"
-            destinoModificado.costo shouldBe 10000f
         }
 
     }
 })
+
+
+
+
+
+
+class StubServiceDestino : ServiceDestino{
+    val destinosJSON ="""
+        [
+           {
+                "id": 2,
+                "pais": "Argentina",
+                "ciudad": "Buenos Aires",
+                "costoBase": 10000
+            }, 
+          {
+                "pais": "Brasil",
+                "ciudad": "Rio de Janeiro",
+                "costoBase": 20000
+             }
+          
+        ]
+    """.trimIndent()
+
+    override fun getDestinos(): String {
+        return destinosJSON
+    }
+}
