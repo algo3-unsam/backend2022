@@ -24,7 +24,7 @@ class UpdateService: DescribeSpec({
         actualizadorDeRepo.repositorio = repoDestino
         actualizadorDeRepo.actualizarDestinos()
         it("El repo tiene 4 elementos"){
-            repoDestino.cantElementos() shouldBe 4
+            repoDestino.cantElementos() shouldBe 5
         }
         it("Modifico bien el segundo destino"){
             var destinoModificado = repoDestino.getById(2)
@@ -46,14 +46,24 @@ class StubServiceDestino : ServiceDestino{
                 "id": 2,
                 "pais": "Argentina",
                 "ciudad": "Buenos Aires",
-                "costoBase": 10000
+                "costoBase": 10000f
             }, 
           {
                 "pais": "Brasil",
                 "ciudad": "Rio de Janeiro",
-                "costoBase": 20000
-             }
-          
+                "costoBase": 20000f
+             },
+           {
+                "id": 3,
+                "pais": "Tailandia",
+                "ciudad": "Bankog",
+                "costoBase": 30000f
+           },
+          {
+                "pais": "Corea",
+                "ciudad": "Seul",
+                "costoBase": 54000f
+           }
         ]
     """.trimIndent()
 
