@@ -30,17 +30,15 @@ class TestDeRepositorio:DescribeSpec({
           assertThrows<BusinessException> { repoDestinos.create(tokio) }
         }
         var nuevoTokio = tokio
-        nuevoTokio.ciudad = "Tokyo"
+        nuevoTokio = Destino("Japon","Tokio",50000f)
+        nuevoTokio.id = tokio.id
         repoDestinos.update(nuevoTokio)
         it("Testeo que el modificado este en el repo"){
-            repoDestinos.estaEnRepo(nuevoTokio)
+            repoDestinos.estaEnRepo(nuevoTokio) shouldBe true
         }
-        it("Testeo que el viejo NO este en el repo"){
-            repoDestinos.estaEnRepo(tokio)
-        }
-        var argelia = Destino("Argelia", "Argel",20000F)
-        repoDestinos.create(argelia)
         it("Testeo la funcion search"){
+            var argelia = Destino("Argelia", "Argel",20000F)
+            repoDestinos.create(argelia)
             var listaDeRespuesta = mutableListOf<Destino>().apply { add(bsAs); add(argelia) }
             repoDestinos.search("Arg") shouldBe listaDeRespuesta
         }

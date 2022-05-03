@@ -17,11 +17,11 @@ interface Vehiculo:Datos{
 
     fun costoBase(diasDealquiler: Int) = costoDiario * diasDealquiler
 
-    fun costoFinal(diasDealquiler: Int) = costoBase(diasDealquiler) + aumentoPorCondicion(diasDealquiler) - descuentoPorConvenio(diasDealquiler)
+    fun costoFinal(diasDealquiler: Int) = (costoBase(diasDealquiler) + aumentoPorCondicion(diasDealquiler)) * factorDescuentoPorConvenio(diasDealquiler)
 
     fun tieneConvenio() = containsString(marcaConvenio,marca)
 
-    fun descuentoPorConvenio(diasDealquiler: Int) = if(tieneConvenio()) costoBase(diasDealquiler) * 0.1 else 0.0
+    fun factorDescuentoPorConvenio(diasDealquiler: Int) = if(tieneConvenio())  0.9 else 1.0
 
     fun antiguedad() = ChronoUnit.YEARS.between(anioDeFabricacion, LocalDate.now())
 
@@ -41,9 +41,9 @@ interface Vehiculo:Datos{
     fun anioDeFabricacionPar() = anioDeFabricacion.year % 2 == 0
 
 
-    fun compararMarcaModelo(vehiculo: Vehiculo) = obtenerInicial(vehiculo.marca) == obtenerInicial(vehiculo.modelo)
+    fun compararMarcaModelo(vehiculo: Vehiculo) = marca.first() == modelo.first()
 
-    fun obtenerInicial(cadena: String) = cadena.get(0)
+
 
 }
 
@@ -61,10 +61,7 @@ class Moto(
     fun extraPorDia(diasDealquiler: Int): Double = (diasDealquiler * 500.0)
 
     override fun aumentoPorCondicion(diasDealquiler: Int): Double {
-        if(superaCilindradasMinimas()) {
-            return extraPorDia(diasDealquiler)
-        }
-        return 0.0
+        return if (superaCilindradasMinimas()) extraPorDia(diasDealquiler) else 0.0
     }
 
     fun superaCilindradasMinimas() = cantidadCilindrada > 250
@@ -81,11 +78,10 @@ class Auto(
 ): Vehiculo {
 
     override fun aumentoPorCondicion(diasDealquiler: Int): Double {
-        if(!hatchback){
-            return costoBase(diasDealquiler)* 0.25
-        }
-        return  costoBase(diasDealquiler) * 0.1
+        return  costoBase(diasDealquiler) * porcentaje()
     }
+
+    fun porcentaje() = if (!hatchback) 0.25 else 0.1
 
 }
 

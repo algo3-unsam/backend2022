@@ -13,9 +13,7 @@ class Destino(val pais: String, var ciudad: String, var costoBase: Float):Datos 
         }
     }
 
-    override fun coincidencia(cadena: String): Boolean = coincidenciaParcialCiudadPais(cadena)
-
-    fun coincidenciaParcialCiudadPais(cadena:String) = coincidenciaParcial(pais,cadena) || coincidenciaParcial(ciudad,cadena)
+    override fun coincidencia(cadena: String): Boolean = coincidenciaParcial(pais,cadena) || coincidenciaParcial(ciudad,cadena)
 
     override fun completamenteValido() = (this.costoBase > 0) && this.tieneInformacionCargadaEnStrings()
 
