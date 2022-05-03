@@ -1,6 +1,8 @@
 package ar.edu.unsam.algo
 
-class Destino(val pais: String, var ciudad: String, var costoBase: Float):Datos {
+import com.google.gson.annotations.SerializedName
+
+class Destino(val pais: String, var ciudad: String, @SerializedName("costo") var costoBase: Float):Datos {
     override var id = 0
 
     companion object {

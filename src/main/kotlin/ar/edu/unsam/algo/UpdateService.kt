@@ -6,21 +6,16 @@ import java.lang.reflect.Type
 
 interface ServiceDestino {
     fun getDestinos(): String
-
 }
-
-
 
 class ActualizadorDeDestinos {
     lateinit var serviceDestino: ServiceDestino
     lateinit var repositorio: Repositorio<Destino>
 
-
     fun deJsonAListaDestino():List<Destino>{
         val gson = Gson()
         val tipoListaDestinos: Type = object : TypeToken<List<Destino?>?>() {}.getType()
        return gson.fromJson<List<Destino>>(serviceDestino.getDestinos(), tipoListaDestinos)
-
     }
 
     fun actualizarDestinos(){
