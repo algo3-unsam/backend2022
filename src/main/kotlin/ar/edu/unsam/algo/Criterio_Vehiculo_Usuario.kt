@@ -13,7 +13,7 @@ object Supersticioso : CriterioVehiculo {
 }
 
 object Caprichoso : CriterioVehiculo{
-    override fun aceptaVehiculo(vehiculo: Vehiculo) = vehiculo.compararMarcaModelo(vehiculo)
+    override fun aceptaVehiculo(vehiculo: Vehiculo) = vehiculo.coincidenInicialMarcaModelo()
 
 
 }

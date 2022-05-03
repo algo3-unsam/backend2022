@@ -2,7 +2,7 @@ package ar.edu.unsam.algo
 
 import com.google.gson.annotations.SerializedName
 
-class Destino(val pais: String, var ciudad: String, @SerializedName("costo") var costoBase: Float):Datos {
+class Destino(val pais: String, var ciudad: String, @SerializedName("costo") var costoBase: Float) : Datos {
     override var id = 0
 
     companion object {
@@ -15,7 +15,8 @@ class Destino(val pais: String, var ciudad: String, @SerializedName("costo") var
         }
     }
 
-    override fun coincidencia(cadena: String): Boolean = coincidenciaParcial(pais,cadena) || coincidenciaParcial(ciudad,cadena)
+    override fun coincidencia(cadena: String): Boolean =
+        coincidenciaParcial(pais, cadena) || coincidenciaParcial(ciudad, cadena)
 
     override fun completamenteValido() = (this.costoBase > 0) && this.tieneInformacionCargadaEnStrings()
 
@@ -30,5 +31,4 @@ class Destino(val pais: String, var ciudad: String, @SerializedName("costo") var
     fun descuento(usuario: Usuario) =
         if (usuario.esDelMismoPaisQueDestino((this))) (costoBase * (usuario.descuentoPorAntiguedad() * 0.01)) else 0.0
 
-    override fun toString(): String = "id: $id, Pais: $pais, Ciudad: $ciudad, Costo: $costoBase "
 }
