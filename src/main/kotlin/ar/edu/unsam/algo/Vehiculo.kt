@@ -41,7 +41,7 @@ interface Vehiculo:Datos{
     fun anioDeFabricacionPar() = anioDeFabricacion.year % 2 == 0
 
 
-    fun compararMarcaModelo(vehiculo: Vehiculo) = marca.first() == modelo.first()
+    fun coincidenInicialMarcaModelo() = marca.first() == modelo.first()
 
 
 
