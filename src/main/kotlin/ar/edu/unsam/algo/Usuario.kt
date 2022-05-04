@@ -30,15 +30,15 @@ class Usuario(
 
     fun tieneDestinoSoñado() = destinosDeseados.isNotEmpty()
 
-    fun esValido() {
-        if (!completamenteValido()) {
+    override fun validacion() {
+        if (!esValido()) {
             throw FaltaCargarInformacionException(
                 "Hay informacion vacia, Nombre: $nombre, apellido: $apellido, username: $username, pais de residencia: $paisDeResidencia\n" + "dias para viajar: $diasParaViajar, destinos deseados: $destinosDeseados"
             )
         }
     }
 
-    override fun completamenteValido(): Boolean = this.tienenInformacionCargadaEnLosStrings() && (!tieneFechaAltaInvalida()) &&(!tieneDiasParaViajarInvalidos()) && (this.tieneDestinoSoñado())
+    override fun esValido(): Boolean = this.tienenInformacionCargadaEnLosStrings() && (!tieneFechaAltaInvalida()) &&(!tieneDiasParaViajarInvalidos()) && (this.tieneDestinoSoñado())
     fun tieneDiasParaViajarInvalidos(): Boolean = this.diasParaViajar < 0
 
     fun tieneFechaAltaInvalida(): Boolean = this.fechaDeAlta > LocalDate.now()

@@ -33,7 +33,7 @@ interface Vehiculo:Datos{
     fun comienzoIgual(cadena: String) = modelo.startsWith(cadena,ignoreCase = true)
 
 
-    override fun completamenteValido(): Boolean {
+    override fun esValido(): Boolean {
         TODO("Not yet implemented")
     }
 
@@ -43,7 +43,9 @@ interface Vehiculo:Datos{
 
     fun coincidenInicialMarcaModelo() = marca.first() == modelo.first()
 
-
+    override fun validacion() {
+        TODO("Not yet implemented")
+    }
 
 }
 

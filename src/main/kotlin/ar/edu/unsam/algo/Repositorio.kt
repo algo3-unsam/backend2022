@@ -2,7 +2,7 @@ package ar.edu.unsam.algo
 
 class Repositorio<Elemento : Datos> {
     val elementos: MutableList<Elemento> = mutableListOf<Elemento>()
-    var id = 1
+    var idSiguiente = 1
 
     fun cantElementos() = elementos.size
 
@@ -13,9 +13,7 @@ class Repositorio<Elemento : Datos> {
     }
 
     fun creacionCorrecta(elemento: Elemento){
-        if(!elemento.completamenteValido()){
-            throw BusinessException("NO ESTA BIEN CREADO")
-        }
+       elemento.validacion()
     }
 
     fun yaEstaCreado(elemento: Elemento){
@@ -29,8 +27,8 @@ class Repositorio<Elemento : Datos> {
     }
 
     fun asignarId(elemento: Elemento){
-        elemento.id  = id
-        id++
+        elemento.id  = idSiguiente
+        idSiguiente++
     }
 
     fun estaEnRepo(elemento: Elemento) = elementos.any{ it.id == elemento.id}
@@ -42,13 +40,13 @@ class Repositorio<Elemento : Datos> {
 
     fun update(elementoModificado: Elemento){
         excepcionPorNoExistenciaEnRepo(elementoModificado)
+        creacionCorrecta(elementoModificado)
         var elementoABorrar = getById(elementoModificado.id)
         delete(elementoABorrar)
         agregaElementoModificado(elementoModificado)
     }
 
     fun agregaElementoModificado(elementoModificado: Elemento) {
-        creacionCorrecta(elementoModificado)
         elementos.add(elementoModificado)
     }
 

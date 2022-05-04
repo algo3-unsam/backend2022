@@ -11,8 +11,8 @@ class Destino(val pais: String, var ciudad: String, @SerializedName("costo") var
         var LOCAL = "Argentina"
     }
 
-    fun validacion() {
-        if (!this.completamenteValido()) {
+    override fun validacion() {
+        if (!this.esValido()) {
             throw FaltaCargarInformacionException("destino invalido,falta informacion\n costo base: $costoBase, pais: $pais, ciudad: $ciudad")
         }
     }
@@ -20,7 +20,7 @@ class Destino(val pais: String, var ciudad: String, @SerializedName("costo") var
     override fun coincidencia(cadena: String): Boolean =
         coincidenciaParcial(pais, cadena) || coincidenciaParcial(ciudad, cadena)
 
-    override fun completamenteValido() = (this.costoBase > 0) && this.tieneInformacionCargadaEnStrings()
+    override fun esValido() = (this.costoBase > 0) && this.tieneInformacionCargadaEnStrings()
 
     fun tieneInformacionCargadaEnStrings() = !(this.pais.isNullOrEmpty() && this.ciudad.isNullOrEmpty())
 

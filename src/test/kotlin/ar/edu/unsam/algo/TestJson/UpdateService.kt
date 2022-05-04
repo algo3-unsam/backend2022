@@ -20,17 +20,18 @@ class UpdateService: DescribeSpec({
         it("El repo tiene 3 elementos"){
             repoDestino.cantElementos() shouldBe 3
         }
-        actualizadorDeRepo.serviceDestino = StubServiceDestino()
-        actualizadorDeRepo.repositorio = repoDestino
-        actualizadorDeRepo.actualizarDestinos()
-        it("El repo tiene 4 elementos"){
-            repoDestino.cantElementos() shouldBe 5
+        describe("Test de actualizador de destinos") {
+            actualizadorDeRepo.serviceDestino = StubServiceDestino()
+            actualizadorDeRepo.repositorio = repoDestino
+            actualizadorDeRepo.actualizarDestinos()
+            it("El repo tiene 4 elementos") {
+                repoDestino.cantElementos() shouldBe 5
+            }
+            it("Modifico bien el segundo destino") {
+                var destinoModificado = repoDestino.getById(2)
+                destinoModificado.ciudad shouldBe "Buenos Aires"
+            }
         }
-        it("Modifico bien el segundo destino"){
-            var destinoModificado = repoDestino.getById(2)
-            destinoModificado.ciudad shouldBe "Buenos Aires"
-        }
-
     }
 })
 
@@ -46,39 +47,28 @@ class StubServiceDestino : ServiceDestino{
                 "id": 2,
                 "pais": "Argentina",
                 "ciudad": "Buenos Aires",
-<<<<<<< HEAD
                 "costo": 10000f
-=======
-                "costo": 10000
->>>>>>> 1e6478837ed03423e7e593ab492fd25e6e8fff25
+
             }, 
           {
                 "pais": "Brasil",
                 "ciudad": "Rio de Janeiro",
-<<<<<<< HEAD
                 "costo": 20000f
-=======
-                "costo": 20000
->>>>>>> 1e6478837ed03423e7e593ab492fd25e6e8fff25
+
+               
+
              },
            {
                 "id": 3,
                 "pais": "Tailandia",
                 "ciudad": "Bankog",
-<<<<<<< HEAD
                 "costo": 30000f
-=======
-                "costo": 30000
->>>>>>> 1e6478837ed03423e7e593ab492fd25e6e8fff25
+
            },
           {
                 "pais": "Corea",
                 "ciudad": "Seul",
-<<<<<<< HEAD
                 "costo": 54000f
-=======
-                "costo": 54000
->>>>>>> 1e6478837ed03423e7e593ab492fd25e6e8fff25
            }
         ]
     """.trimIndent()

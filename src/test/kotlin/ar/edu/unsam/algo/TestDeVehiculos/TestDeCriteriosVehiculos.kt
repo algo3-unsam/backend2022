@@ -70,21 +70,22 @@ class TestDeCriteriosVehiculos:DescribeSpec({
         usuario.criterioParaVehiculo = Combinado().apply {agregarTipo(SinLimite);agregarTipo(Supersticioso)}
         var motoImpar = Moto("Honda","Ninja", LocalDate.of(1999,2,1),1000.0,true,250)
         var motoPar = Moto("Honda","Ninja", LocalDate.of(2000,2,1),1000.0,true,250)
-        it("Usuario no acepta vehiculo. Si bien tiene kilometraje libre, el año de fabricacion es impar"){
+        it("Usuario no acepta vehiculo. Si bien tiene kilometraje libre, el año de fabricacion es impar") {
             usuario.leGustaVehiculo(motoImpar).shouldBeFalse()
         }
-        it("Usuario acepta vehiculo"){
+        it("Usuario acepta vehiculo") {
             usuario.leGustaVehiculo(motoPar).shouldBeTrue()
         }
-        (usuario.criterioParaVehiculo as Combinado).agregarTipo(Caprichoso)
-        it("Con otro tipo agregado, ahora no acepta motoPar que antes Si aceptaba"){
-            usuario.leGustaVehiculo(motoPar).shouldBeFalse()
+        it("Con otro tipo agregado, ahora no acepta motoPar que antes Si aceptaba") {
+                (usuario.criterioParaVehiculo as Combinado).agregarTipo(Caprichoso)
+                usuario.leGustaVehiculo(motoPar).shouldBeFalse()
         }
-        var subCombinado = Combinado().apply{agregarTipo(Selectivo("Ford")); agregarTipo(SinLimite)}
-        (usuario.criterioParaVehiculo as Combinado).agregarTipo(subCombinado)
-        var autoAceptable = Auto("Ford", "Fiesta",LocalDate.of(2022,1,21),10000.0,true,true)
-        it("Usuario acepta el vehiculo, teniendo como criterio un combinado con otro combinado dentro"){
+        it("Usuario acepta el vehiculo, teniendo como criterio un combinado con otro combinado dentro") {
+            var subCombinado = Combinado().apply { agregarTipo(Selectivo("Ford")); agregarTipo(SinLimite) }
+            (usuario.criterioParaVehiculo as Combinado).agregarTipo(subCombinado)
+            var autoAceptable = Auto("Ford", "Fiesta", LocalDate.of(2022, 1, 21), 10000.0, true, true)
             usuario.leGustaVehiculo(autoAceptable).shouldBeTrue()
+
         }
     }
 })

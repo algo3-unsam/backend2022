@@ -25,15 +25,13 @@ class Itinerario(
     fun existeDiaConActividadInciado() = this.hayDiasInciados() and this.unDiaConActividad()
     //fun tieneCreadorYDestino() = !this.creador.isNullorEmpty() and !this.destino.isNullorEmpty()
 
-    fun validacion(){
+    override fun validacion(){
         if(!this.existeDiaConActividadInciado()){
             throw FaltaCargarInformacionException("El Itinerario no tiene ninguna actividad")
         }
     }
 
-    override fun completamenteValido(): Boolean {
-        TODO("Not yet implemented")
-    }
+    override fun esValido() = existeDiaConActividadInciado()
 
     override fun coincidencia(cadena: String): Boolean = destino.coincidencia(cadena) || coincidenciaConActividades(cadena)
 
@@ -55,7 +53,6 @@ class Itinerario(
     //reviso que todos los dias asignados al itinerario tengan actividades
     fun todoLosDiasOcupados() = (dias.all { it.tengoActividades() } )
 
-    //fun todosLosDiasIniciados() = dias.size == this.cantDias
 
     fun sosMiCreador(usuario: Usuario) = usuario.username.equals(creador.username,ignoreCase = true)
 
