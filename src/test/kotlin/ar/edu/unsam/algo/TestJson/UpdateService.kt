@@ -46,23 +46,23 @@ class StubServiceDestino : ServiceDestino{
                 "id": 2,
                 "pais": "Argentina",
                 "ciudad": "Buenos Aires",
-                "costoBase": 10000f
+                "costo": 10000f
             }, 
           {
                 "pais": "Brasil",
                 "ciudad": "Rio de Janeiro",
-                "costoBase": 20000f
+                "costo": 20000f
              },
            {
                 "id": 3,
                 "pais": "Tailandia",
                 "ciudad": "Bankog",
-                "costoBase": 30000f
+                "costo": 30000f
            },
           {
                 "pais": "Corea",
                 "ciudad": "Seul",
-                "costoBase": 54000f
+                "costo": 54000f
            }
         ]
     """.trimIndent()
