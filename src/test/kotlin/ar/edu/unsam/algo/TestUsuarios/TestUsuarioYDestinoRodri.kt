@@ -42,21 +42,5 @@ class TestUsuarioYDestinoRodri: DescribeSpec ({
             destino2.precio(usuario2) shouldBe 8500
         }
 
-        /*describe("prueba de gson") {
-            val destino1 = Destino(pais = "Francia", ciudad = "Paris", costoBase = 20000F)
-            val destino2 = Destino(pais = "Argentina", ciudad = "Buenos aires", costoBase = 10000F)
-            val servicioDestino1 = ServiceDestino()
-
-            servicioDestino1.apply {
-                add(destino1)
-                add(destino2)
-            }
-
-            servicioDestino1.printJson()
-            //servicioDestino1.destinos.contains(destino2).shouldBeTrue()
-        }*/
     }
-
-
-
 })

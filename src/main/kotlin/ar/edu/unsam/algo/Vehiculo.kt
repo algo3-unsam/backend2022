@@ -27,26 +27,32 @@ interface Vehiculo:Datos{
 
     fun aumentoPorCondicion(diasDealquiler: Int) : Double
 
-
     override fun coincidencia(cadena: String) = marca.equals(cadena,ignoreCase = true) or comienzoIgual(cadena)
 
     fun comienzoIgual(cadena: String) = modelo.startsWith(cadena,ignoreCase = true)
 
-
-    override fun esValido(): Boolean {
-        TODO("Not yet implemented")
-    }
-
     fun esModerno()= antiguedad() < 2
-    fun anioDeFabricacionPar() = anioDeFabricacion.year % 2 == 0
 
+    fun anioDeFabricacionPar() = anioDeFabricacion.year % 2 == 0
 
     fun coincidenInicialMarcaModelo() = marca.first() == modelo.first()
 
-    override fun validacion() {
-        TODO("Not yet implemented")
-    }
 
+    override fun esValido() = this.tieneInformacionCargadaEnStrings() && this.costoDiarioValido() && this.tieneFechaAltaValida()
+
+
+    fun tieneInformacionCargadaEnStrings() = !(this.marca.isNullOrEmpty() && this.modelo.isNullOrEmpty())
+
+    fun tieneFechaAltaValida(): Boolean = this.anioDeFabricacion > LocalDate.now()
+
+    fun costoDiarioValido() = costoDiario > 0
+
+    override fun validacion() {
+        if (!this.esValido()) {
+            throw FaltaCargarInformacionException("destino invalido,falta informacion\n Marca: $marca ,Modelo: $modelo , Año de Fabricacion: $anioDeFabricacion , costo diario : $costoDiario")
+
+        }
+    }
 }
 
 class Moto(

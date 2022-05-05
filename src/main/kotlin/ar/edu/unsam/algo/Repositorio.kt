@@ -7,40 +7,36 @@ class Repositorio<Elemento : Datos> {
     fun cantElementos() = elementos.size
 
     fun create(elemento: Elemento){
-        creacionCorrecta(elemento)
+        elemento.validacion()
         yaEstaCreado(elemento)
         agregarAlRepo(elemento)
     }
 
-    fun creacionCorrecta(elemento: Elemento){
-       elemento.validacion()
-    }
-
     fun yaEstaCreado(elemento: Elemento){
-        if(estaEnRepo(elemento)){
+        if(estaEnRepo(elemento.id)){
             throw BusinessException("YA ESTA EN EL REPO")
         }
     }
+
     fun agregarAlRepo(elemento: Elemento){
         elementos.add(elemento)
         asignarId(elemento)
     }
 
     fun asignarId(elemento: Elemento){
-        elemento.id  = idSiguiente
-        idSiguiente++
+        elemento.id  = idSiguiente++
     }
 
-    fun estaEnRepo(elemento: Elemento) = elementos.any{ it.id == elemento.id}
+    fun estaEnRepo(idABuscar: Int) = elementos.any{ it.id == idABuscar}
 
     fun delete(elemento: Elemento) {
-        excepcionPorNoExistenciaEnRepo(elemento)
+        excepcionPorNoExistenciaEnRepo(elemento.id)
         elementos.remove(elemento)
     }
 
     fun update(elementoModificado: Elemento){
-        excepcionPorNoExistenciaEnRepo(elementoModificado)
-        creacionCorrecta(elementoModificado)
+        excepcionPorNoExistenciaEnRepo(elementoModificado.id)
+        elementoModificado.validacion()
         var elementoABorrar = getById(elementoModificado.id)
         delete(elementoABorrar)
         agregaElementoModificado(elementoModificado)
@@ -50,20 +46,21 @@ class Repositorio<Elemento : Datos> {
         elementos.add(elementoModificado)
     }
 
-    fun excepcionPorNoExistenciaEnRepo(elemento: Elemento){
-        if(!estaEnRepo(elemento)){
+    fun excepcionPorNoExistenciaEnRepo(idABuscar: Int){
+        if(!estaEnRepo(idABuscar)){
             throw BusinessException("NO ESTA EN EL REPO")
         }
     }
 
     fun getById(idABuscar: Int):Elemento{
+        excepcionPorNoExistenciaEnRepo(idABuscar)
         return elementos.first { it.id == idABuscar  }
     }
 
     fun search(cadena: String) = elementos.filter { it.coincidencia(cadena) }
 
     fun crearOModificar(elemento: Elemento){
-        if(estaEnRepo(elemento)){
+        if(estaEnRepo(elemento.id)){
             this.update(elemento)
         }
         else{

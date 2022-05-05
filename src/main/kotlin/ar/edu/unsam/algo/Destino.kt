@@ -17,8 +17,10 @@ class Destino(val pais: String, var ciudad: String, @SerializedName("costo") var
         }
     }
 
-    override fun coincidencia(cadena: String): Boolean =
-        coincidenciaParcial(pais, cadena) || coincidenciaParcial(ciudad, cadena)
+    override fun coincidencia(cadena: String): Boolean = coincidenciaParcialPaisCiudad(cadena)
+
+
+    fun coincidenciaParcialPaisCiudad(cadena: String) = pais.contains(cadena,ignoreCase = true) || ciudad.contains(cadena,ignoreCase = true)
 
     override fun esValido() = (this.costoBase > 0) && this.tieneInformacionCargadaEnStrings()
 

@@ -17,22 +17,25 @@ class UpdateService: DescribeSpec({
         var destino3 = Destino("Peru","Lima",8000f)
         val actualizadorDeRepo = ActualizadorDeDestinos()
         repoDestino.apply { create(destino1);create(destino2);create(destino3) }
-        it("El repo tiene 3 elementos"){
+        actualizadorDeRepo.serviceDestino = StubServiceDestino()
+        actualizadorDeRepo.repositorio = repoDestino
+        it("Al actualizar el repo, se agregan mas destinos al repo"){
             repoDestino.cantElementos() shouldBe 3
-        }
-        describe("Test de actualizador de destinos") {
-            actualizadorDeRepo.serviceDestino = StubServiceDestino()
-            actualizadorDeRepo.repositorio = repoDestino
             actualizadorDeRepo.actualizarDestinos()
-            it("El repo tiene 4 elementos") {
-                repoDestino.cantElementos() shouldBe 5
-            }
-            it("Modifico bien el segundo destino") {
-                var destinoModificado = repoDestino.getById(2)
-                destinoModificado.ciudad shouldBe "Buenos Aires"
-            }
+            repoDestino.cantElementos() shouldBe 5
         }
-    }
+
+        it("Al usar el actualziador de destinos, el elemento en la posicion 2 cambia de estado") {
+            var destinoAModificar = repoDestino.getById(2)
+            destinoAModificar.ciudad shouldBe "Mar Del Plata"
+
+            actualizadorDeRepo.actualizarDestinos()
+
+            var destinoModificado = repoDestino.getById(2)
+            destinoModificado.ciudad shouldBe "Buenos Aires"
+           }
+        }
+
 })
 
 

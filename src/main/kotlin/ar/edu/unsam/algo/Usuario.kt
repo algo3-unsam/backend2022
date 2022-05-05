@@ -26,7 +26,7 @@ class Usuario(
 
     fun coincidenciaTotalUsername(cadena: String) = username.equals(cadena,ignoreCase = false)
 
-    fun coicidenciaParcialNombreApellido(cadena: String) = coincidenciaParcial(nombre,cadena) || coincidenciaParcial(apellido,cadena)
+    fun coicidenciaParcialNombreApellido(cadena: String) = nombre.contains(cadena,ignoreCase = true) || apellido.contains(cadena,ignoreCase = true)
 
     fun tieneDestinoSoñado() = destinosDeseados.isNotEmpty()
 
@@ -38,7 +38,7 @@ class Usuario(
         }
     }
 
-    override fun esValido(): Boolean = this.tienenInformacionCargadaEnLosStrings() && (!tieneFechaAltaInvalida()) &&(!tieneDiasParaViajarInvalidos()) && (this.tieneDestinoSoñado())
+    override fun esValido(): Boolean = this.tieneInformacionCargadaEnStrings() && (!tieneFechaAltaInvalida()) &&(!tieneDiasParaViajarInvalidos()) && (this.tieneDestinoSoñado())
     fun tieneDiasParaViajarInvalidos(): Boolean = this.diasParaViajar < 0
 
     fun tieneFechaAltaInvalida(): Boolean = this.fechaDeAlta > LocalDate.now()
@@ -47,7 +47,7 @@ class Usuario(
         this.criterioParaItinerario = criterio
     }
 
-    fun tienenInformacionCargadaEnLosStrings() =
+   fun tieneInformacionCargadaEnStrings() =
         !(this.nombre.isNullOrEmpty() && this.apellido.isNullOrEmpty() && this.username.isNullOrEmpty() && this.paisDeResidencia.isNullOrEmpty())
 
     fun agregarAmigo(usuario: Usuario) = amigos.add(usuario)
