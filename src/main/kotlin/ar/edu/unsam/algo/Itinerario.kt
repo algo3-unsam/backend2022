@@ -22,16 +22,14 @@ class Itinerario(
 
     fun cantidadDeDias() = dias.size
 
-    fun existeDiaConActividadInciado() = this.hayDiasInciados() and this.unDiaConActividad()
-    //fun tieneCreadorYDestino() = !this.creador.isNullorEmpty() and !this.destino.isNullorEmpty()
+    override fun esValido() = this.hayDiasInciados() and this.unDiaConActividad()
 
     override fun validacion(){
-        if(!this.existeDiaConActividadInciado()){
+        if(!this.esValido()){
             throw FaltaCargarInformacionException("El Itinerario no tiene ninguna actividad")
         }
     }
 
-    override fun esValido() = existeDiaConActividadInciado()
 
     override fun coincidencia(cadena: String): Boolean = destino.coincidencia(cadena) || coincidenciaConActividades(cadena)
 
