@@ -35,7 +35,6 @@ class Repositorio<Elemento : Datos> {
     }
 
     fun update(elementoModificado: Elemento){
-        excepcionPorNoExistenciaEnRepo(elementoModificado.id)
         elementoModificado.validacion()
         var elementoABorrar = getById(elementoModificado.id)
         delete(elementoABorrar)

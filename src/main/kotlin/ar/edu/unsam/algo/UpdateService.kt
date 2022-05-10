@@ -8,7 +8,7 @@ interface ServiceDestino {
     fun getDestinos(): String
 }
 
-class ActualizadorDeDestinos {
+object ActualizadorDeDestinos {
     lateinit var serviceDestino: ServiceDestino
     lateinit var repositorio: Repositorio<Destino>
 

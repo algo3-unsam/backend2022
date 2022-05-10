@@ -15,13 +15,12 @@ class UpdateService: DescribeSpec({
         var destino1 = Destino("Brasil","Rio de Janeiro",5000f)
         var destino2 = Destino("Argentina","Mar Del Plata",4000f)
         var destino3 = Destino("Peru","Lima",8000f)
-        val actualizadorDeRepo = ActualizadorDeDestinos()
         repoDestino.apply { create(destino1);create(destino2);create(destino3) }
-        actualizadorDeRepo.serviceDestino = StubServiceDestino()
-        actualizadorDeRepo.repositorio = repoDestino
+        ActualizadorDeDestinos.serviceDestino = StubServiceDestino()
+        ActualizadorDeDestinos.repositorio = repoDestino
         it("Al actualizar el repo, se agregan mas destinos al repo"){
             repoDestino.cantElementos() shouldBe 3
-            actualizadorDeRepo.actualizarDestinos()
+            ActualizadorDeDestinos.actualizarDestinos()
             repoDestino.cantElementos() shouldBe 5
         }
 
@@ -29,7 +28,7 @@ class UpdateService: DescribeSpec({
             var destinoAModificar = repoDestino.getById(2)
             destinoAModificar.ciudad shouldBe "Mar Del Plata"
 
-            actualizadorDeRepo.actualizarDestinos()
+            ActualizadorDeDestinos.actualizarDestinos()
 
             var destinoModificado = repoDestino.getById(2)
             destinoModificado.ciudad shouldBe "Buenos Aires"
