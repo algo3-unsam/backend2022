@@ -1,5 +1,7 @@
-package ar.edu.unsam.algo
+package ar.edu.unsam.algo.TestUsuarios
 
+import ar.edu.unsam.algo.Destino
+import ar.edu.unsam.algo.Usuario
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe

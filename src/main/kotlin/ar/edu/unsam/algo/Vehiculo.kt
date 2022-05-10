@@ -9,23 +9,50 @@ interface Vehiculo:Datos{
     val modelo: String
     val anioDeFabricacion: LocalDate
     var costoDiario: Double
+    val kilometrajeLibre: Boolean
+    override var id: Int
+
 
     companion object{var marcaConvenio: MutableList<String> = mutableListOf("Honda")}
 
     fun costoBase(diasDealquiler: Int) = costoDiario * diasDealquiler
 
-    fun costoFinal(diasDealquiler: Int) = costoBase(diasDealquiler) - descuentoPorConvenio(diasDealquiler)
+    fun costoFinal(diasDealquiler: Int) = (costoBase(diasDealquiler) + aumentoPorCondicion(diasDealquiler)) * factorDescuentoPorConvenio(diasDealquiler)
 
     fun tieneConvenio() = containsString(marcaConvenio,marca)
 
-    fun descuentoPorConvenio(diasDealquiler: Int) = if(tieneConvenio()) costoBase(diasDealquiler) * 0.1 else 0.0
+    fun factorDescuentoPorConvenio(diasDealquiler: Int) = if(tieneConvenio())  0.9 else 1.0
 
     fun antiguedad() = ChronoUnit.YEARS.between(anioDeFabricacion, LocalDate.now())
 
-    fun kilometrajeLibre(): Boolean
+    fun aumentoPorCondicion(diasDealquiler: Int) : Double
 
-    override fun coincidencia(cadena: String) = marca.equals(cadena,ignoreCase = true)
+    override fun coincidencia(cadena: String) = marca.equals(cadena,ignoreCase = true) or comienzoIgual(cadena)
 
+    fun comienzoIgual(cadena: String) = modelo.startsWith(cadena,ignoreCase = true)
+
+    fun esModerno()= antiguedad() < 2
+
+    fun anioDeFabricacionPar() = anioDeFabricacion.year % 2 == 0
+
+    fun coincidenInicialMarcaModelo() = marca.first() == modelo.first()
+
+
+    override fun esValido() = this.tieneInformacionCargadaEnStrings() && this.costoDiarioValido() && this.tieneFechaAltaValida()
+
+
+    fun tieneInformacionCargadaEnStrings() = !(this.marca.isNullOrEmpty() && this.modelo.isNullOrEmpty())
+
+    fun tieneFechaAltaValida(): Boolean = this.anioDeFabricacion > LocalDate.now()
+
+    fun costoDiarioValido() = costoDiario > 0
+
+    override fun validacion() {
+        if (!this.esValido()) {
+            throw FaltaCargarInformacionException("destino invalido,falta informacion\n Marca: $marca ,Modelo: $modelo , Año de Fabricacion: $anioDeFabricacion , costo diario : $costoDiario")
+
+        }
+    }
 }
 
 class Moto(
@@ -33,16 +60,19 @@ class Moto(
     override val modelo: String,
     override val anioDeFabricacion: LocalDate,
     override var costoDiario: Double,
-    val cantidadCilindrada: Int
+    override val kilometrajeLibre: Boolean,
+    val cantidadCilindrada: Int,
+    override var id: Int = 0,
+
 ): Vehiculo {
-    override fun kilometrajeLibre() = true
 
-    override fun costoBase(diasDealquiler: Int): Double = if(cilindradasMaximas()) super.costoBase(diasDealquiler) + extraPorDia(diasDealquiler) else super.costoBase(diasDealquiler)
+    fun extraPorDia(diasDealquiler: Int): Double = (diasDealquiler * 500.0)
 
-    fun extraPorDia(diasDealquiler: Int) = (diasDealquiler * 500)
+    override fun aumentoPorCondicion(diasDealquiler: Int): Double {
+        return if (superaCilindradasMinimas()) extraPorDia(diasDealquiler) else 0.0
+    }
 
-
-    fun cilindradasMaximas() = cantidadCilindrada > 250
+    fun superaCilindradasMinimas() = cantidadCilindrada > 250
 }
 
 class Auto(
@@ -50,20 +80,17 @@ class Auto(
     override val modelo: String,
     override val anioDeFabricacion: LocalDate,
     override var costoDiario: Double,
-    val hatchback: Boolean
+    override val kilometrajeLibre: Boolean,
+    val hatchback: Boolean,
+    override var id: Int = 0,
 ): Vehiculo {
-    var extra = 1.1
-    override fun kilometrajeLibre() = true
 
-    override fun costoBase(diasDealquiler: Int):Double {
-        if(!hatchback){
-            extra = 1.25
-        }
-        else {
-            extra = 1.1
-        }
-        return super.costoBase(diasDealquiler) * extra
+    override fun aumentoPorCondicion(diasDealquiler: Int): Double {
+        return  costoBase(diasDealquiler) * porcentaje()
     }
+
+    fun porcentaje() = if (!hatchback) 0.25 else 0.1
+
 }
 
 class Camioneta(
@@ -71,17 +98,17 @@ class Camioneta(
     override val modelo: String,
     override val anioDeFabricacion: LocalDate,
     override var costoDiario: Double,
-    val todoTerreno: Boolean
+    override val kilometrajeLibre: Boolean,
+    val todoTerreno: Boolean,
+    override var id: Int = 0,
 ): Vehiculo{
-    override fun kilometrajeLibre() = true
 
-    override fun costoBase(diasDealquiler: Int): Double = semanaDeAlquiler(diasDealquiler) + ((aumentoPorExceso(diasDealquiler)) * 1000)
 
-    override fun costoFinal(diasDealquiler: Int): Double = costoBase(diasDealquiler) + aumentoPorTodoTerreno(diasDealquiler) - descuentoPorConvenio(diasDealquiler)
-
-    fun semanaDeAlquiler(diasDealquiler: Int) = super.costoBase(diasDealquiler) + 10000
-
-    fun aumentoPorExceso(diasDealquiler: Int) = Math.max(0, diasDealquiler - 7)
+    fun aumentoPorExceso(diasDealquiler: Int) = 10000 + Math.max(0, diasDealquiler - 7)*1000
 
     fun aumentoPorTodoTerreno(diasDealquiler: Int) = if(todoTerreno) costoBase(diasDealquiler) * 0.5 else 0.0
+
+    override fun aumentoPorCondicion(diasDealquiler: Int): Double {
+        return aumentoPorExceso(diasDealquiler) + aumentoPorTodoTerreno(diasDealquiler)
+    }
 }

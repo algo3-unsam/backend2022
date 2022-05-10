@@ -1,5 +1,6 @@
-package ar.edu.unsam.algo
+package ar.edu.unsam.algo.TestItinerarios
 
+import ar.edu.unsam.algo.*
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
@@ -17,15 +18,15 @@ class TestDestinos:DescribeSpec({
         describe("Test de Validez de Destino") {
             it("Creo un Destino invalido porque tiene vacias sus parametros") {
                 var destinoIncompleto = Destino("", "", 0F)
-               assertThrows<Exception> { destinoIncompleto.validar() }
+                assertThrows<Exception> { destinoIncompleto.validacion() }
             }
             it("Creo un Destino Invalido porque su costo es menor a 0"){
                 var destinoSinCosto = Destino("Argentina", "Buenos Aires",-7F)
-                assertThrows<Exception> { destinoSinCosto.validar() }
+                assertThrows<Exception> { destinoSinCosto.validacion() }
             }
             it("Creo un Destino valido") {
                 var destinoValido = Destino("Argentina", "Mendoza", 5000f)
-                assertDoesNotThrow { destinoValido.validar() }
+                assertDoesNotThrow { destinoValido.validacion() }
             }
         }
         describe("Test de Destinos Locales"){
@@ -45,20 +46,8 @@ class TestDeItinerarios:DescribeSpec ({
 
     isolationMode = IsolationMode.InstancePerTest
     describe("Creo un itinerario ") {
-        val pepe = Usuario("Juan", "Pelotas", "Pelotas01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3).apply{criterioItinerarioUsuario = Relajado }
+        val pepe = Usuario("Juan", "Pelotas", "Pelotas01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3).apply{criterioParaItinerario = Relajado }
         val destino1 = Destino(pais = "Argentina", ciudad = "BuenosAires", costoBase = 3000F)
-        describe("Creo un itinerario invalido por falta de dias"){
-            var itinerarioInvalido = Itinerario(pepe,destino1)
-            it("Test de itinerario invalido por falta de dias iniciados"){
-                assertThrows<FaltaCargarInformacionException> { itinerarioInvalido.validar() }
-            }
-            var dia =Dia()
-            var dia2 = Dia()
-            itinerarioInvalido.apply{ocuparDia(dia); ocuparDia(dia2)}
-            it("Test de itinerario invalido porque ningun dia tiene actividades"){
-                assertThrows<FaltaCargarInformacionException> { itinerarioInvalido.validar() }
-            }
-        }
         val actividad = Actividad(100.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultad.ALTA)
         val actividad2 = Actividad(150.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultad.BAJA)
         val actividad3 = Actividad(300.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultad.BAJA)
@@ -78,16 +67,6 @@ class TestDeItinerarios:DescribeSpec ({
             agregarActividadAlDia(dia3, actividad3)
             agregarActividadAlDia(dia4, actividad4)
         }
-        it("Testeo la validez de un itinerario valido"){
-            assertDoesNotThrow { itinerarioConDificultadBaja.validar() }
-        }
-        it("Test de Costo De Itinerarios") {
-            itinerarioConDificultadBaja.totalCosto() shouldBe 900.0
-        }
-
-        it("Test de Dificultad del Itinerario. Al tener ser dificultad BAJA la que mas actividades tiene, el itinerario tendra esa dificultad") {
-            itinerarioConDificultadBaja.dificultad() shouldBe Dificultad.BAJA
-        }
         var itinerarioConDificultadAlta = Itinerario(pepe, destino1)
         val lunes = Dia()
         val martes = Dia()
@@ -100,6 +79,30 @@ class TestDeItinerarios:DescribeSpec ({
             agregarActividadAlDia(martes, actividad2)
             agregarActividadAlDia(miercoles, actividad4)
         }
+        describe("Creo un itinerario invalido por falta de dias"){
+            var itinerarioInvalido = Itinerario(pepe,destino1)
+            it("Test de itinerario invalido por falta de dias iniciados"){
+                assertThrows<FaltaCargarInformacionException> { itinerarioInvalido.validacion() }
+            }
+            var dia = Dia()
+            var dia2 = Dia()
+            itinerarioInvalido.apply{ocuparDia(dia); ocuparDia(dia2)}
+            it("Test de itinerario invalido porque ningun dia tiene actividades"){
+                assertThrows<FaltaCargarInformacionException> { itinerarioInvalido.validacion() }
+            }
+        }
+
+        it("Testeo la validez de un itinerario valido"){
+            assertDoesNotThrow { itinerarioConDificultadBaja.validacion() }
+        }
+        it("Test de Costo De Itinerarios") {
+            itinerarioConDificultadBaja.totalCosto() shouldBe 900.0
+        }
+
+        it("Test de Dificultad del Itinerario. Al tener ser dificultad BAJA la que mas actividades tiene, el itinerario tendra esa dificultad") {
+            itinerarioConDificultadBaja.dificultad() shouldBe Dificultad.BAJA
+        }
+
         it("Test de dificultad cuando todas las dificultades tengan la misma cantidad de actividades. La dificultad final sera la mas alta"){
             itinerarioConDificultadAlta.dificultad() shouldBe Dificultad.ALTA
         }
@@ -135,16 +138,19 @@ class TestDeActividades:DescribeSpec({
         }
         it("Testeo una Activida invalida por error en hora de inicio y final"){
             var actividadConMalHorario = Actividad(0.0,"Visita al Museo",LocalTime.of(10,0),LocalTime.of(8,30),
-                Dificultad.BAJA)
+                Dificultad.BAJA
+            )
             assertThrows<Exception> { actividadConMalHorario.validar() }
         }
         it("Testeo una Actividad invalidad por costo menor a 0"){
             var actividadSinCosto = Actividad(-500.0,"Visita al Museo",LocalTime.of(8,30),LocalTime.of(10,0),
-                Dificultad.BAJA)
+                Dificultad.BAJA
+            )
             assertThrows<Exception> { actividadSinCosto.validar() }
         }
         var actividadValida = Actividad(500.0,"Visita al Museo",LocalTime.of(8,30),LocalTime.of(10,0),
-            Dificultad.BAJA)
+            Dificultad.BAJA
+        )
         it("Testeo una Actividad valida"){
            assertDoesNotThrow { actividadValida.validar() }
         }
@@ -171,7 +177,8 @@ class TestDias:DescribeSpec({
         }
         it("Ingreso un actividad valida"){
             var actividadValida = Actividad(400.0,"Circuito Lagos", LocalTime.of(13,0),LocalTime.of(14,0),
-                Dificultad.MEDIA)
+                Dificultad.MEDIA
+            )
             assertDoesNotThrow { dia.agregarActividad(actividadValida) }
         }
     }
@@ -185,21 +192,21 @@ class TestDeUsuarios:DescribeSpec({
             it("Testeo un usuario invalido por falta de parametros"){
                 var usuarioIncompleto = Usuario("","","",LocalDate.of(2012,3,12),"",9)
                 usuarioIncompleto.destinosDeseados.add(newYork)
-                assertThrows<FaltaCargarInformacionException> {  usuarioIncompleto.esValido()  }
+                assertThrows<FaltaCargarInformacionException> {  usuarioIncompleto.validacion()  }
             }
             it("Testeo un usuario invalido por fecha del futuro"){
                 var usuarioDelFuturo = Usuario("Martin","Mcfly","Mmcfly",LocalDate.now().plusYears(2),"Estados Unidos",7)
                 usuarioDelFuturo.destinosDeseados.add(newYork)
-                assertThrows<FaltaCargarInformacionException> {  usuarioDelFuturo.esValido()  }
+                assertThrows<FaltaCargarInformacionException> {  usuarioDelFuturo.validacion()  }
             }
             it("Testeo un usuario invalido por dias para viajar menor a 0"){
                 var usuarioSinViaje = Usuario("Martin","Mcfly","Mmcfly",LocalDate.now().minusYears(2),"Estados Unidos",-7)
                 usuarioSinViaje.destinosDeseados.add(newYork)
-                assertThrows<FaltaCargarInformacionException> {  usuarioSinViaje.esValido()  }
+                assertThrows<FaltaCargarInformacionException> {  usuarioSinViaje.validacion()  }
             }
             it("Testeo un usuario invalido por falta de Destino deseado"){
                 var usuarioSinDeseo = Usuario("Martin","Mcfly","Mmcfly",LocalDate.now().minusYears(2),"Estados Unidos",7)
-                assertThrows<FaltaCargarInformacionException> { usuarioSinDeseo.esValido() }
+                assertThrows<FaltaCargarInformacionException> { usuarioSinDeseo.validacion() }
             }
             it("Testo un usuario valido"){
                 var usuarioValido = Usuario("Martin","Mcfly","Mmcfly",LocalDate.now().minusYears(2),"Estados Unidos",7)
