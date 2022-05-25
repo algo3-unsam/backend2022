@@ -12,15 +12,33 @@ class Usuario(
     var diasParaViajar: Int,
     val amigos: MutableList<Usuario> = mutableListOf(),
     val destinosDeseados: MutableList<Destino> = mutableListOf(),
-    val destinosVisitados: MutableList<Destino> = mutableListOf()
+    val destinosVisitados: MutableList<Destino> = mutableListOf(),
 ):Datos {
     override var id: Int = 0
     lateinit var criterioParaItinerario: CriterioItinerario
-    lateinit var criterioParaVehiculo : CriterioVehiculo
+    lateinit var criterioParaVehiculo: CriterioVehiculo
+
+    val itinerariosAPuntuar: MutableList<Itinerario> = mutableListOf()
+    val itinerariosCreados: MutableList<Itinerario> = mutableListOf()
+    val itinerariosRecibidos: MutableList<Itinerario> = mutableListOf()
 
     companion object {
         var ANTIGUEDAD_MAXIMA = 15
     }
+
+    fun puntuarItinerarios(puntaje: Int) = itinerariosAPuntuar.forEach { this.puntuar(it, puntaje) }
+
+    fun obtenerAmigoConMenosDestinos() = amigos.first()
+
+    fun obtenerItinerarios(amigo:Usuario) = this.itinerariosRecibidos.addAll(amigo.itinerariosCreados)
+
+    fun transferirItinerariosAAmigoPobre() {
+        this.ordenarAmigos()
+        this.obtenerAmigoConMenosDestinos().obtenerItinerarios(this)
+    }
+
+    fun ordenarAmigos(){
+        if(amigos.isEmpty()) amigos.sortBy { it.destinosVisitados.size }}
 
     override fun coincidencia(cadena: String): Boolean = coicidenciaParcialNombreApellido(cadena) || coincidenciaTotalUsername(cadena)
 
@@ -29,6 +47,21 @@ class Usuario(
     fun coicidenciaParcialNombreApellido(cadena: String) = nombre.contains(cadena,ignoreCase = true) || apellido.contains(cadena,ignoreCase = true)
 
     fun tieneDestinoSoñado() = destinosDeseados.isNotEmpty()
+
+    fun hacerseAmigoDeLosQueConocen(listaDeUsuarios:MutableList<Usuario>,destino: Destino){amigos.addAll(this.amigosQueConocenA(listaDeUsuarios,destino))}
+
+    fun amigosQueConocenA(listaDeUsuarios: MutableList<Usuario>, destino: Destino)= listaDeUsuarios.filter{it.conoceDestino(destino)}
+
+    fun agregarDestinomasCarodeMisAmigos() = amigos.forEach{it.agregarDestinoMasCaroA(this)}
+
+    fun agregarDestinoMasCaroA(amigo: Usuario) = amigo.destinosDeseados.add(this.destinoMasCaro())
+
+    fun destinoMasCaro(): Destino {
+        this.ordenarDestinosPorPrecio()
+        if(!this.destinosDeseados.isEmpty()) return this.destinosDeseados.last() else throw BusinessException("No tiene destino deseado")
+    }
+
+    fun ordenarDestinosPorPrecio() {if(destinosDeseados.isEmpty()) destinosDeseados.sortBy { it.precio(this) }}
 
     override fun validacion() {
         if (!esValido()) {
