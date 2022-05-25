@@ -17,10 +17,12 @@ class Usuario(
     override var id: Int = 0
     lateinit var criterioParaItinerario: CriterioItinerario
     lateinit var criterioParaVehiculo: CriterioVehiculo
+    var presupuesto: Double = 0.0
 
     val itinerariosAPuntuar: MutableList<Itinerario> = mutableListOf()
     val itinerariosCreados: MutableList<Itinerario> = mutableListOf()
     val itinerariosRecibidos: MutableList<Itinerario> = mutableListOf()
+    val itinerariosDeViaje: MutableList<Itinerario> = mutableListOf()
 
     companion object {
         var ANTIGUEDAD_MAXIMA = 15
@@ -80,6 +82,10 @@ class Usuario(
         this.criterioParaItinerario = criterio
     }
 
+    fun cambiarCriterioVehiculo(criterioVehiculo: CriterioVehiculo){
+        this.criterioParaVehiculo = criterioVehiculo
+    }
+
    fun tieneInformacionCargadaEnStrings() =
         !(this.nombre.isNullOrEmpty() && this.apellido.isNullOrEmpty() && this.username.isNullOrEmpty() && this.paisDeResidencia.isNullOrEmpty())
 
@@ -132,6 +138,16 @@ class Usuario(
     fun soyAmigoDelCreador(otroUsuario: Usuario) = amigos.contains(otroUsuario)
 
     fun leGustaVehiculo(vehiculo: Vehiculo) = criterioParaVehiculo.aceptaVehiculo(vehiculo)
+
+    fun aceptaViaje(viaje: Viaje) = presupuesto > viaje.totalCostoViaje()
+
+    fun agregarItinerarioDeViaje(viaje: Viaje) = itinerariosDeViaje.add(viaje.itinerario)
+
+    fun agregarDestinosDeViaje(viaje: Viaje) {if(aceptaViaje(viaje)) destinosVisitados.addAll(viaje.listaDestinosParaViaje)}
+
+    fun noEsViajeLocal(viaje: Viaje, criterio: CriterioItinerario){if(!viaje.esLocal()) this.cambiarCriterio(criterio = Localista)}
+
+    fun viajeSinVehiculoConConvenio(viaje: Viaje, criterioVehiculo: CriterioVehiculo){if(!viaje.tieneConvenioConVehiculo) this.cambiarCriterioVehiculo(criterioVehiculo = Selectivo(""))}
 
 }
 
