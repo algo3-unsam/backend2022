@@ -41,7 +41,7 @@ class Test:DescribeSpec({
             agregarActividadAlDia(dia3, actividad3)
             agregarActividadAlDia(dia4, actividad4)
         }
-        var itinerarioConDificultadAlta = Itinerario(marce, destino1)
+        val itinerarioConDificultadAlta = Itinerario(marce, destino1)
         val lunes = Dia()
         val martes = Dia()
         val miercoles = Dia()
