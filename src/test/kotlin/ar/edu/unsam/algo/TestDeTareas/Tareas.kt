@@ -18,7 +18,7 @@ class Test:DescribeSpec({
         val destino4 = Destino(pais = "Argentina", ciudad = "BuenosAires", costoBase = 6000F)
         val destino5 = Destino(pais = "Argentina", ciudad = "BuenosAires", costoBase = 7000F)
         val pepe = Usuario("Juan", "Pelotas", "Pelotas01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3, destinosVisitados = mutableListOf(destino1), destinosDeseados = mutableListOf(destino2,destino4)).apply{criterioParaItinerario = Relajado }
-        val pepe2 = Usuario("Juan", "Pelotas", "Pelotas01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3, destinosVisitados = mutableListOf(destino1,destino2,destino3)).apply{criterioParaItinerario = Relajado }
+        val pepe2 = Usuario("Juan", "Pelotas", "Pelotas01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3, destinosVisitados = mutableListOf(destino1,destino3)).apply{criterioParaItinerario = Relajado }
         val marce = Usuario("Marce", "Lito", "Lito01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3, destinosVisitados = mutableListOf(destino1), amigos = mutableListOf(pepe,pepe2)).apply{criterioParaItinerario = Relajado }
 
 
