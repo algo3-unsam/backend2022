@@ -26,19 +26,22 @@ class Usuario(
         var ANTIGUEDAD_MAXIMA = 15
     }
 
-    fun puntuarItinerarios(puntaje: Int) = itinerariosUsuario.filter { this.puedoPuntuar(it) }.forEach { this.puntuar(it, puntaje) }
+    fun puntuarItinerarios(puntaje: Int) = itinerariosUsuario.forEach { this.puntuar(it, puntaje) }
 
-    fun obtenerAmigoConMenosDestinos() = amigos.first()
+    fun obtenerAmigoConMenosDestinos() = this.amigos.minByOrNull {it.destinosVisitados.size } //amigos.first()
+
+    fun obtener(itinerario: Itinerario) = itinerariosUsuario.add(itinerario)
 
     fun obtenerItinerarios(amigo:Usuario) = this.itinerariosUsuario.addAll(amigo.itinerariosUsuario.filter { it.sosMiCreador(amigo) })
 
-    fun transferirItinerariosAAmigoPobre() {
-        this.ordenarAmigos()
-        this.obtenerAmigoConMenosDestinos().obtenerItinerarios(this)
+    fun transferirItinerariosAAmigoConMenosDestinos() {
+        this.validarQueTieneAmigo()
+        this.obtenerAmigoConMenosDestinos()?.obtenerItinerarios(this)
     }
 
-    fun ordenarAmigos(){
-        if(amigos.isEmpty()) amigos.sortBy { it.destinosVisitados.size }}
+    fun validarQueTieneAmigo() {
+        if (amigos.isEmpty()) throw BusinessException("No tiene amigos")
+    }
 
     override fun coincidencia(cadena: String): Boolean = coicidenciaParcialNombreApellido(cadena) || coincidenciaTotalUsername(cadena)
 

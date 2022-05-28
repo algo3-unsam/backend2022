@@ -56,16 +56,19 @@ class Test:DescribeSpec({
         //pepe.itinerariosAPuntuar.addAll(listOf( itinerarioConDificultadAlta, itinerarioConDificultadBaja))
 
         it("Verificar que se puntuan correctamente"){
+            pepe.obtener(itinerarioConDificultadAlta)
+            pepe.obtener(itinerarioConDificultadBaja)
             pepe.puntuarItinerarios(5)
             itinerarioConDificultadAlta.puntajes[pepe.username] shouldBe 5
             itinerarioConDificultadBaja.puntajes[pepe.username] shouldBe 5
         }
-        /*it("Verificar que se transfieren itinerarios a amigo con menos destinos visitados"){
-            marce.itinerariosCreados.addAll(mutableListOf(itinerarioConDificultadAlta,itinerarioConDificultadBaja))
-            marce.transferirItinerariosAAmigoPobre()
-            pepe.itinerariosRecibidos.size shouldBe 2
-            pepe2.itinerariosRecibidos.size shouldBe 0
-        }*/
+        it("Verificar que se transfieren itinerarios a amigo con menos destinos visitados"){
+            marce.obtener(itinerarioConDificultadAlta)
+            marce.obtener(itinerarioConDificultadBaja)
+            marce.transferirItinerariosAAmigoConMenosDestinos()
+            pepe.itinerariosUsuario.size shouldBe 2
+            pepe2.itinerariosUsuario.size shouldBe 0
+        }
         it("Verificar que se hace amigo del que conocen el destino y no del que no"){
             marce.amigos.clear()
             marce.hacerseAmigoDeLosQueConocen(mutableListOf(pepe,pepe2),destino2)
