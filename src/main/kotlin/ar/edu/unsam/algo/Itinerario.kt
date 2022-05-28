@@ -35,7 +35,7 @@ class Itinerario(
 
     fun coincidenciaConActividades(cadena:String) = todasLasActividades().any{it.coincidenciaConNombre(cadena)}
 
-    fun totalCosto() = dias.sumOf { it.costoDeTotalDeActividades() }
+    fun totalCosto(usuario: Usuario) = dias.sumOf { it.costoDeTotalDeActividades() } + destino.precio(usuario)
 
     fun ocuparDia(dia: Dia) {
         dias.add(dia)

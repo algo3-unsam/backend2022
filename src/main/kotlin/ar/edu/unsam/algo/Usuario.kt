@@ -19,20 +19,18 @@ class Usuario(
     lateinit var criterioParaVehiculo: CriterioVehiculo
     var presupuesto: Double = 0.0
 
-    val itinerariosAPuntuar: MutableList<Itinerario> = mutableListOf()
-    val itinerariosCreados: MutableList<Itinerario> = mutableListOf()
-    val itinerariosRecibidos: MutableList<Itinerario> = mutableListOf()
-    val itinerariosDeViaje: MutableList<Itinerario> = mutableListOf()
+    val itinerariosUsuario: MutableList<Itinerario> = mutableListOf()
+    val listaViajes: MutableList<Viaje> = mutableListOf()
 
     companion object {
         var ANTIGUEDAD_MAXIMA = 15
     }
 
-    fun puntuarItinerarios(puntaje: Int) = itinerariosAPuntuar.forEach { this.puntuar(it, puntaje) }
+    fun puntuarItinerarios(puntaje: Int) = itinerariosUsuario.filter { this.puedoPuntuar(it) }.forEach { this.puntuar(it, puntaje) }
 
     fun obtenerAmigoConMenosDestinos() = amigos.first()
 
-    fun obtenerItinerarios(amigo:Usuario) = this.itinerariosRecibidos.addAll(amigo.itinerariosCreados)
+    fun obtenerItinerarios(amigo:Usuario) = this.itinerariosUsuario.addAll(amigo.itinerariosUsuario.filter { it.sosMiCreador(amigo) })
 
     fun transferirItinerariosAAmigoPobre() {
         this.ordenarAmigos()
@@ -82,8 +80,8 @@ class Usuario(
         this.criterioParaItinerario = criterio
     }
 
-    fun cambiarCriterioVehiculo(criterioVehiculo: CriterioVehiculo){
-        this.criterioParaVehiculo = criterioVehiculo
+    fun cambiarCriterioVehiculoA(criterio: CriterioVehiculo){
+        this.criterioParaVehiculo = criterio
     }
 
    fun tieneInformacionCargadaEnStrings() =
@@ -139,15 +137,25 @@ class Usuario(
 
     fun leGustaVehiculo(vehiculo: Vehiculo) = criterioParaVehiculo.aceptaVehiculo(vehiculo)
 
-    fun aceptaViaje(viaje: Viaje) = presupuesto > viaje.totalCostoViaje()
+    fun puedeRealizar(viaje: Viaje) = presupuesto >= viaje.itinerario.totalCosto(this)
 
-    fun agregarItinerarioDeViaje(viaje: Viaje) = itinerariosDeViaje.add(viaje.itinerario)
+    fun validarViaje(viaje: Viaje) {
+        if(!puedeRealizar(viaje) && !estaEnLista(viaje)) {
+            throw BusinessException("No puede viajar porque no tenes el presupuesto suficiente o no existe el viaje")
+        }
+    }
 
-    fun agregarDestinosDeViaje(viaje: Viaje) {if(aceptaViaje(viaje)) destinosVisitados.addAll(viaje.listaDestinosParaViaje)}
+    fun estaEnLista(viaje: Viaje) = listaViajes.contains(viaje)
 
-    fun noEsViajeLocal(viaje: Viaje, criterio: CriterioItinerario){if(!viaje.esLocal()) this.cambiarCriterio(criterio = Localista)}
+    fun realizar(viaje: Viaje) {
+        validarViaje(viaje)
+        destinosVisitados.add(viaje.itinerario.destino)
+    }
 
-    fun viajeSinVehiculoConConvenio(viaje: Viaje, criterioVehiculo: CriterioVehiculo){if(!viaje.tieneConvenioConVehiculo) this.cambiarCriterioVehiculo(criterioVehiculo = Selectivo(""))}
+    fun noEsLocal(viaje: Viaje){
+        if(!viaje.itinerario.tieneDestinoLocal()) this.cambiarCriterio(criterio = Localista)
+    }
+
 
 }
 

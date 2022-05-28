@@ -1,11 +1,9 @@
 package ar.edu.unsam.algo
 
-class Viaje(var tieneConvenioConVehiculo: Boolean, var itinerario: Itinerario, val listaDestinosParaViaje: MutableList<Destino> = mutableListOf()) {
+// NOTA: Si el viaje no tiene un vehículo con convenio, el usuario se convierte en selectivo,
+// y le pasan a gustar los vehículos de una marca con convenio
+// ** esto es un observer pa´ mi
 
-    fun agregarDestino(destino: Destino) = listaDestinosParaViaje.add(destino)
-
-    fun totalCostoViaje() = listaDestinosParaViaje.sumOf { it.costoBase.toDouble() }
-
-    fun esLocal() = listaDestinosParaViaje.any{it.esLocal()}
+class Viaje(var vehiculo: Vehiculo, var itinerario : Itinerario){
 
 }
