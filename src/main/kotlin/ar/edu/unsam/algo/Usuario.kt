@@ -137,7 +137,7 @@ class Usuario(
 
     fun leGustaVehiculo(vehiculo: Vehiculo) = criterioParaVehiculo.aceptaVehiculo(vehiculo)
 
-    fun puedeRealizar(viaje: Viaje) = presupuesto >= viaje.itinerario.totalCosto(this)
+    fun puedeRealizar(viaje: Viaje) = presupuesto >= viaje.costoTotal(this)
 
     fun validarViaje(viaje: Viaje) {
         if(!puedeRealizar(viaje) && !estaEnLista(viaje)) {
