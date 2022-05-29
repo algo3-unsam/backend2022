@@ -9,7 +9,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 
 
-class Test:DescribeSpec({
+class TestTareas:DescribeSpec({
     isolationMode = IsolationMode.InstancePerTest
     describe("Verificar tareas"){
         val destino1 = Destino(pais = "Argentina", ciudad = "BuenosAires", costoBase = 3000F)
