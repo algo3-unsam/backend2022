@@ -154,10 +154,22 @@ class Usuario(
     fun realizar(viaje: Viaje) {
         validarViaje(viaje)
         destinosVisitados.add(viaje.itinerario.destino)
+        realizaViajeLocal(viaje)
+        realizaViajeConConvenio(viaje)
+
+        //mail.enviarMailDeViaje(viaje, amigosQueDeseanViaje(viaje))
     }
 
-    fun noEsLocal(viaje: Viaje){
-        if(!viaje.itinerario.tieneDestinoLocal()) this.cambiarCriterio(criterio = Localista)
+    fun realizaViajeConConvenio(viaje: Viaje) {
+        if(!viaje.vehiculoConConvenio()) this.cambiarCriterioVehiculoA(criterio = Selectivo("Honda"))
+    }
+
+    fun amigosQueDeseanViaje(viaje: Viaje) = amigos.filter { it.deseoDestino(viaje.itinerario.destino) }
+
+    fun deseoDestino(destino: Destino) = destinosDeseados.contains(destino)
+
+    fun realizaViajeLocal(viaje: Viaje){
+        if(!viaje.esLocal()) this.cambiarCriterio(criterio = Localista)
     }
 
     fun deseanDestinoAmigos(viaje: Viaje) =amigos.filter { it.destinosDeseados.equals(viaje.itinerario.destino) }
