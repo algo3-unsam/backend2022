@@ -18,6 +18,7 @@ class Usuario(
     lateinit var criterioParaItinerario: CriterioItinerario
     lateinit var criterioParaVehiculo: CriterioVehiculo
     var presupuesto: Double = 0.0
+    val email: String = ""
 
     val itinerariosUsuario: MutableList<Itinerario> = mutableListOf()
     val listaViajes: MutableList<Viaje> = mutableListOf()
@@ -159,6 +160,7 @@ class Usuario(
         if(!viaje.itinerario.tieneDestinoLocal()) this.cambiarCriterio(criterio = Localista)
     }
 
+    fun deseanDestinoAmigos(viaje: Viaje) =amigos.filter { it.destinosDeseados.equals(viaje.itinerario.destino) }
 
 }
 
