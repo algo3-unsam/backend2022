@@ -18,7 +18,7 @@ class Usuario(
     lateinit var criterioParaItinerario: CriterioItinerario
     lateinit var criterioParaVehiculo: CriterioVehiculo
     var presupuesto: Double = 0.0
-    val email: String = ""
+    var direccionDeCorreo: String = ""
 
     val itinerariosUsuario: MutableList<Itinerario> = mutableListOf()
     val listaViajes: MutableList<Viaje> = mutableListOf()
@@ -27,6 +27,7 @@ class Usuario(
         var ANTIGUEDAD_MAXIMA = 15
     }
 
+    fun direccionDeCoreo() = direccionDeCorreo
     fun puntuarItinerarios(puntaje: Int) = itinerariosUsuario.forEach { this.puntuar(it, puntaje) }
 
     fun obtenerAmigoConMenosDestinos() = this.amigos.minByOrNull {it.destinosVisitados.size } //amigos.first()
@@ -172,7 +173,6 @@ class Usuario(
         if(!viaje.esLocal()) this.cambiarCriterio(criterio = Localista)
     }
 
-    fun deseanDestinoAmigos(viaje: Viaje) =amigos.filter { it.destinosDeseados.equals(viaje.itinerario.destino) }
 
 }
 
