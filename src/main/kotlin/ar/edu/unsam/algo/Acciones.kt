@@ -27,7 +27,7 @@ class AgregarAListaDeItinerariosParaPuntuar() : Acciones{
 
 class  RealizaViajeConConvenio() : Acciones{
     override fun ejecutar(usuario: Usuario, viaje: Viaje) {
-        if(!viaje.vehiculoConConvenio()) throw BusinessException("El viaje ya tiene un vehiculo con convenio") else cambiarCriterio(usuario, viaje)
+        if(viaje.vehiculoConConvenio()) throw BusinessException("El viaje ya tiene un vehiculo con convenio") else cambiarCriterio(usuario, viaje)
     }
 
     fun cambiarCriterio(usuario: Usuario, viaje: Viaje){
