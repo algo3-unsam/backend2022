@@ -99,7 +99,7 @@ class Usuario(
     fun consultarPuntaje(itinerario: Itinerario) = itinerario.verPuntaje(this)
 
     fun puedoPuntuar(itinerario: Itinerario) =
-            !(esCreadorDe(itinerario)) && !itinerario.yaPuntuo(this.username) && this.conoceDestino(itinerario.destino) && contieneElItinerario(itinerario)
+            !(esCreadorDe(itinerario)) && !itinerario.yaPuntuo(this.username) && this.conoceDestino(itinerario.destino)
 
     fun puntuar(itinerario: Itinerario, puntaje: Int) {
         if ((puntaje < 1) || (puntaje > 10) || !puedoPuntuar(itinerario)) {

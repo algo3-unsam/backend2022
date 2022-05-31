@@ -95,9 +95,6 @@ class TestViaje:DescribeSpec({
             it("Verificar que NO cambie a Localista") {
                 pepe2.criterioParaItinerario shouldBe Relajado
             }
-            it("Verificar que NO puedo puntuar") {
-                pepe2.puedoPuntuar(viajeNoLocal.itinerario) shouldBe false
-            }
             it("Verificar que NO puedo puntuar todos juntos") {
                 assertThrows<BusinessException> { pepe2.puntuarItinerarios(5) }
             }
