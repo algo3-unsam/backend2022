@@ -21,12 +21,16 @@ class Usuario(
 
     val itinerariosUsuario: MutableList<Itinerario> = mutableListOf()
     val listaViajes: MutableList<Viaje> = mutableListOf()
+    val accionesActivas: MutableList<Acciones> = mutableListOf()
 
     companion object {
         var ANTIGUEDAD_MAXIMA = 15
     }
 
-    fun puntuarItinerarios(puntaje: Int) = itinerariosUsuario.forEach { this.puntuar(it, puntaje) }
+    fun puntuarItinerarios(puntaje: Int) {
+        if (itinerariosUsuario.isEmpty()) throw BusinessException("No tiene itinerarios para puntuar")
+        else itinerariosUsuario.forEach { this.puntuar(it, puntaje) }
+    }
 
     fun obtenerAmigoConMenosDestinos() = this.amigos.minByOrNull {it.destinosVisitados.size } //amigos.first()
 
@@ -69,7 +73,7 @@ class Usuario(
     override fun validacion() {
         if (!esValido()) {
             throw FaltaCargarInformacionException(
-                "Hay informacion vacia, Nombre: $nombre, apellido: $apellido, username: $username, pais de residencia: $paisDeResidencia\n" + "dias para viajar: $diasParaViajar, destinos deseados: $destinosDeseados"
+                "Hay informacion vacia, Nombre: $nombre, apellido: $apellido, username: $username, pais de residencia: $paisDeResidencia\ndias para viajar: $diasParaViajar, destinos deseados: $destinosDeseados"
             )
         }
     }
@@ -95,7 +99,7 @@ class Usuario(
     fun consultarPuntaje(itinerario: Itinerario) = itinerario.verPuntaje(this)
 
     fun puedoPuntuar(itinerario: Itinerario) =
-            !(esCreadorDe(itinerario)) && !itinerario.yaPuntuo(this.username) && this.conoceDestino(itinerario.destino)
+            !(esCreadorDe(itinerario)) && !itinerario.yaPuntuo(this.username) && this.conoceDestino(itinerario.destino) && contieneElItinerario(itinerario)
 
     fun puntuar(itinerario: Itinerario, puntaje: Int) {
         if ((puntaje < 1) || (puntaje > 10) || !puedoPuntuar(itinerario)) {
@@ -105,6 +109,7 @@ class Usuario(
             itinerario.recibirPuntaje(this, puntaje)
         }
     }
+    fun contieneElItinerario(itinerario: Itinerario) = this.itinerariosUsuario.contains(itinerario)
 
     fun esCreadorDe(itinerario: Itinerario) = itinerario.creador === this
 
@@ -143,8 +148,8 @@ class Usuario(
     fun puedeRealizar(viaje: Viaje) = presupuesto >= viaje.costoTotal(this)
 
     fun validarViaje(viaje: Viaje) {
-        if(!puedeRealizar(viaje) && !estaEnLista(viaje)) {
-            throw BusinessException("No puede viajar porque no tenes el presupuesto suficiente o no existe el viaje")
+        if(!puedeRealizar(viaje)) {
+            throw BusinessException("No puede viajar porque no tenes el presupuesto suficiente")
         }
     }
 
@@ -153,23 +158,27 @@ class Usuario(
     fun realizar(viaje: Viaje) {
         validarViaje(viaje)
         destinosVisitados.add(viaje.itinerario.destino)
-        realizaViajeLocal(viaje)
-        realizaViajeConConvenio(viaje)
 
-        //mail.enviarMailDeViaje(viaje, amigosQueDeseanViaje(viaje))
+        ejecutarAcciones(viaje)
+
     }
 
-    fun realizaViajeConConvenio(viaje: Viaje) {
-        if(!viaje.vehiculoConConvenio()) this.cambiarCriterioVehiculoA(criterio = Selectivo("Honda"))
+    fun ejecutarAcciones(viaje: Viaje) {
+
+        if(accionesActivas.isNotEmpty())
+        accionesActivas.forEach { it.ejecutar(this,viaje) }
     }
+
+    fun activarAccion(accion:Acciones) = accionesActivas.add(accion)
+
+    fun activarAcciones(listaDeAcciones: MutableList<Acciones>) = accionesActivas.addAll(listaDeAcciones)
+
+    fun desactivarAccion(accion: Acciones) = accionesActivas.remove(accion)
 
     fun amigosQueDeseanViaje(viaje: Viaje) = amigos.filter { it.deseoDestino(viaje.itinerario.destino) }
 
     fun deseoDestino(destino: Destino) = destinosDeseados.contains(destino)
 
-    fun realizaViajeLocal(viaje: Viaje){
-        if(!viaje.esLocal()) this.cambiarCriterio(criterio = Localista)
-    }
 
 
 }
