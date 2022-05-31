@@ -154,7 +154,7 @@ class Usuario(
 
     fun realizar(viaje: Viaje) {
         validarViaje(viaje)
-        destinosVisitados.add(viaje.itinerario.destino)
+        destinosVisitados.add(viaje.getDestino())
         realizaViajeLocal(viaje)
         realizaViajeConConvenio(viaje)
 
@@ -165,7 +165,7 @@ class Usuario(
         if(!viaje.vehiculoConConvenio()) this.cambiarCriterioVehiculoA(criterio = Selectivo("Honda"))
     }
 
-    fun amigosQueDeseanViaje(viaje: Viaje) = amigos.filter { it.deseoDestino(viaje.itinerario.destino) }
+    fun amigosQueDeseanViaje(viaje: Viaje) = amigos.filter { it.deseoDestino(viaje.getDestino()) }
 
     fun deseoDestino(destino: Destino) = destinosDeseados.contains(destino)
 

@@ -26,6 +26,6 @@ class AppHolaMundo{
         mailsEnviados += 1
     }
 
-    fun getBody(viaje: Viaje, emisor: Usuario, receptor: Usuario) = "Hola! ${receptor.nombre}, ${emisor.nombre} visito ${viaje.itinerario.destino.pais} ${viaje.itinerario.destino.ciudad}"
+    fun getBody(viaje: Viaje, emisor: Usuario, receptor: Usuario) = "Hola! ${receptor.nombre}, ${emisor.nombre} visito ${viaje.getDestino().pais} ${viaje.getDestino().ciudad}"
 
 }

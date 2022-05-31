@@ -78,7 +78,7 @@ class TestSendMail : DescribeSpec({
 
         serviceLocator.mailSender = mockedMailSender
 
-       
+
         it("dado un viaje se envia un mail"){
             appHolaMundo.sendMail(viajeNoLocal, marce)
             appHolaMundo.mailsEnviados.shouldBe(2)
