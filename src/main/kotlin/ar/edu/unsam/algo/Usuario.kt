@@ -36,6 +36,7 @@ class Usuario(
         else itinerariosUsuario.forEach { this.puntuar(it, puntaje) }
     }
 
+    fun estaParaPuntuar(itinerario: Itinerario) = itinerariosUsuario.contains(itinerario)
 
     fun obtenerAmigoConMenosDestinos() = this.amigos.minByOrNull { it.destinosVisitados.size } //amigos.first()
 

@@ -3,10 +3,8 @@ package ar.edu.unsam.algo.TestDeMail
 import ar.edu.unsam.algo.*
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
-import io.kotest.matchers.ints.exactly
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
-import io.mockk.verify
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -69,8 +67,8 @@ class TestSendMail : DescribeSpec({
     describe("realizado unm viaje debe enviarse un mail"){
         val mockedMailSender = mockk<MailSender>(relaxUnitFun = true)
         //val appHolaMundo = mockk<AppHolaMundo>(relaxUnitFun = true)
-        val appHolaMundo = AppHolaMundo()
-        appHolaMundo.apply {
+        val listaCorreo = ListaCorreo()
+        listaCorreo.apply {
             registrar(pepe)
             registrar(pepe2)
             registrar(marce)
@@ -80,8 +78,8 @@ class TestSendMail : DescribeSpec({
 
 
         it("dado un viaje se envia un mail"){
-            appHolaMundo.sendMail(viajeNoLocal, marce)
-            appHolaMundo.mailsEnviados.shouldBe(2)
+            listaCorreo.sendMail(viajeNoLocal, marce)
+            listaCorreo.mailsEnviados.shouldBe(2)
         }
     }
 

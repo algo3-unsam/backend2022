@@ -1,6 +1,6 @@
 package ar.edu.unsam.algo
 
-class AppHolaMundo{
+class ListaCorreo{
     val usuariosRegistrados : MutableList<Usuario> = mutableListOf()
     val direccionDeCorreo : String = "app@holamundo.com"
     val subject: String =  "Visitaron un destino que te puede interesar"

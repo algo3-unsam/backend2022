@@ -37,6 +37,7 @@ interface Vehiculo:Datos{
 
     fun coincidenInicialMarcaModelo() = marca.first() == modelo.first()
 
+    fun marcasConConvenio() = marcaConvenio
 
     override fun esValido() = this.tieneInformacionCargadaEnStrings() && this.costoDiarioValido() && this.tieneFechaAltaValida()
 
