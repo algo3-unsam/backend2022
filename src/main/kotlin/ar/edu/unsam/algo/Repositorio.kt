@@ -1,6 +1,6 @@
 package ar.edu.unsam.algo
 
-class Repositorio<Elemento : Datos> {
+open class Repositorio<Elemento : Datos> {
     val elementos: MutableList<Elemento> = mutableListOf<Elemento>()
     var idSiguiente = 1
 
@@ -65,5 +65,31 @@ class Repositorio<Elemento : Datos> {
         else{
             this.create(elemento)
         }
+    }
+}
+
+class RepositorioDeItinerarios : Repositorio<Itinerario>() {
+
+    fun filtrarPorItinerariosCreados(unUsuario: Usuario): List<Itinerario>{
+        return elementos.filter { it.sosMiCreador(unUsuario) }
+    }
+
+    fun cambiarCreador(viejoCreador: Usuario, nuevoCreador: Usuario){
+        filtrarPorItinerariosCreados(viejoCreador).forEach { it.cambiarCreador(nuevoCreador) }
+    }
+
+    fun filtrarPorPuntuables(unUsuario: Usuario): List<Itinerario> {
+        return elementos.filter { unUsuario.puedoPuntuar(it) }
+    }
+
+}
+
+class RepositorioDeUsuarios : Repositorio<Usuario>(){
+    fun filtrarXDestinoConocido(unDestino: Destino): List<Usuario>{
+        return elementos.filter {it.conoceDestino(unDestino)}
+    }
+
+    fun agregarAmigosConDestinoConocido(unUsuario: Usuario,unDestino: Destino){
+        filtrarXDestinoConocido(unDestino).forEach { unUsuario.agregarAmigo(it) }
     }
 }

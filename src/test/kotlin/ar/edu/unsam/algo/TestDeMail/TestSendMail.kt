@@ -85,7 +85,6 @@ class TestSendMail : DescribeSpec({
 
         val viajeNoLocal = Viaje(vehiculo = motoSinConvenio, itinerario = itinerarioConDificultadAlta)
 
-        marce.presupuesto = 40000.0
         pepe.direccionDeCorreo = "pepe@gmail.com"
         pepe2.direccionDeCorreo = "pepe2@gmail.com"
         marce.direccionDeCorreo = "marce@gmail.com"
@@ -112,10 +111,8 @@ class TestSendMail : DescribeSpec({
             tareaMandarMail.mailSender = StubMailSender
 
             StubMailSender.reset()
-            tareaMandarMail.ejecutar(marce, viajeNoLocal)
+            tareaMandarMail.realizaViaje(marce, viajeNoLocal)
             StubMailSender.mailsEnviados.size.shouldBe(2)
-
-
         }
 
     }

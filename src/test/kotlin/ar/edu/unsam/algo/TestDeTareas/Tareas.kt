@@ -4,6 +4,7 @@ import ar.edu.unsam.algo.*
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
+import io.mockk.mockk
 import org.junit.jupiter.api.assertThrows
 import java.time.LocalDate
 import java.time.LocalTime
@@ -53,40 +54,45 @@ class TestTareas:DescribeSpec({
             agregarActividadAlDia(martes, actividad2)
             agregarActividadAlDia(miercoles, actividad4)
         }
-        //pepe.itinerariosAPuntuar.addAll(listOf( itinerarioConDificultadAlta, itinerarioConDificultadBaja))
-
+        val repoDeUsuario = RepositorioDeUsuarios()
+        repoDeUsuario.agregarAlRepo(pepe)
+        repoDeUsuario.agregarAlRepo(pepe2)
+        val repoDeItinerarios = RepositorioDeItinerarios()
+        repoDeItinerarios.agregarAlRepo(itinerarioConDificultadBaja)
+        repoDeItinerarios.agregarAlRepo(itinerarioConDificultadAlta)
+        val mockedMailSender = mockk<MailSender>(relaxUnitFun = true)
         it("Verificar que se puntuan correctamente"){
-            pepe.obtener(itinerarioConDificultadAlta)
-            pepe.obtener(itinerarioConDificultadBaja)
-            pepe.puntuarItinerarios(5)
+
+            pepe.realizarTarea(PuntuarItinerarios(repoDeItinerarios,5),mockedMailSender)
             itinerarioConDificultadAlta.puntajes[pepe.username] shouldBe 5
             itinerarioConDificultadBaja.puntajes[pepe.username] shouldBe 5
         }
-        it("Verificar que se transfieren itinerarios a amigo con menos destinos visitados"){
-            marce.obtener(itinerarioConDificultadAlta)
-            marce.obtener(itinerarioConDificultadBaja)
-            marce.transferirItinerariosAAmigoConMenosDestinos()
-            pepe.itinerariosUsuario.size shouldBe 2
-            pepe2.itinerariosUsuario.size shouldBe 0
+
+        /*
+        *
+        it("Verificar que se transfieren itinerarios"){
+            marce.realizarTarea(TranseferirItinerarios(repoDeItinerarios),mockedMailSender)
+            pepe2.esCreadorDe(itinerarioConDificultadAlta) shouldBe true
+            pepe2.esCreadorDe(itinerarioConDificultadBaja) shouldBe true
         }
+        *
+        * */
+
         it("Verificar que se hace amigo del que conocen el destino y no del que no"){
             marce.amigos.clear()
-            marce.hacerseAmigoDeLosQueConocen(mutableListOf(pepe,pepe2),destino2)
+            marce.realizarTarea(AgregarAmigos(repoDeUsuario,destino2),mockedMailSender)
             marce.amigos.size shouldBe 1
             marce.amigos.contains(pepe)
         }
         it("Verificar que se hace amigo de los que conocen el destino"){
             marce.amigos.clear()
-            marce.hacerseAmigoDeLosQueConocen(mutableListOf(pepe,pepe2),destino1)
+            marce.realizarTarea(AgregarAmigos(repoDeUsuario,destino1),mockedMailSender)
             marce.amigos.size shouldBe 2
             marce.amigos.containsAll(mutableListOf(pepe,pepe2))
         }
-        it("Verificar que si alguno de nuestros amigos no tiene destinos desados, no se agregan destinos"){
-            assertThrows<BusinessException> {marce.agregarDestinomasCarodeMisAmigos()}
-        }
         it("Verificar que se agregan destinos deseados mas caros"){
             pepe2.destinosDeseados.add(destino5)
-            marce.agregarDestinomasCarodeMisAmigos()
+            marce.realizarTarea(AgregarDeseadoCaroDeAmigos(),mockedMailSender)
             marce.destinosDeseados shouldBe (mutableListOf(destino4,destino5))
         }
     }

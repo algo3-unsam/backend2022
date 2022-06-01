@@ -85,4 +85,6 @@ class Itinerario(
     }
 
     fun tieneDestinoLocal() = destino.esLocal()
+
+    fun cambiarCreador(unUsuario: Usuario) {creador = unUsuario}
 }

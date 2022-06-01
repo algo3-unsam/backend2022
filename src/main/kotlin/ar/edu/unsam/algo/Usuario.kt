@@ -17,42 +17,15 @@ class Usuario(
     override var id: Int = 0
     lateinit var criterioParaItinerario: CriterioItinerario
     lateinit var criterioParaVehiculo: CriterioVehiculo
-    var presupuesto: Double = 0.0
     var direccionDeCorreo: String = ""
 
-    val itinerariosUsuario: MutableList<Itinerario> = mutableListOf()
-    val listaViajes: MutableList<Viaje> = mutableListOf()
-    val accionesActivas: MutableList<Acciones> = mutableListOf()
+    val observerDeViajesActivas: MutableList<ObserverDeViajes> = mutableListOf()
 
     companion object {
         var ANTIGUEDAD_MAXIMA = 15
     }
 
-
-    fun direccionDeCoreo() = direccionDeCorreo
-
-    fun puntuarItinerarios(puntaje: Int) {
-        if (itinerariosUsuario.isEmpty()) throw BusinessException("No tiene itinerarios para puntuar")
-        else itinerariosUsuario.forEach { this.puntuar(it, puntaje) }
-    }
-
-    fun estaParaPuntuar(itinerario: Itinerario) = itinerariosUsuario.contains(itinerario)
-
     fun obtenerAmigoConMenosDestinos() = this.amigos.minByOrNull { it.destinosVisitados.size } //amigos.first()
-
-    fun obtener(itinerario: Itinerario) = itinerariosUsuario.add(itinerario)
-
-    fun obtenerItinerarios(amigo: Usuario) =
-        this.itinerariosUsuario.addAll(amigo.itinerariosUsuario.filter { it.sosMiCreador(amigo) })
-
-    fun transferirItinerariosAAmigoConMenosDestinos() {
-        this.validarQueTieneAmigo()
-        this.obtenerAmigoConMenosDestinos()?.obtenerItinerarios(this)
-    }
-
-    fun validarQueTieneAmigo() {
-        if (amigos.isEmpty()) throw BusinessException("No tiene amigos")
-    }
 
     override fun coincidencia(cadena: String): Boolean =
         coicidenciaParcialNombreApellido(cadena) || coincidenciaTotalUsername(cadena)
@@ -63,10 +36,6 @@ class Usuario(
         nombre.contains(cadena, ignoreCase = true) || apellido.contains(cadena, ignoreCase = true)
 
     fun tieneDestinoSoñado() = destinosDeseados.isNotEmpty()
-
-    fun hacerseAmigoDeLosQueConocen(listaDeUsuarios: MutableList<Usuario>, destino: Destino) {
-        amigos.addAll(this.amigosQueConocenA(listaDeUsuarios, destino))
-    }
 
     fun amigosQueConocenA(listaDeUsuarios: MutableList<Usuario>, destino: Destino) =
         listaDeUsuarios.filter { it.conoceDestino(destino) }
@@ -128,8 +97,6 @@ class Usuario(
         }
     }
 
-    fun contieneElItinerario(itinerario: Itinerario) = this.itinerariosUsuario.contains(itinerario)
-
     fun esCreadorDe(itinerario: Itinerario) = itinerario.creador === this
 
     fun conoceDestino(destino: Destino) =
@@ -164,41 +131,33 @@ class Usuario(
 
     fun leGustaVehiculo(vehiculo: Vehiculo) = criterioParaVehiculo.aceptaVehiculo(vehiculo)
 
-    fun puedeRealizar(viaje: Viaje) = presupuesto >= viaje.costoTotal(this)
-
-    fun validarViaje(viaje: Viaje) {
-        if (!puedeRealizar(viaje)) {
-            throw BusinessException("No puede viajar porque no tenes el presupuesto suficiente")
-        }
-    }
-
-    fun estaEnLista(viaje: Viaje) = listaViajes.contains(viaje)
-
     fun realizar(viaje: Viaje) {
-        validarViaje(viaje)
         destinosVisitados.add(viaje.getDestino())
-        ejecutarAcciones(viaje)
+        realizaViaje(viaje)
 
     }
 
-    fun ejecutarAcciones(viaje: Viaje) {
-
-        if (accionesActivas.isNotEmpty())
-            accionesActivas.forEach { it.ejecutar(this, viaje) }
+    fun realizaViaje(viaje: Viaje) {
+        observerDeViajesActivas.forEach { it.realizaViaje(this, viaje) }
     }
-
 
     fun amigosQueConocenDestino(destino: Destino) = amigos.filter { it.deseoDestino(destino) }
 
-    fun activarAccion(accion: Acciones) = accionesActivas.add(accion)
+    fun activarAccion(accion: ObserverDeViajes) = observerDeViajesActivas.add(accion)
 
-    fun activarAcciones(listaDeAcciones: MutableList<Acciones>) = accionesActivas.addAll(listaDeAcciones)
+    fun activarAcciones(listaDeAcciones: MutableList<ObserverDeViajes>) = observerDeViajesActivas.addAll(listaDeAcciones)
 
-    fun desactivarAccion(accion: Acciones) = accionesActivas.remove(accion)
-
+    fun desactivarAccion(accion: ObserverDeViajes) = observerDeViajesActivas.remove(accion)
 
     fun deseoDestino(destino: Destino) = destinosDeseados.contains(destino)
 
+    fun realizarTarea(tarea: Tarea,sender: MailSender){
+        tarea.realizarYNotificarTarea(this,sender)
+    }
+
+    fun realizarVariasTareas(listaDeTarea: MutableList<Tarea>,mailSender: MailSender){
+        listaDeTarea.forEach { this.realizarTarea(it,mailSender) }
+    }
 
 }
 
