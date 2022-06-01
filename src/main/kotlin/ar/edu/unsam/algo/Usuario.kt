@@ -188,7 +188,7 @@ class Usuario(
     }
 
 
-    fun amigosQueDeseanViaje(viaje: Viaje) = amigos.filter { it.deseoDestino(viaje.getDestino()) }
+    fun amigosQueConocenDestino(destino: Destino) = amigos.filter { it.deseoDestino(destino) }
 
     fun activarAccion(accion: Acciones) = accionesActivas.add(accion)
 
