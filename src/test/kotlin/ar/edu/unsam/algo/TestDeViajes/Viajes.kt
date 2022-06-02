@@ -3,7 +3,9 @@ package ar.edu.unsam.algo.TestDeTareas
 import ar.edu.unsam.algo.*
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
+import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.shouldBe
+import io.mockk.mockk
 import org.junit.jupiter.api.assertThrows
 import java.time.LocalDate
 import java.time.LocalTime
@@ -19,8 +21,8 @@ class TestViaje:DescribeSpec({
         val destino5 = Destino(pais = "Chile", ciudad = "Santiago", costoBase = 7000F)
 
         val pepe = Usuario("Juan", "Pelotas", "Pelotas01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3, destinosVisitados = mutableListOf(destino1), destinosDeseados = mutableListOf(destino2,destino4)).apply{criterioParaItinerario = Relajado}
-        val pepe2 = Usuario("Juan", "Pelotas", "Pelotas01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3, destinosVisitados = mutableListOf(destino1,destino3)).apply{criterioParaItinerario = Relajado }
-        val marce = Usuario("Marce", "Lito", "Lito01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3, destinosVisitados = mutableListOf(destino1), amigos = mutableListOf(pepe,pepe2)).apply{criterioParaItinerario = Relajado }
+        val pepe2 = Usuario("Juan", "Pelotas", "Pelotas01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3, destinosVisitados = mutableListOf(destino1,destino3)).apply{criterioParaItinerario = Relajado;criterioParaVehiculo=SinLimite }
+        val marce = Usuario("Marce", "Lito", "Lito01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3, destinosVisitados = mutableListOf(destino1),destinosDeseados = mutableListOf(destino2), amigos = mutableListOf(pepe,pepe2)).apply{criterioParaItinerario = Relajado }
 
         var moto200cc = Moto("honda","ninja",LocalDate.of(2015,7,5),10000.0,true,250)
         var motoSinConvenio = Moto("bmw","ninja",LocalDate.of(2015,7,5),10000.0,true,250)
@@ -59,23 +61,70 @@ class TestViaje:DescribeSpec({
 
         val viajeNoLocal = Viaje(vehiculo = motoSinConvenio, itinerario = itinerarioConDificultadAlta)
 
-        pepe.presupuesto = 40000.0
-        pepe.realizar(viajeNoLocal)
+        val repo = RepositorioDeItinerarios()
+        repo.agregarAlRepo(itinerarioConDificultadBaja)
+        pepe.agregarAmigo(marce)
+        pepe.agregarAmigo(pepe2)
 
-        it("Verificar que si no es local cambiar criterio a Localista"){
-            pepe.criterioParaItinerario shouldBe Localista
+        val tareaMandarMail = MandarMailAAmigosQueDeseanDestino()
+        tareaMandarMail.mailSender = StubMailSender
+
+        describe("Test donde activo 4 acciones"){
+            pepe.activarAccion(AgregarAListaDeItinerariosParaPuntuar(repo))
+            pepe.activarAccion(RealizaViajeLocal())
+            pepe.activarAccion(RealizaViajeConConvenio())
+
+
+            pepe.activarAccion(tareaMandarMail)
+            StubMailSender.reset()
+
+            pepe.realizar(viajeNoLocal)
+
+            it("Verificar que la  lista de acciones tiene 4 acciones") {
+                pepe.observerDeViajesActivas.size shouldBe 4
+            }
+            it("Verifico que se manda mail a amigo que desea el destino del viaje y no al que no"){
+                StubMailSender.mailsEnviados.size.shouldBe(1)
+            }
+            it("Verificar que si NO es local cambia criterio a Localista") {
+                pepe.criterioParaItinerario shouldBe Localista
+            }
+            it("Verificar que se agrega a itinerarios a puntuar el itinerario del viaje"){
+                repo.filtrarPorPuntuables(pepe) shouldBe mutableListOf(itinerarioConDificultadBaja,itinerarioConDificultadAlta)
+            }
+            it("Verificar que se cambia el criterio de vehiculo a Selectivo"){
+                pepe.leGustaVehiculo(motoSinConvenio) shouldBe false
+                pepe.leGustaVehiculo(moto200cc) shouldBe true
+            }
+
         }
-        it("Verificar que agrego a itinerarios a puntar el itinerario del viaje"){
-            pepe.puedoPuntuar(viajeNoLocal.itinerario)
+        describe("Test donde no activo acciones"){
+
+            pepe2.realizar(viajeNoLocal)
+            it("Verificar que la  lista de acciones tiene 4 acciones") {
+                pepe2.observerDeViajesActivas.size shouldBe 0
+            }
+
+            /*
+            *
+            it("Verifico que NO se manda mail a amigo que desea el destino"){
+                StubMailSender.mailsEnviados.size.shouldBe(0)
+            }
+            *
+            */
+
+            it("Verificar que NO cambie a Localista") {
+                pepe2.criterioParaItinerario shouldBe Relajado
+            }
+            it("Verificar que NO agrego a itinerarios a puntar el itinerario del viaje"){
+                repo.filtrarPorPuntuables(pepe2) shouldBe mutableListOf(itinerarioConDificultadBaja)
+            }
+            it("Verificar que NO se cambia el criterio de vehiculo a Selectivo"){
+                pepe2.leGustaVehiculo(motoSinConvenio) shouldBe true
+                pepe2.leGustaVehiculo(moto200cc) shouldBe true
+            }
+
         }
-        it("Verificar que si no me alcanza el presupuesto no realizo el viaje"){
-            pepe2.presupuesto = 5000.0
-            assertThrows<BusinessException> { pepe2.realizar(viajeNoLocal) }
-        }
-        /*
-        it("Verificar que si viaje no tiene vehiculo con convenio, cambia criterio a Selectivo "){
-            pepe.criterioParaVehiculo shouldBe Selectivo("Honda")
-        }
-        */
+
     }
 })

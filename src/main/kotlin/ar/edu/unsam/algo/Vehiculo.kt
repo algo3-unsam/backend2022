@@ -19,6 +19,8 @@ interface Vehiculo:Datos{
 
     fun costoFinal(diasDealquiler: Int) = (costoBase(diasDealquiler) + aumentoPorCondicion(diasDealquiler)) * factorDescuentoPorConvenio(diasDealquiler)
 
+    fun primeraMarcaConConvenio() = marcasConConvenio().first()
+
     fun tieneConvenio() = containsString(marcaConvenio,marca)
 
     fun factorDescuentoPorConvenio(diasDealquiler: Int) = if(tieneConvenio())  0.9 else 1.0
@@ -37,6 +39,7 @@ interface Vehiculo:Datos{
 
     fun coincidenInicialMarcaModelo() = marca.first() == modelo.first()
 
+    fun marcasConConvenio() = marcaConvenio
 
     override fun esValido() = this.tieneInformacionCargadaEnStrings() && this.costoDiarioValido() && this.tieneFechaAltaValida()
 

@@ -8,4 +8,6 @@ class Viaje(var vehiculo: Vehiculo, var itinerario : Itinerario){
 
     fun vehiculoConConvenio() = vehiculo.tieneConvenio()
 
+    fun getDestino() = itinerario.destino
+
 }
