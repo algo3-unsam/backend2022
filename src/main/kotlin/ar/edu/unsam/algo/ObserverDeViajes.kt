@@ -4,22 +4,21 @@ interface ObserverDeViajes {
     fun realizaViaje(usuario: Usuario, viaje: Viaje)
 }
 
-class RealizaViajeLocal() : ObserverDeViajes {
+class RealizaViajeLocal : ObserverDeViajes {
     override fun realizaViaje(usuario: Usuario, viaje: Viaje) {
         usuario.cambiarCriterio(Localista)
     }
 
 }
 
-class MandarMailAAmigosQueDeseanDestino() : ObserverDeViajes {
+class MandarMailAAmigosQueDeseanDestino : ObserverDeViajes {
     val direccionDeCorreo: String = "app@holamundo.com"
-    lateinit var mailSender: MailSender
     override fun realizaViaje(usuario: Usuario, viaje: Viaje) {
         usuario.amigosQueConocenDestino(viaje.getDestino()).forEach { armarMail(usuario, viaje, it) }
     }
 
     fun armarMail(emisor: Usuario, viaje: Viaje, receptor: Usuario) {
-        mailSender.sendMail(
+        ServiceLocator.mailSender.sendMail(
             Mail(
                 from = direccionDeCorreo,
                 to = receptor.direccionDeCorreo,
@@ -43,7 +42,7 @@ class AgregarAListaDeItinerariosParaPuntuar(var repo:RepositorioDeItinerarios) :
     }
 }
 
-class RealizaViajeConConvenio() : ObserverDeViajes {
+class RealizaViajeConConvenio : ObserverDeViajes {
     override fun realizaViaje(usuario: Usuario, viaje: Viaje) {
         cambiarCriterio(usuario,viaje)
     }

@@ -19,7 +19,7 @@ class Usuario(
     lateinit var criterioParaVehiculo: CriterioVehiculo
     var direccionDeCorreo: String = ""
 
-    val observerDeViajesActivas: MutableList<ObserverDeViajes> = mutableListOf()
+    val observerDeViajesActivas: MutableSet<ObserverDeViajes> = mutableSetOf()
 
     companion object {
         var ANTIGUEDAD_MAXIMA = 15
@@ -35,10 +35,7 @@ class Usuario(
     fun coicidenciaParcialNombreApellido(cadena: String) =
         nombre.contains(cadena, ignoreCase = true) || apellido.contains(cadena, ignoreCase = true)
 
-    fun tieneDestinoSoñado() = destinosDeseados.isNotEmpty()
-
-    fun amigosQueConocenA(listaDeUsuarios: MutableList<Usuario>, destino: Destino) =
-        listaDeUsuarios.filter { it.conoceDestino(destino) }
+    fun tieneDestinoSoniado() = destinosDeseados.isNotEmpty()
 
     fun agregarDestinomasCarodeMisAmigos() = amigos.forEach { it.agregarDestinoMasCaroA(this) }
 
@@ -62,7 +59,7 @@ class Usuario(
     }
 
     override fun esValido(): Boolean =
-        this.tieneInformacionCargadaEnStrings() && (!tieneFechaAltaInvalida()) && (!tieneDiasParaViajarInvalidos()) && (this.tieneDestinoSoñado())
+        this.tieneInformacionCargadaEnStrings() && (!tieneFechaAltaInvalida()) && (!tieneDiasParaViajarInvalidos()) && (this.tieneDestinoSoniado())
 
     fun tieneDiasParaViajarInvalidos(): Boolean = this.diasParaViajar < 0
 
@@ -77,7 +74,7 @@ class Usuario(
     }
 
     fun tieneInformacionCargadaEnStrings() =
-        !(this.nombre.isNullOrEmpty() && this.apellido.isNullOrEmpty() && this.username.isNullOrEmpty() && this.paisDeResidencia.isNullOrEmpty())
+        !(this.nombre.isEmpty() && this.apellido.isEmpty() && this.username.isEmpty() && this.paisDeResidencia.isEmpty())
 
     fun agregarAmigo(usuario: Usuario) = amigos.add(usuario)
 
@@ -151,12 +148,12 @@ class Usuario(
 
     fun deseoDestino(destino: Destino) = destinosDeseados.contains(destino)
 
-    fun realizarTarea(tarea: Tarea,sender: MailSender){
-        tarea.realizarYNotificarTarea(this,sender)
+    fun realizarTarea(tarea: Tarea){
+        tarea.realizarYNotificarTarea(this)
     }
 
-    fun realizarVariasTareas(listaDeTarea: MutableList<Tarea>,mailSender: MailSender){
-        listaDeTarea.forEach { this.realizarTarea(it,mailSender) }
+    fun realizarVariasTareas(listaDeTarea: MutableList<Tarea>){
+        listaDeTarea.forEach { this.realizarTarea(it) }
     }
 
 }

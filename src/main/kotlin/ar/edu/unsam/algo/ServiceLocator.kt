@@ -1,5 +1,5 @@
 package ar.edu.unsam.algo
 
-object serviceLocator {
+object ServiceLocator {
     lateinit var mailSender: MailSender
 }
