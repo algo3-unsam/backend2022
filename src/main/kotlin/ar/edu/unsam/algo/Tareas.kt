@@ -3,8 +3,8 @@ package ar.edu.unsam.algo
 abstract class Tarea(var nombre: String) {
     abstract fun realizarTarea(usuario: Usuario)
 
-    fun notificarTarea(usuario: Usuario,mailSender: MailSender){
-        mailSender.sendMail(
+    fun notificarTarea(usuario: Usuario){
+        ServiceLocator.mailSender.sendMail(
             Mail(
                 from = "app@gmail.com",
                 to = usuario.direccionDeCorreo,
@@ -13,16 +13,16 @@ abstract class Tarea(var nombre: String) {
             ))
     }
 
-    fun realizarYNotificarTarea(unUsuario: Usuario, mailSender: MailSender){
-        realizarTarea(unUsuario)
-        notificarTarea(unUsuario,mailSender)
+    fun realizarYNotificarTarea(usuario: Usuario){
+        realizarTarea(usuario)
+        notificarTarea(usuario)
     }
 
 }
 
 class PuntuarItinerarios(val repoDeItinerarios: RepositorioDeItinerarios, var puntaje: Int) :Tarea("PuntuarTodosLosItinerarios"){
-    override fun realizarTarea(unUsuario: Usuario){
-        repoDeItinerarios.filtrarPorPuntuables(unUsuario).forEach { unUsuario.puntuar(it,puntaje) }
+    override fun realizarTarea(usuario: Usuario){
+        repoDeItinerarios.filtrarPorPuntuables(usuario).forEach { usuario.puntuar(it,puntaje) }
     }
 }
 
@@ -38,7 +38,7 @@ class AgregarAmigos(val repositorioDeUsuarios: RepositorioDeUsuarios, val destin
     }
 }
 
-class AgregarDeseadoCaroDeAmigos() : Tarea("Agregar el deseado mas caro de tus amigos"){
+class AgregarDeseadoCaroDeAmigos : Tarea("Agregar el deseado mas caro de tus amigos"){
     override fun realizarTarea(usuario: Usuario) {
         usuario.agregarDestinomasCarodeMisAmigos()
     }

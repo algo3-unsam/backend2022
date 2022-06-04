@@ -1,12 +1,9 @@
-package ar.edu.unsam.algo.TestDeTareas
+package ar.edu.unsam.algo.TestDeViajes
 
 import ar.edu.unsam.algo.*
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
-import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.shouldBe
-import io.mockk.mockk
-import org.junit.jupiter.api.assertThrows
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -18,14 +15,13 @@ class TestViaje:DescribeSpec({
         val destino2 = Destino(pais = "Brasil", ciudad = "Rio", costoBase = 4000F)
         val destino3 = Destino(pais = "Alemania", ciudad = "Berlin", costoBase = 5000F)
         val destino4 = Destino(pais = "Turquia", ciudad = "Batman", costoBase = 6000F)
-        val destino5 = Destino(pais = "Chile", ciudad = "Santiago", costoBase = 7000F)
 
         val pepe = Usuario("Juan", "Pelotas", "Pelotas01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3, destinosVisitados = mutableListOf(destino1), destinosDeseados = mutableListOf(destino2,destino4)).apply{criterioParaItinerario = Relajado}
         val pepe2 = Usuario("Juan", "Pelotas", "Pelotas01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3, destinosVisitados = mutableListOf(destino1,destino3)).apply{criterioParaItinerario = Relajado;criterioParaVehiculo=SinLimite }
         val marce = Usuario("Marce", "Lito", "Lito01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3, destinosVisitados = mutableListOf(destino1),destinosDeseados = mutableListOf(destino2), amigos = mutableListOf(pepe,pepe2)).apply{criterioParaItinerario = Relajado }
 
-        var moto200cc = Moto("honda","ninja",LocalDate.of(2015,7,5),10000.0,true,250)
-        var motoSinConvenio = Moto("bmw","ninja",LocalDate.of(2015,7,5),10000.0,true,250)
+        val moto200cc = Moto("honda","ninja",LocalDate.of(2015,7,5),10000.0,true,250)
+        val motoSinConvenio = Moto("bmw","ninja",LocalDate.of(2015,7,5),10000.0,true,250)
 
         val actividad = Actividad(100.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultad.ALTA)
         val actividad2 = Actividad(150.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultad.BAJA)
@@ -67,13 +63,17 @@ class TestViaje:DescribeSpec({
         pepe.agregarAmigo(pepe2)
 
         val tareaMandarMail = MandarMailAAmigosQueDeseanDestino()
-        tareaMandarMail.mailSender = StubMailSender
+        ServiceLocator.mailSender = StubMailSender
+
+        val accionDeViajeLocal = RealizaViajeLocal()
 
         describe("Test donde activo 4 acciones"){
             pepe.activarAccion(AgregarAListaDeItinerariosParaPuntuar(repo))
-            pepe.activarAccion(RealizaViajeLocal())
+            pepe.activarAccion(accionDeViajeLocal)
+            pepe.activarAccion(accionDeViajeLocal)
+            pepe.activarAccion(accionDeViajeLocal)
+            pepe.activarAccion(accionDeViajeLocal)
             pepe.activarAccion(RealizaViajeConConvenio())
-
 
             pepe.activarAccion(tareaMandarMail)
             StubMailSender.reset()
@@ -100,18 +100,15 @@ class TestViaje:DescribeSpec({
         }
         describe("Test donde no activo acciones"){
 
+            StubMailSender.reset()
             pepe2.realizar(viajeNoLocal)
             it("Verificar que la  lista de acciones tiene 4 acciones") {
                 pepe2.observerDeViajesActivas.size shouldBe 0
             }
 
-            /*
-            *
             it("Verifico que NO se manda mail a amigo que desea el destino"){
                 StubMailSender.mailsEnviados.size.shouldBe(0)
             }
-            *
-            */
 
             it("Verificar que NO cambie a Localista") {
                 pepe2.criterioParaItinerario shouldBe Relajado

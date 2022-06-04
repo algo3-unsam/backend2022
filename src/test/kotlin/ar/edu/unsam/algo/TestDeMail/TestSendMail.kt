@@ -49,7 +49,7 @@ class TestSendMail : DescribeSpec({
         ).apply { criterioParaItinerario = Relajado }
 
 
-        var motoSinConvenio = Moto("bmw", "ninja", LocalDate.of(2015, 7, 5), 10000.0, true, 250)
+        val motoSinConvenio = Moto("bmw", "ninja", LocalDate.of(2015, 7, 5), 10000.0, true, 250)
 
         val actividad = Actividad(100.0, "Hola!", LocalTime.of(9, 30), LocalTime.of(10, 30), Dificultad.ALTA)
         val actividad2 = Actividad(150.0, "Hola!", LocalTime.of(9, 30), LocalTime.of(10, 30), Dificultad.BAJA)
@@ -108,7 +108,7 @@ class TestSendMail : DescribeSpec({
         it("se mandara mail a todos los amigos del usuario que realizo el viaje y desean el destino") {
             val tareaMandarMail = MandarMailAAmigosQueDeseanDestino()
 
-            tareaMandarMail.mailSender = StubMailSender
+            ServiceLocator.mailSender = StubMailSender
 
             StubMailSender.reset()
             tareaMandarMail.realizaViaje(marce, viajeNoLocal)
