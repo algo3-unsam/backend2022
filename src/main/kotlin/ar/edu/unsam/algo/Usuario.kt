@@ -130,11 +130,11 @@ class Usuario(
 
     fun realizar(viaje: Viaje) {
         destinosVisitados.add(viaje.getDestino())
-        realizaViaje(viaje)
+        accionDe(viaje)
 
     }
 
-    fun realizaViaje(viaje: Viaje) {
+    fun accionDe(viaje: Viaje) {
         observerDeViajesActivas.forEach { it.realizaViaje(this, viaje) }
     }
 
@@ -148,12 +148,12 @@ class Usuario(
 
     fun deseoDestino(destino: Destino) = destinosDeseados.contains(destino)
 
-    fun realizarTarea(tarea: Tarea){
-        tarea.realizarYNotificarTarea(this)
+    fun realizarTarea(tarea: Tarea, mailSender: MailSender){
+        tarea.realizarYNotificarTarea(this, mailSender)
     }
 
-    fun realizarVariasTareas(listaDeTarea: MutableList<Tarea>){
-        listaDeTarea.forEach { this.realizarTarea(it) }
+    fun realizarVariasTareas(listaDeTarea: MutableList<Tarea>, mailSender: MailSender){
+        listaDeTarea.forEach { this.realizarTarea(it, mailSender) }
     }
 
 }

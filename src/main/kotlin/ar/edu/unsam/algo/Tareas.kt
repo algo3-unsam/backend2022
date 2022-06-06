@@ -2,20 +2,19 @@ package ar.edu.unsam.algo
 
 abstract class Tarea(var nombre: String) {
     abstract fun realizarTarea(usuario: Usuario)
-
-    fun notificarTarea(usuario: Usuario){
-        ServiceLocator.mailSender.sendMail(
+    fun notificarTarea(usuario: Usuario, mailSender: MailSender){
+        mailSender.sendMail(
             Mail(
-                from = "app@gmail.com",
+                from = direccionCorreoApp,
                 to = usuario.direccionDeCorreo,
                 subject = "Tarea Realizada",
                 content = "Se realiza la tarea ${this.nombre}"
             ))
     }
 
-    fun realizarYNotificarTarea(usuario: Usuario){
+    fun realizarYNotificarTarea(usuario: Usuario, mailSender: MailSender){
         realizarTarea(usuario)
-        notificarTarea(usuario)
+        notificarTarea(usuario, mailSender)
     }
 
 }

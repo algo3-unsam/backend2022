@@ -12,24 +12,22 @@ class RealizaViajeLocal : ObserverDeViajes {
 }
 
 class MandarMailAAmigosQueDeseanDestino : ObserverDeViajes {
-    val direccionDeCorreo: String = "app@holamundo.com"
+    lateinit var mailSender: MailSender
     override fun realizaViaje(usuario: Usuario, viaje: Viaje) {
         usuario.amigosQueConocenDestino(viaje.getDestino()).forEach { armarMail(usuario, viaje, it) }
     }
 
     fun armarMail(emisor: Usuario, viaje: Viaje, receptor: Usuario) {
-        ServiceLocator.mailSender.sendMail(
+        mailSender.sendMail(
             Mail(
-                from = direccionDeCorreo,
+                from = direccionCorreoApp,
                 to = receptor.direccionDeCorreo,
-                subject = getSubject(),
+                subject = "Visitaron un destino que te puede interesar",
                 content = getBody(emisor, viaje, receptor)
             )
         )
 
     }
-
-    fun getSubject() = "Visitaron un destino que te puede interesar"
 
     fun getBody(emisor: Usuario, viaje: Viaje, receptor: Usuario) = "Hola! ${receptor.nombre}, ${emisor.nombre} ${emisor.apellido} visito ${viaje.getDestino().pais} ${viaje.getDestino().ciudad}"
 

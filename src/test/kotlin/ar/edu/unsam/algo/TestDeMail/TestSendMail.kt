@@ -107,8 +107,7 @@ class TestSendMail : DescribeSpec({
 
         it("se mandara mail a todos los amigos del usuario que realizo el viaje y desean el destino") {
             val tareaMandarMail = MandarMailAAmigosQueDeseanDestino()
-
-            ServiceLocator.mailSender = StubMailSender
+            tareaMandarMail.mailSender = StubMailSender
 
             StubMailSender.reset()
             tareaMandarMail.realizaViaje(marce, viajeNoLocal)

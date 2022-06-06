@@ -63,7 +63,7 @@ class TestViaje:DescribeSpec({
         pepe.agregarAmigo(pepe2)
 
         val tareaMandarMail = MandarMailAAmigosQueDeseanDestino()
-        ServiceLocator.mailSender = StubMailSender
+        tareaMandarMail.mailSender = StubMailSender
 
         val accionDeViajeLocal = RealizaViajeLocal()
 

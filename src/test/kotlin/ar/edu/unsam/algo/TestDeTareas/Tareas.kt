@@ -63,32 +63,32 @@ class TestTareas:DescribeSpec({
         val mockedMailSender = mockk<MailSender>(relaxUnitFun = true)
         it("Verificar que se puntuan correctamente"){
 
-            pepe.realizarTarea(PuntuarItinerarios(repoDeItinerarios,5))
+            pepe.realizarTarea(PuntuarItinerarios(repoDeItinerarios,5), mockedMailSender)
             itinerarioConDificultadAlta.puntajes[pepe.username] shouldBe 5
             itinerarioConDificultadBaja.puntajes[pepe.username] shouldBe 5
         }
 
         it("Verificar que se transfieren itinerarios"){
-            marce.realizarTarea(TranseferirItinerarios(repoDeItinerarios))
+            marce.realizarTarea(TranseferirItinerarios(repoDeItinerarios), mockedMailSender)
             pepe.esCreadorDe(itinerarioConDificultadAlta) shouldBe true
             pepe.esCreadorDe(itinerarioConDificultadBaja) shouldBe true
         }
 
         it("Verificar que se hace amigo del que conocen el destino y no del que no"){
             marce.amigos.clear()
-            marce.realizarTarea(AgregarAmigos(repoDeUsuario,destino2))
+            marce.realizarTarea(AgregarAmigos(repoDeUsuario,destino2), mockedMailSender)
             marce.amigos.size shouldBe 1
             marce.amigos.contains(pepe)
         }
         it("Verificar que se hace amigo de los que conocen el destino"){
             marce.amigos.clear()
-            marce.realizarTarea(AgregarAmigos(repoDeUsuario,destino1))
+            marce.realizarTarea(AgregarAmigos(repoDeUsuario,destino1), mockedMailSender)
             marce.amigos.size shouldBe 2
             marce.amigos.containsAll(mutableListOf(pepe,pepe2))
         }
         it("Verificar que se agregan destinos deseados mas caros"){
             pepe2.destinosDeseados.add(destino5)
-            marce.realizarTarea(AgregarDeseadoCaroDeAmigos())
+            marce.realizarTarea(AgregarDeseadoCaroDeAmigos(), mockedMailSender)
             marce.destinosDeseados shouldBe (mutableListOf(destino4,destino5))
         }
     }
