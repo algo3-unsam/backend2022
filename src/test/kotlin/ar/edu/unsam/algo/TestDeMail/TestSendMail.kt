@@ -45,7 +45,7 @@ class TestSendMail : DescribeSpec({
             "Argentina",
             diasParaViajar = 3,
             destinosVisitados = mutableListOf(destino1),
-            amigos = mutableListOf(pepe, pepe2)
+            amigos = mutableSetOf(pepe, pepe2)
         ).apply { criterioParaItinerario = Relajado }
 
 

@@ -18,7 +18,7 @@ class TestViaje:DescribeSpec({
 
         val pepe = Usuario("Juan", "Pelotas", "Pelotas01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3, destinosVisitados = mutableListOf(destino1), destinosDeseados = mutableListOf(destino2,destino4)).apply{criterioParaItinerario = Relajado}
         val pepe2 = Usuario("Juan", "Pelotas", "Pelotas01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3, destinosVisitados = mutableListOf(destino1,destino3)).apply{criterioParaItinerario = Relajado;criterioParaVehiculo=SinLimite }
-        val marce = Usuario("Marce", "Lito", "Lito01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3, destinosVisitados = mutableListOf(destino1),destinosDeseados = mutableListOf(destino2), amigos = mutableListOf(pepe,pepe2)).apply{criterioParaItinerario = Relajado }
+        val marce = Usuario("Marce", "Lito", "Lito01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3, destinosVisitados = mutableListOf(destino1),destinosDeseados = mutableListOf(destino2), amigos = mutableSetOf(pepe,pepe2)).apply{criterioParaItinerario = Relajado }
 
         val moto200cc = Moto("honda","ninja",LocalDate.of(2015,7,5),10000.0,true,250)
         val motoSinConvenio = Moto("bmw","ninja",LocalDate.of(2015,7,5),10000.0,true,250)
@@ -68,7 +68,7 @@ class TestViaje:DescribeSpec({
         val accionDeViajeLocal = RealizaViajeLocal()
 
         describe("Test donde activo 4 acciones"){
-            pepe.activarAccion(AgregarAListaDeItinerariosParaPuntuar(repo))
+            pepe.activarAccion(AgregarAListaDeItinerariosParaPuntuar())
             pepe.activarAccion(accionDeViajeLocal)
             pepe.activarAccion(accionDeViajeLocal)
             pepe.activarAccion(accionDeViajeLocal)
@@ -90,7 +90,7 @@ class TestViaje:DescribeSpec({
                 pepe.criterioParaItinerario shouldBe Localista
             }
             it("Verificar que se agrega a itinerarios a puntuar el itinerario del viaje"){
-                repo.filtrarPorPuntuables(pepe) shouldBe mutableListOf(itinerarioConDificultadBaja,itinerarioConDificultadAlta)
+                pepe.listaItinerariosParaPuntuar shouldBe mutableSetOf(itinerarioConDificultadAlta)
             }
             it("Verificar que se cambia el criterio de vehiculo a Selectivo"){
                 pepe.leGustaVehiculo(motoSinConvenio) shouldBe false

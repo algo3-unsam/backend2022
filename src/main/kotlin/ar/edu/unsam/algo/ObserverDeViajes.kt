@@ -6,7 +6,7 @@ interface ObserverDeViajes {
 
 class RealizaViajeLocal : ObserverDeViajes {
     override fun realizaViaje(usuario: Usuario, viaje: Viaje) {
-        usuario.cambiarCriterio(Localista)
+        if(!viaje.esLocal()) usuario.cambiarCriterio(Localista)
     }
 
 }
@@ -14,7 +14,7 @@ class RealizaViajeLocal : ObserverDeViajes {
 class MandarMailAAmigosQueDeseanDestino : ObserverDeViajes {
     lateinit var mailSender: MailSender
     override fun realizaViaje(usuario: Usuario, viaje: Viaje) {
-        usuario.amigosQueConocenDestino(viaje.getDestino()).forEach { armarMail(usuario, viaje, it) }
+        usuario.amigosQueDeseanDestino(viaje.getDestino()).forEach { armarMail(usuario, viaje, it) }
     }
 
     fun armarMail(emisor: Usuario, viaje: Viaje, receptor: Usuario) {
@@ -34,9 +34,9 @@ class MandarMailAAmigosQueDeseanDestino : ObserverDeViajes {
 }
 
 
-class AgregarAListaDeItinerariosParaPuntuar(var repo:RepositorioDeItinerarios) : ObserverDeViajes {
+class AgregarAListaDeItinerariosParaPuntuar() : ObserverDeViajes {
     override fun realizaViaje(usuario: Usuario, viaje: Viaje) {
-        repo.create(viaje.itinerario)
+        usuario.listaItinerariosParaPuntuar.add(viaje.itinerario)
     }
 }
 

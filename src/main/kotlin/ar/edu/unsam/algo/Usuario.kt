@@ -10,7 +10,7 @@ class Usuario(
     var fechaDeAlta: LocalDate,
     val paisDeResidencia: String,
     var diasParaViajar: Int,
-    val amigos: MutableList<Usuario> = mutableListOf(),
+    val amigos: MutableSet<Usuario> = mutableSetOf(),
     val destinosDeseados: MutableList<Destino> = mutableListOf(),
     val destinosVisitados: MutableList<Destino> = mutableListOf(),
 ) : Datos {
@@ -20,6 +20,7 @@ class Usuario(
     var direccionDeCorreo: String = ""
 
     val observerDeViajesActivas: MutableSet<ObserverDeViajes> = mutableSetOf()
+    val listaItinerariosParaPuntuar: MutableSet<Itinerario> = mutableSetOf()
 
     companion object {
         var ANTIGUEDAD_MAXIMA = 15
@@ -138,7 +139,7 @@ class Usuario(
         observerDeViajesActivas.forEach { it.realizaViaje(this, viaje) }
     }
 
-    fun amigosQueConocenDestino(destino: Destino) = amigos.filter { it.deseoDestino(destino) }
+    fun amigosQueDeseanDestino(destino: Destino) = amigos.filter { it.deseoDestino(destino) }
 
     fun activarAccion(accion: ObserverDeViajes) = observerDeViajesActivas.add(accion)
 

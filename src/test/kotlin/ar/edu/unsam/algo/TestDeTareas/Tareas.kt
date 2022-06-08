@@ -20,7 +20,7 @@ class TestTareas:DescribeSpec({
         val destino5 = Destino(pais = "Argentina", ciudad = "BuenosAires", costoBase = 7000F)
         val pepe = Usuario("Juan", "Pelotas", "Pelotas01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3, destinosVisitados = mutableListOf(destino1), destinosDeseados = mutableListOf(destino2,destino4)).apply{criterioParaItinerario = Relajado }
         val pepe2 = Usuario("Juan", "Pelotas", "Pelotas01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3, destinosVisitados = mutableListOf(destino1,destino3)).apply{criterioParaItinerario = Relajado }
-        val marce = Usuario("Marce", "Lito", "Lito01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3, destinosVisitados = mutableListOf(destino1), amigos = mutableListOf(pepe,pepe2)).apply{criterioParaItinerario = Relajado }
+        val marce = Usuario("Marce", "Lito", "Lito01", LocalDate.of(2010, 3, 12), "Argentina", diasParaViajar = 3, destinosVisitados = mutableListOf(destino1), amigos = mutableSetOf(pepe,pepe2)).apply{criterioParaItinerario = Relajado }
 
 
         val actividad = Actividad(100.0, "Hola!", LocalTime.of(9,30), LocalTime.of(10,30), Dificultad.ALTA)
@@ -63,7 +63,8 @@ class TestTareas:DescribeSpec({
         val mockedMailSender = mockk<MailSender>(relaxUnitFun = true)
         it("Verificar que se puntuan correctamente"){
 
-            pepe.realizarTarea(PuntuarItinerarios(repoDeItinerarios,5), mockedMailSender)
+            pepe.listaItinerariosParaPuntuar.addAll(mutableSetOf(itinerarioConDificultadAlta, itinerarioConDificultadBaja))
+            pepe.realizarTarea(PuntuarItinerarios(5), mockedMailSender)
             itinerarioConDificultadAlta.puntajes[pepe.username] shouldBe 5
             itinerarioConDificultadBaja.puntajes[pepe.username] shouldBe 5
         }

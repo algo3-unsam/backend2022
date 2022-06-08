@@ -7,10 +7,12 @@ abstract class Tarea(var nombre: String) {
             Mail(
                 from = direccionCorreoApp,
                 to = usuario.direccionDeCorreo,
-                subject = "Tarea Realizada",
-                content = "Se realiza la tarea ${this.nombre}"
+                subject = Mensaje(),
+                content = Mensaje()
             ))
     }
+
+    fun Mensaje() = "Se realiza la tarea ${this.nombre}"
 
     fun realizarYNotificarTarea(usuario: Usuario, mailSender: MailSender){
         realizarTarea(usuario)
@@ -19,9 +21,9 @@ abstract class Tarea(var nombre: String) {
 
 }
 
-class PuntuarItinerarios(val repoDeItinerarios: RepositorioDeItinerarios, var puntaje: Int) :Tarea("PuntuarTodosLosItinerarios"){
+class PuntuarItinerarios(var puntaje: Int) :Tarea("PuntuarTodosLosItinerarios"){
     override fun realizarTarea(usuario: Usuario){
-        repoDeItinerarios.filtrarPorPuntuables(usuario).forEach { usuario.puntuar(it,puntaje) }
+        usuario.listaItinerariosParaPuntuar.forEach{usuario.puntuar(it,puntaje)}
     }
 }
 
