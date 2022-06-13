@@ -35,7 +35,8 @@ class TranseferirItinerarios(val repoDeItinerarios: RepositorioDeItinerarios): T
 
 class AgregarAmigos(val repositorioDeUsuarios: RepositorioDeUsuarios, val destino: Destino) : Tarea("Agregar amigos con destino conocido"){
     override fun realizarTarea(usuario: Usuario) {
-        repositorioDeUsuarios.agregarAmigosConDestinoConocido(usuario,destino)
+        val usuariosAAgregarAAmigos = repositorioDeUsuarios.usuariosQueConocenUnDestinoYNoSonAmigosDeOtroUsuario(destino,usuario)
+        usuariosAAgregarAAmigos.forEach {usuario.agregarAmigo(it)  }
     }
 }
 

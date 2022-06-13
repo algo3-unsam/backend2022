@@ -12,16 +12,16 @@ interface Vehiculo:Datos{
     val kilometrajeLibre: Boolean
     override var id: Int
 
-
-    companion object{var marcaConvenio: MutableList<String> = mutableListOf("Honda")}
+    companion object{
+        var marcasConvenio: MutableList<String> = mutableListOf("Honda")
+        fun primeraMarcaConConvenio() = marcasConvenio.first()
+    }
 
     fun costoBase(diasDealquiler: Int) = costoDiario * diasDealquiler
 
     fun costoFinal(diasDealquiler: Int) = (costoBase(diasDealquiler) + aumentoPorCondicion(diasDealquiler)) * factorDescuentoPorConvenio(diasDealquiler)
 
-    fun primeraMarcaConConvenio() = marcasConConvenio().first()
-
-    fun tieneConvenio() = containsString(marcaConvenio,marca)
+    fun tieneConvenio() = containsString(marcasConvenio,marca)
 
     fun factorDescuentoPorConvenio(diasDealquiler: Int) = if(tieneConvenio())  0.9 else 1.0
 
@@ -39,7 +39,7 @@ interface Vehiculo:Datos{
 
     fun coincidenInicialMarcaModelo() = marca.first() == modelo.first()
 
-    fun marcasConConvenio() = marcaConvenio
+    fun marcasConConvenio() = marcasConvenio
 
     override fun esValido() = this.tieneInformacionCargadaEnStrings() && this.costoDiarioValido() && this.tieneFechaAltaValida()
 
@@ -114,4 +114,6 @@ class Camioneta(
     override fun aumentoPorCondicion(diasDealquiler: Int): Double {
         return aumentoPorExceso(diasDealquiler) + aumentoPorTodoTerreno(diasDealquiler)
     }
+
+
 }

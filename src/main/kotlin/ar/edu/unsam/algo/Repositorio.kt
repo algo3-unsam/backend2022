@@ -85,11 +85,8 @@ class RepositorioDeItinerarios : Repositorio<Itinerario>() {
 }
 
 class RepositorioDeUsuarios : Repositorio<Usuario>(){
-    fun filtrarXDestinoConocido(unDestino: Destino): List<Usuario>{
-        return elementos.filter {it.conoceDestino(unDestino)}
+    fun usuariosQueConocenUnDestinoYNoSonAmigosDeOtroUsuario(unDestino: Destino, usuario: Usuario): List<Usuario>{
+        return elementos.filter {it.conoceDestino(unDestino) && usuario.puedoAgregarAAmigos(it)}
     }
 
-    fun agregarAmigosConDestinoConocido(unUsuario: Usuario,unDestino: Destino){
-        filtrarXDestinoConocido(unDestino).forEach { unUsuario.agregarAmigo(it) }
-    }
 }

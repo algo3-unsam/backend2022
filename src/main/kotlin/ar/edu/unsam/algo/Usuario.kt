@@ -38,13 +38,12 @@ class Usuario(
 
     fun tieneDestinoSoniado() = destinosDeseados.isNotEmpty()
 
-    fun agregarDestinomasCarodeMisAmigos() = amigos.forEach { it.agregarDestinoMasCaroA(this) }
+    fun agregarDestinomasCarodeMisAmigos() = amigos.forEach { agregarDestinoDeseado(it.destinoMasCaro()) }
 
-    fun agregarDestinoMasCaroA(amigo: Usuario) = amigo.destinosDeseados.add(this.destinoMasCaro())
+    fun agregarDestinoDeseado(destino: Destino) = destinosDeseados.add(destino)
 
     fun destinoMasCaro(): Destino {
-        this.ordenarDestinosPorPrecio()
-        if (!this.destinosDeseados.isEmpty()) return this.destinosDeseados.last() else throw BusinessException("No tiene destino deseado")
+        return destinosDeseados.maxByOrNull { it.precio(this) }!!
     }
 
     fun ordenarDestinosPorPrecio() {
@@ -85,7 +84,7 @@ class Usuario(
         !(esCreadorDe(itinerario)) && !itinerario.yaPuntuo(this.username) && this.conoceDestino(itinerario.destino)
 
     fun puntuar(itinerario: Itinerario, puntaje: Int) {
-        if ((puntaje < 1) || (puntaje > 10) || !puedoPuntuar(itinerario)) {
+        if((puntaje !in 1..10) || !puedoPuntuar(itinerario)) {
             throw BusinessException(
                 "No puede puntuar el itinerario, usted es el creador o ya puntuo el itinerario o no conce el destino\n" +
                         "Revise que el puntaje ingresado sea mayor a 1 y menor que 10 puntaje: $puntaje"
@@ -131,11 +130,11 @@ class Usuario(
 
     fun realizar(viaje: Viaje) {
         destinosVisitados.add(viaje.getDestino())
-        accionDe(viaje)
+        notificarObserversDeViajes(viaje)
 
     }
 
-    fun accionDe(viaje: Viaje) {
+    fun notificarObserversDeViajes(viaje: Viaje) {
         observerDeViajesActivas.forEach { it.realizaViaje(this, viaje) }
     }
 
@@ -156,6 +155,12 @@ class Usuario(
     fun realizarVariasTareas(listaDeTarea: MutableList<Tarea>, mailSender: MailSender){
         listaDeTarea.forEach { this.realizarTarea(it, mailSender) }
     }
+
+    fun agregarItinerarioAPuntuar(itinerario: Itinerario) = listaItinerariosParaPuntuar.add(itinerario)
+
+    fun esAmigo(usuario: Usuario) = amigos.contains(usuario)
+
+    fun puedoAgregarAAmigos(usuario: Usuario) = this !=usuario && !esAmigo(usuario)
 
 }
 

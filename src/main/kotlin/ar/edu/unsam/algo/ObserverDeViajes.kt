@@ -36,17 +36,20 @@ class MandarMailAAmigosQueDeseanDestino : ObserverDeViajes {
 
 class AgregarAListaDeItinerariosParaPuntuar() : ObserverDeViajes {
     override fun realizaViaje(usuario: Usuario, viaje: Viaje) {
-        usuario.listaItinerariosParaPuntuar.add(viaje.itinerario)
+        usuario.agregarItinerarioAPuntuar(viaje.itinerario)
     }
+
 }
 
 class RealizaViajeConConvenio : ObserverDeViajes {
     override fun realizaViaje(usuario: Usuario, viaje: Viaje) {
-        cambiarCriterio(usuario,viaje)
+        if(!viaje.esLocal()){
+            cambiarCriterio(usuario,viaje)
+        }
     }
 
     fun cambiarCriterio(usuario: Usuario, viaje: Viaje) {
-        usuario.cambiarCriterioVehiculoA(Selectivo(viaje.vehiculo.primeraMarcaConConvenio()))
+        usuario.cambiarCriterioVehiculoA(Selectivo(Vehiculo.primeraMarcaConConvenio()))
     }
 
 }
