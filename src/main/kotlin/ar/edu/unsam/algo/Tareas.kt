@@ -1,8 +1,9 @@
 package ar.edu.unsam.algo
 
-abstract class Tarea(var nombre: String) {
+abstract class Tarea(var nombre: String, var mailSender: MailSender) {
+
     abstract fun realizarTarea(usuario: Usuario)
-    fun notificarTarea(usuario: Usuario, mailSender: MailSender){
+    fun notificarTarea(usuario: Usuario){
         mailSender.sendMail(
             Mail(
                 from = direccionCorreoApp,
@@ -14,33 +15,39 @@ abstract class Tarea(var nombre: String) {
 
     fun Mensaje() = "Se realiza la tarea ${this.nombre}"
 
-    fun realizarYNotificarTarea(usuario: Usuario, mailSender: MailSender){
+    fun realizarYNotificarTarea(usuario: Usuario){
         realizarTarea(usuario)
-        notificarTarea(usuario, mailSender)
+        notificarTarea(usuario)
     }
 
 }
 
-class PuntuarItinerarios(var puntaje: Int) :Tarea("PuntuarTodosLosItinerarios"){
+class PuntuarItinerarios(var puntaje: Int, mailSender: MailSender) :Tarea("PuntuarTodosLosItinerarios", mailSender){
     override fun realizarTarea(usuario: Usuario){
         usuario.listaItinerariosParaPuntuar.forEach{usuario.puntuar(it,puntaje)}
     }
 }
 
-class TranseferirItinerarios(val repoDeItinerarios: RepositorioDeItinerarios): Tarea("Transferir Itinerarios"){
+class TranseferirItinerarios(val repoDeItinerarios: RepositorioDeItinerarios,
+                             mailSender: MailSender
+): Tarea("Transferir Itinerarios", mailSender){
     override fun realizarTarea(usuario: Usuario) {
         usuario.obtenerAmigoConMenosDestinos()?.let { repoDeItinerarios.cambiarCreador(usuario, it) }
     }
 }
 
-class AgregarAmigos(val repositorioDeUsuarios: RepositorioDeUsuarios, val destino: Destino) : Tarea("Agregar amigos con destino conocido"){
+class AgregarAmigos(val repositorioDeUsuarios: RepositorioDeUsuarios, val destino: Destino,
+                    mailSender: MailSender
+) : Tarea("Agregar amigos con destino conocido", mailSender){
     override fun realizarTarea(usuario: Usuario) {
         val usuariosAAgregarAAmigos = repositorioDeUsuarios.usuariosQueConocenUnDestinoYNoSonAmigosDeOtroUsuario(destino,usuario)
         usuariosAAgregarAAmigos.forEach {usuario.agregarAmigo(it)  }
     }
 }
 
-class AgregarDeseadoCaroDeAmigos : Tarea("Agregar el deseado mas caro de tus amigos"){
+class AgregarDeseadoCaroDeAmigos(mailSender: MailSender) : Tarea("Agregar el deseado mas caro de tus amigos",
+    mailSender
+){
     override fun realizarTarea(usuario: Usuario) {
         usuario.agregarDestinomasCarodeMisAmigos()
     }

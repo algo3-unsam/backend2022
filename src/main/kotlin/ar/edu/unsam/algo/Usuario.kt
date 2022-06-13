@@ -148,12 +148,12 @@ class Usuario(
 
     fun deseoDestino(destino: Destino) = destinosDeseados.contains(destino)
 
-    fun realizarTarea(tarea: Tarea, mailSender: MailSender){
-        tarea.realizarYNotificarTarea(this, mailSender)
+    fun realizarTarea(tarea: Tarea){
+        tarea.realizarYNotificarTarea(this)
     }
 
-    fun realizarVariasTareas(listaDeTarea: MutableList<Tarea>, mailSender: MailSender){
-        listaDeTarea.forEach { this.realizarTarea(it, mailSender) }
+    fun realizarVariasTareas(listaDeTarea: MutableList<Tarea>){
+        listaDeTarea.forEach { this.realizarTarea(it) }
     }
 
     fun agregarItinerarioAPuntuar(itinerario: Itinerario) = listaItinerariosParaPuntuar.add(itinerario)
