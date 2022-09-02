@@ -96,7 +96,7 @@ class TestDeItinerarios:DescribeSpec ({
             assertDoesNotThrow { itinerarioConDificultadBaja.validacion() }
         }
         it("Test de Costo De Itinerarios") {
-            itinerarioConDificultadBaja.totalCosto() shouldBe 900.0
+            itinerarioConDificultadBaja.totalCosto(pepe) shouldBe 3540.0
         }
 
         it("Test de Dificultad del Itinerario. Al tener ser dificultad BAJA la que mas actividades tiene, el itinerario tendra esa dificultad") {
