@@ -29,15 +29,9 @@ object Activo: CriterioItinerario {
     override fun acepta(itinerario: Itinerario) = itinerario.todoLosDiasOcupados()
 }
 
-class Exigente(var dificultadPreferida: Dificultad, var porcentajeDeseado: Int): CriterioItinerario {
+class Exigente(private val dificultadPreferida: Dificultad, private val porcentajeDeseado: Int): CriterioItinerario {
 
     override fun acepta(itinerario: Itinerario) = porcentajeSuficiente(itinerario)
 
-    fun cambiarDificultad(nuevaDificultad: Dificultad) { dificultadPreferida = nuevaDificultad}
-
-    fun cambiarPorcentaje(nuevaPorcentaje: Int){
-        porcentajeDeseado = nuevaPorcentaje
-    }
-
-    fun porcentajeSuficiente(itinerario: Itinerario) = itinerario.porcentajeDeActividadXDificultad(dificultadPreferida) >= porcentajeDeseado
+    private fun porcentajeSuficiente(itinerario: Itinerario) = itinerario.porcentajeDeActividadXDificultad(dificultadPreferida) >= porcentajeDeseado
 }

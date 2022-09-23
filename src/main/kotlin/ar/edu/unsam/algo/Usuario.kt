@@ -31,12 +31,12 @@ class Usuario(
     override fun coincidencia(cadena: String): Boolean =
         coicidenciaParcialNombreApellido(cadena) || coincidenciaTotalUsername(cadena)
 
-    fun coincidenciaTotalUsername(cadena: String) = username.equals(cadena, ignoreCase = false)
+    private fun coincidenciaTotalUsername(cadena: String) = username.equals(cadena, ignoreCase = false)
 
-    fun coicidenciaParcialNombreApellido(cadena: String) =
+    private fun coicidenciaParcialNombreApellido(cadena: String) =
         nombre.contains(cadena, ignoreCase = true) || apellido.contains(cadena, ignoreCase = true)
 
-    fun tieneDestinoSoniado() = destinosDeseados.isNotEmpty()
+    private fun tieneDestinoSoniado() = destinosDeseados.isNotEmpty()
 
     fun agregarDestinomasCarodeMisAmigos() = amigos.forEach { agregarDestinoDeseado(it.destinoMasCaro()) }
 

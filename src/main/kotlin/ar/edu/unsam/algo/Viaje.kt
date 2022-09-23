@@ -6,8 +6,6 @@ class Viaje(var vehiculo: Vehiculo, var itinerario : Itinerario){
 
     fun esLocal() = itinerario.tieneDestinoLocal()
 
-    fun vehiculoConConvenio() = vehiculo.tieneConvenio()
-
     fun getDestino() = itinerario.destino
 
 }

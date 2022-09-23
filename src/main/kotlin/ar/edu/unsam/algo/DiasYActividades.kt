@@ -12,9 +12,7 @@ enum class Dificultad() {
 class Dia(val actividades: MutableList<Actividad> = mutableListOf()) {
 
     fun agregarActividad(actividad: Actividad) {
-        if (!actividades.all{actividad.validarHorarioActividad(it)}) {
-            throw BusinessException("No se puede agregar la actividad porque el horario de Fin: ${actividad.horarioFin} parecer estar ocupado\"")
-        }
+        actividades.forEach{actividad.validarHorarioActividad(it)}
         actividades.add(actividad)
     }
 
@@ -53,12 +51,9 @@ data class Actividad(
         }
     }
 
-    fun validarHorarioActividad(actividad: Actividad): Boolean {
-        return if(!this.validarRangoInicioActividad(actividad)){
+    fun validarHorarioActividad(actividad: Actividad) {
+        if(!this.validarRangoInicioActividad(actividad) || !this.validarRangoFinActividad(actividad))
             throw BusinessException("No se puede agregar la actividad porque el horario de Inicio: ${this.horarioInicio} parecer estar ocupado")
-        }else{
-            this.validarRangoFinActividad(actividad)
-        }
     }
 
     fun validarRangoFinActividad(actividad: Actividad) = actividad.horarioFin.between(this.horarioInicio, this.horarioFin)

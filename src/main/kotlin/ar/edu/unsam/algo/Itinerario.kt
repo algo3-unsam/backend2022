@@ -3,8 +3,7 @@ package ar.edu.unsam.algo
 class Itinerario(
     var creador: Usuario,
     var destino: Destino,
-    //var cantDias: Int,
-    val dias: MutableList<Dia> = mutableListOf()
+    private val dias: MutableList<Dia> = mutableListOf()
 ): Datos{
     override var id: Int = 0
 

@@ -49,7 +49,7 @@ class RealizaViajeConConvenio : ObserverDeViajes {
     }
 
     fun cambiarCriterio(usuario: Usuario, viaje: Viaje) {
-        usuario.cambiarCriterioVehiculoA(Selectivo(Vehiculo.primeraMarcaConConvenio()))
+        usuario.cambiarCriterioVehiculoA(Selectivo(marcasConConvenio.first()))
     }
 
 }
