@@ -1,19 +1,19 @@
 package ar.edu.unsam.algo
 
-abstract class Tarea(var nombre: String, var mailSender: MailSender) {
+abstract class Tarea(private var nombre: String, private var mailSender: MailSender) {
 
     abstract fun realizarTarea(usuario: Usuario)
-    fun notificarTarea(usuario: Usuario){
+    private fun notificarTarea(usuario: Usuario){
         mailSender.sendMail(
             Mail(
                 from = direccionCorreoApp,
                 to = usuario.direccionDeCorreo,
-                subject = Mensaje(),
-                content = Mensaje()
+                subject = mensaje(),
+                content = mensaje()
             ))
     }
 
-    fun Mensaje() = "Se realiza la tarea ${this.nombre}"
+    private fun mensaje() = "Se realiza la tarea ${this.nombre}"
 
     fun realizarYNotificarTarea(usuario: Usuario){
         realizarTarea(usuario)
@@ -22,22 +22,24 @@ abstract class Tarea(var nombre: String, var mailSender: MailSender) {
 
 }
 
-class PuntuarItinerarios(var puntaje: Int, mailSender: MailSender) :Tarea("PuntuarTodosLosItinerarios", mailSender){
+class PuntuarItinerarios(private var puntaje: Int, mailSender: MailSender) :Tarea("PuntuarTodosLosItinerarios", mailSender){
     override fun realizarTarea(usuario: Usuario){
         usuario.listaItinerariosParaPuntuar.forEach{usuario.puntuar(it,puntaje)}
     }
 }
 
-class TranseferirItinerarios(val repoDeItinerarios: RepositorioDeItinerarios,
-                             mailSender: MailSender
+class TranseferirItinerarios(
+    private val repoDeItinerarios: RepositorioDeItinerarios,
+    mailSender: MailSender
 ): Tarea("Transferir Itinerarios", mailSender){
     override fun realizarTarea(usuario: Usuario) {
         usuario.obtenerAmigoConMenosDestinos()?.let { repoDeItinerarios.cambiarCreador(usuario, it) }
     }
 }
 
-class AgregarAmigos(val repositorioDeUsuarios: RepositorioDeUsuarios, val destino: Destino,
-                    mailSender: MailSender
+class AgregarAmigos(
+    private val repositorioDeUsuarios: RepositorioDeUsuarios, val destino: Destino,
+    mailSender: MailSender
 ) : Tarea("Agregar amigos con destino conocido", mailSender){
     override fun realizarTarea(usuario: Usuario) {
         val usuariosAAgregarAAmigos = repositorioDeUsuarios.usuariosQueConocenUnDestinoYNoSonAmigosDeOtroUsuario(destino,usuario)

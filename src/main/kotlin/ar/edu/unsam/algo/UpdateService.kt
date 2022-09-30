@@ -12,10 +12,10 @@ object ActualizadorDeDestinos {
     lateinit var serviceDestino: ServiceDestino
     lateinit var repositorio: Repositorio<Destino>
 
-    fun deJsonAListaDestino():List<Destino>{
+    private fun deJsonAListaDestino():List<Destino>{
         val gson = Gson()
-        val tipoListaDestinos: Type = object : TypeToken<List<Destino?>?>() {}.getType()
-       return gson.fromJson<List<Destino>>(serviceDestino.getDestinos(), tipoListaDestinos)
+        val tipoListaDestinos: Type = object : TypeToken<List<Destino?>?>() {}.type
+       return gson.fromJson(serviceDestino.getDestinos(), tipoListaDestinos)
     }
 
     fun actualizarDestinos(){

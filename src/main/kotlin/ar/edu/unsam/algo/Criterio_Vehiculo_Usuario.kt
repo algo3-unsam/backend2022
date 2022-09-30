@@ -18,7 +18,7 @@ object Caprichoso : CriterioVehiculo{
 
 }
 
-class Selectivo(var marcaPreferida :String) : CriterioVehiculo{
+class Selectivo(private val marcaPreferida :String) : CriterioVehiculo{
     override fun aceptaVehiculo(vehiculo: Vehiculo) = marcaPreferida.equals(vehiculo.marca,ignoreCase = true)
 }
 
@@ -26,13 +26,13 @@ object SinLimite : CriterioVehiculo{
     override fun aceptaVehiculo(vehiculo: Vehiculo) = vehiculo.kilometrajeLibre
 }
 
-class Combinado(): CriterioVehiculo{
+class Combinado : CriterioVehiculo{
 
-    var listaDeTipos = mutableListOf<CriterioVehiculo>()
+    private var listaDeTipos = mutableListOf<CriterioVehiculo>()
 
     fun agregarTipo(tipoUsuario: CriterioVehiculo) = listaDeTipos.add(tipoUsuario)
 
-    fun validarLista() = listaDeTipos.size >= 2
+    private fun validarLista() = listaDeTipos.size >= 2
 
     override fun aceptaVehiculo(vehiculo: Vehiculo): Boolean{
         if(!validarLista()){

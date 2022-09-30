@@ -3,7 +3,7 @@ package ar.edu.unsam.algo
 import java.time.LocalTime
 import java.time.temporal.ChronoUnit
 
-enum class Dificultad() {
+enum class Dificultad {
     BAJA,
     MEDIA,
     ALTA
@@ -36,16 +36,14 @@ data class Actividad(
 
     fun duracion() = ChronoUnit.MINUTES.between(horarioInicio, horarioFin).toInt()
 
-    fun validarDificultad() = (this.dificultad >= Dificultad.BAJA) && (this.dificultad <= Dificultad.ALTA)
+    private fun tieneInformacionCargadaEnDescripcion() = this.descripcion.isNotEmpty()
 
-    fun tieneInformacionCargadaEnDescripcion() = !this.descripcion.isNullOrEmpty()
+    private fun validarDuracion() = this.duracion() >= 0
 
-    fun validarDuracion() = this.duracion() >= 0
-
-    fun validarCosto() = costo >= 0
+    private fun validarCosto() = costo >= 0
 
     fun validar() {
-        if (!this.validarDificultad() || !this.tieneInformacionCargadaEnDescripcion() || !this.validarCosto() || !this.validarDuracion()) {
+        if (!this.tieneInformacionCargadaEnDescripcion() || !this.validarCosto() || !this.validarDuracion()) {
             throw FaltaCargarInformacionException("No se puede crear esta Actividad porque falta informacion o hay datos invalidos\n" +
             "dificultad: $dificultad, descripcion: $descripcion, duracion: ${duracion()}, costo: $costo")
         }
@@ -56,7 +54,7 @@ data class Actividad(
             throw BusinessException("No se puede agregar la actividad porque el horario de Inicio: ${this.horarioInicio} parecer estar ocupado")
     }
 
-    fun validarRangoFinActividad(actividad: Actividad) = actividad.horarioFin.between(this.horarioInicio, this.horarioFin)
+    private fun validarRangoFinActividad(actividad: Actividad) = actividad.horarioFin.between(this.horarioInicio, this.horarioFin)
 
-    fun validarRangoInicioActividad(actividad: Actividad) = actividad.horarioInicio.between(this.horarioInicio, this.horarioFin)
+    private fun validarRangoInicioActividad(actividad: Actividad) = actividad.horarioInicio.between(this.horarioInicio, this.horarioFin)
 }

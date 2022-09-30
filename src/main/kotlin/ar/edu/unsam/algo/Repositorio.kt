@@ -1,8 +1,8 @@
 package ar.edu.unsam.algo
 
 open class Repositorio<Elemento : Datos> {
-    val elementos: MutableList<Elemento> = mutableListOf<Elemento>()
-    var idSiguiente = 1
+    val elementos: MutableList<Elemento> = mutableListOf()
+    private var idSiguiente = 1
 
     fun cantElementos() = elementos.size
 
@@ -12,7 +12,7 @@ open class Repositorio<Elemento : Datos> {
         agregarAlRepo(elemento)
     }
 
-    fun yaEstaCreado(elemento: Elemento){
+    private fun yaEstaCreado(elemento: Elemento){
         if(estaEnRepo(elemento.id)){
             throw BusinessException("YA ESTA EN EL REPO")
         }
@@ -23,7 +23,7 @@ open class Repositorio<Elemento : Datos> {
         asignarId(elemento)
     }
 
-    fun asignarId(elemento: Elemento){
+    private fun asignarId(elemento: Elemento){
         elemento.id  = idSiguiente++
     }
 
@@ -36,16 +36,16 @@ open class Repositorio<Elemento : Datos> {
 
     fun update(elementoModificado: Elemento){
         elementoModificado.validacion()
-        var elementoABorrar = getById(elementoModificado.id)
+        val elementoABorrar = getById(elementoModificado.id)
         delete(elementoABorrar)
         agregaElementoModificado(elementoModificado)
     }
 
-    fun agregaElementoModificado(elementoModificado: Elemento) {
+    private fun agregaElementoModificado(elementoModificado: Elemento) {
         elementos.add(elementoModificado)
     }
 
-    fun excepcionPorNoExistenciaEnRepo(idABuscar: Int){
+    private fun excepcionPorNoExistenciaEnRepo(idABuscar: Int){
         if(!estaEnRepo(idABuscar)){
             throw BusinessException("NO ESTA EN EL REPO")
         }
@@ -70,7 +70,7 @@ open class Repositorio<Elemento : Datos> {
 
 class RepositorioDeItinerarios : Repositorio<Itinerario>() {
 
-    fun filtrarPorItinerariosCreados(unUsuario: Usuario): List<Itinerario>{
+    private fun filtrarPorItinerariosCreados(unUsuario: Usuario): List<Itinerario>{
         return elementos.filter { it.sosMiCreador(unUsuario) }
     }
 

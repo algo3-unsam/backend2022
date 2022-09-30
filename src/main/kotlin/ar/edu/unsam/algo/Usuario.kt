@@ -40,7 +40,7 @@ class Usuario(
 
     fun agregarDestinomasCarodeMisAmigos() = amigos.forEach { agregarDestinoDeseado(it.destinoMasCaro()) }
 
-    fun agregarDestinoDeseado(destino: Destino) = destinosDeseados.add(destino)
+    private fun agregarDestinoDeseado(destino: Destino) = destinosDeseados.add(destino)
 
     fun destinoMasCaro(): Destino {
         return destinosDeseados.maxByOrNull { it.precio(this) }!!

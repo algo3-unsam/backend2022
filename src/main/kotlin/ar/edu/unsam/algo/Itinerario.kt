@@ -15,9 +15,9 @@ class Itinerario(
 
     fun yaPuntuo(username : String) = puntajes.containsKey(username)
 
-    fun unDiaConActividad() = dias.any{ it.tengoActividades()}
+    private fun unDiaConActividad() = dias.any{ it.tengoActividades()}
 
-    fun hayDiasInciados() = dias.isNotEmpty()
+    private fun hayDiasInciados() = dias.isNotEmpty()
 
     fun cantidadDeDias() = dias.size
 
@@ -32,7 +32,7 @@ class Itinerario(
 
     override fun coincidencia(cadena: String): Boolean = destino.coincidencia(cadena) || coincidenciaConActividades(cadena)
 
-    fun coincidenciaConActividades(cadena:String) = todasLasActividades().any{it.coincidenciaConNombre(cadena)}
+    private fun coincidenciaConActividades(cadena:String) = todasLasActividades().any{it.coincidenciaConNombre(cadena)}
 
     fun totalCosto(usuario: Usuario) = dias.sumOf { it.costoDeTotalDeActividades() } + destino.precio(usuario)
 
@@ -53,19 +53,19 @@ class Itinerario(
 
     fun sosMiCreador(usuario: Usuario) = usuario.username.equals(creador.username,ignoreCase = true)
 
-    fun cantidadDeActividades() = dias.sumOf { it.cantidadDeActidades() }
+    private fun cantidadDeActividades() = dias.sumOf { it.cantidadDeActidades() }
 
-    fun todasLasActividades(): MutableList<Actividad> {
+    private fun todasLasActividades(): MutableList<Actividad> {
         return dias.flatMap { it.actividades }.toMutableList()
     }
 
-    fun actividadesXDificultad() = todasLasActividades().groupingBy { it.dificultad }.eachCount()
+    private fun actividadesXDificultad() = todasLasActividades().groupingBy { it.dificultad }.eachCount()
 
-    fun mapDeActividadesOrdenado() = actividadesXDificultad().toSortedMap(compareByDescending { it })
+    private fun mapDeActividadesOrdenado() = actividadesXDificultad().toSortedMap(compareByDescending { it })
 
     fun dificultad(): Dificultad = mapDeActividadesOrdenado().maxByOrNull { it.value }!!.key
 
-    fun cantDeActividadesDeDifcultad(dificultad: Dificultad) = actividadesXDificultad()[dificultad]!!
+    private fun cantDeActividadesDeDifcultad(dificultad: Dificultad) = actividadesXDificultad()[dificultad]!!
 
     fun porcentajeDeActividadXDificultad(dificultad: Dificultad) =
         (cantDeActividadesDeDifcultad(dificultad) * 100) / cantidadDeActividades()
@@ -77,7 +77,7 @@ class Itinerario(
         return puntajes.getValue(usuario.username)
     }
 
-    fun editar(usuario: Usuario){
+    fun puedeEditar(usuario: Usuario){
         if(!usuario.puedoEditar(this)){
             throw BusinessException("Este usuario no puede editar el itinerario")
         }

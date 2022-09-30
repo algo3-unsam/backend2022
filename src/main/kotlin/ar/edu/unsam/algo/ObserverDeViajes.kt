@@ -17,7 +17,7 @@ class MandarMailAAmigosQueDeseanDestino : ObserverDeViajes {
         usuario.amigosQueDeseanDestino(viaje.getDestino()).forEach { armarMail(usuario, viaje, it) }
     }
 
-    fun armarMail(emisor: Usuario, viaje: Viaje, receptor: Usuario) {
+    private fun armarMail(emisor: Usuario, viaje: Viaje, receptor: Usuario) {
         mailSender.sendMail(
             Mail(
                 from = direccionCorreoApp,
@@ -29,12 +29,12 @@ class MandarMailAAmigosQueDeseanDestino : ObserverDeViajes {
 
     }
 
-    fun getBody(emisor: Usuario, viaje: Viaje, receptor: Usuario) = "Hola! ${receptor.nombre}, ${emisor.nombre} ${emisor.apellido} visito ${viaje.getDestino().pais} ${viaje.getDestino().ciudad}"
+    private fun getBody(emisor: Usuario, viaje: Viaje, receptor: Usuario) = "Hola! ${receptor.nombre}, ${emisor.nombre} ${emisor.apellido} visito ${viaje.getDestino().pais} ${viaje.getDestino().ciudad}"
 
 }
 
 
-class AgregarAListaDeItinerariosParaPuntuar() : ObserverDeViajes {
+class AgregarAListaDeItinerariosParaPuntuar : ObserverDeViajes {
     override fun realizaViaje(usuario: Usuario, viaje: Viaje) {
         usuario.agregarItinerarioAPuntuar(viaje.itinerario)
     }
@@ -48,7 +48,7 @@ class RealizaViajeConConvenio : ObserverDeViajes {
         }
     }
 
-    fun cambiarCriterio(usuario: Usuario, viaje: Viaje) {
+    private fun cambiarCriterio(usuario: Usuario, viaje: Viaje) {
         usuario.cambiarCriterioVehiculoA(Selectivo(marcasConConvenio.first()))
     }
 
